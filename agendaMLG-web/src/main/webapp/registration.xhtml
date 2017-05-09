@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/WEB-INF/templates/template_login.xhtml">
+        <ui:define name="content">
+            <h1>Regístrate</h1>
+            <h4>¿Dispones de una cuenta? Inicia sesión <h:link value="aquí" outcome="login" /></h4>
+            <h4 class="login-header4">Crea una nueva cuenta de Sur.es</h4>
+            <hr />
+            <h:form id="form_registration">
+                <p:growl id="msg" />
+                <div class="form-group form-group-lg">
+                    <p:messages id="registration_messages" autoUpdate="true"/>
+                    <p:inputText  value="#{registro.nombre}" class="form-control"  id="registration_name"  placeholder="Nombre" 
+                                  required="true"  
+                                  requiredMessage="Introduce tu nombre" />
+                    <p:inputText  value="#{registro.apellidos}" class="form-control"  id="registration_surname"  placeholder="Apellidos"  
+                                  required="true"   
+                                  requiredMessage="Introduce tus apellidos"/>
+                    <p:inputText  value="#{registro.email}" id="login_email"  class="form-control"  placeholder="Correo eléctronico"
+                                  required="true"  
+                                  requiredMessage="Introduce tu correo"
+                                  validatorMessage="Correo invalido">
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+
+                    </p:inputText>
+                    <p:inputText   value="#{registro.pseudonimo}" class="form-control"  id="registration_user"  placeholder="Usuario"  
+                                   required="true"   
+                                   requiredMessage="Introduce tu nombre de usuario"/>
+                    <!--
+                    <input type="hidden" class="latitude" id="registration_latitude" />
+                    <input type="hidden" class="longitude" id="registration_longitude" />
+                    -->
+                    <p:password id="registration_pwd1" value="#{registro.contrasenia}"  match="registration_pwd2" placeholder="Contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden"/>
+                    <p:password id="registration_pwd2" value="#{registro.contrasenia2}" match="registration_pwd2"  placeholder="Repite la contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden"/>
+                    <div id="login-rememberForgot">
+                        <p:selectBooleanCheckbox id="registration_notifications" />
+                        <h:outputText value=" Desea recibir notificaciones por email." /><br/>
+                        <p:selectBooleanCheckbox id="registration_terms"  value="#{registro.acepta}" required="true"  requiredMessage="Debe aceptar los terminos de uso" />
+                            
+                        
+
+                        <h:link value=" Acepta los términos y condiciones de uso." outcome="terms" />
+                    </div>
+                    <p:commandButton value="Enviar"    id="registration_submit" action="#{registro.valido()}"
+                                     styleClass="btn btn-primary btn-lg submitButtons" />
+
+                    
+                </div>
+
+                <!--<h5 id="geoLaLo"></h5>-->
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

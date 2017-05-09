@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/WEB-INF/templates/template.xhtml">
+        <ui:define name="main-content">
+            <f:metadata>
+                <f:viewAction action="#{ControlLog.redirectUrl('index.xhtml')}" />
+            </f:metadata>
+
+            <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
+                    <h:form>
+                        <p:panelGrid class="eventCreate">
+                            <p:row>
+                                <p:column colspan="2">
+                                    <div id="event-goBack">
+                                        <br/>
+                                        <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
+                                    </div>
+                                    <h2 class="eventTitle">Crear evento</h2>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Título
+                                </p:column>
+                                <p:column colspan="2">
+                                    <p:inputText id="eventTitle" value="Kafka, la verdad oculta" placeholder="Título" disabled="true"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Descripcion
+                                </p:column>
+                                <p:column>
+                                    <p:inputTextarea id="eventDescripcion" placeholder="Descripción"  disabled="true" rows="10" cols="50" value="A las 20:30 h comienza Kafka, la verdad oculta. Coordinado por Paco Casado. Como en cada sesión se presentará la obra pictórica de José María Llobel, perteneciente al proyecto Cine pintado y cerraremos con nuestro habitual coloquio."/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Publico
+                                </p:column>
+                                <p:column>
+                                    <h:selectManyListbox id="eventDestinatario" value="Todos" disabled="true"> 
+                                        <f:selectItems value="#{destinatarioBean.destinatarios}"  var="d" itemLabel="#{d.descripcion}" itemValue="#{d.descripcion}" />
+                                    </h:selectManyListbox>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Etiquetas
+                                </p:column>
+                                <p:column>
+                                    <h:selectManyListbox id="eventEtiqueta" value="Cineclub" disabled="true">
+                                        <f:selectItems value="#{etiquetaBean.etiquetas}"  var="e" itemLabel="#{e.nombre}" itemValue="#{e.nombre}" />
+                                    </h:selectManyListbox>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Fecha inicio
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="eventFechaIni" value="05/05/2017" disabled="true" placeholder="Fecha Inicio"/>
+
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Fecha fin
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="eventFechaFin" value="05/05/2017" disabled="true" placeholder="Fecha Fin"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Horario
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="eventHorario" value="20:30" disabled="true" placeholder="Horario"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Precio
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="eventPrecio" value="Entrada libre hasta completar aforo." disabled="true" placeholder="Precio"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Imagen
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="eventImage" value="img/eventos/556084_1.jpg" disabled="true" placeholder="URL de la Imagen"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Provincia
+                                </p:column>
+                                <p:column colspan="2">
+                                    <h:selectOneMenu id="provincia" class="form-control"  value="#{provinciaBean.provincia}" disabled="true">
+                                        <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
+                                    </h:selectOneMenu>
+                                </p:column></p:row>
+                            <p:row>
+                                <p:column>
+                                    Localidad
+                                </p:column>
+                                <p:column>
+                                    <h:selectOneMenu id="localidad"  class="form-control" value="Torremolinos" disabled="true">
+                                        <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
+                                    </h:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="btn btn-default btn-lg" style="float: right"/>
+                                    <h:link  outcome="index" value="Crear" id="createSubmit"  styleClass="btn btn-default btn-lg" style="float:right; margin-right: 10px"/>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </h:form>
+                </div>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <ui:composition template="/WEB-INF/templates/template_noad_sidebar.xhtml">
+        <ui:define name="main-content">
+            <div id="main-left" class="login" style="margin-top: 70px;">
+                <div id="login-goBack" style="font-size: 11px">
+                        <h:link value="Volver a la página principal" outcome="index" class="icon fa-chevron-left fa-2x"/>
+                    </div>
+                <!-- Show minimal error information -->
+                
+                <p class="lead"><h2>Error #{errorHandler.statusCode}</h2>
+                    #{errorHandler.exceptionType}
+                </p>
+                
+                <!-- Show full error information -->
+                <!--
+                <p><h:outputText value="Error Code: #{errorHandler.statusCode}" /></p>
+                <p><h:outputText value="Error Description: #{errorHandler.message}" /></p>
+                <p><h:outputText value="Exception Type: #{errorHandler.exceptionType}" /></p>
+                <p><h:outputText value="Exception Class: #{errorHandler.exception}" /></p>
+                <p><h:outputText value="Request URI: #{errorHandler.requestURI}" /></p>
+                -->
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>

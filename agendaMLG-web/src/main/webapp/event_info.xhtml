@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/WEB-INF/templates/template.xhtml">
+        <ui:define name="main-content">
+
+            <p:dataTable value="#{eventoBean.getEvento(param['event'])}" var="evento" id="eventInfo">
+
+                <p:column>
+                    <div id="event-goBack">
+                        <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
+                    </div>
+                    <div style="float: right">
+
+                        <c:choose>
+                            <c:when test="#{empty ControlLog.usuario}">
+                                <p><p:commandLink id="icon-map" style="font-size:20px" styleClass="icon fa fa-map" onclick="PF('gmap').show();" /></p>                     
+                                <p:tooltip id="tooltipMap" for="icon-map" value="Ver mapa" position="right"/>
+                                <p><h5 style="font-size: 11px"><a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x"></a></h5></p>
+                                <p><h5 style="font-size: 11px"><a class="fa fa-google-plus fa-2x" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
+                                <p><h5 style="font-size: 11px"><a class="fa fa-facebook fa-2x" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
+                            </c:when>
+                            <c:otherwise>
+                                <h:form id="eventInfoForm">
+                                    <p>
+                                        <h:commandLink id="icon-like"  disabled="true" style="font-size:20px" styleClass="icon fa-thumbs-up fa-2x" />
+                                    </p>  
+                                    <!--<p><h5 style="font-size: 11px"><h:link id="icon-like" value="" outcome="event_info.xhtml?event=#{evento.id_evento}" class="icon fa-thumbs-up fa-2x"/></h5></p>-->
+                                    <p:tooltip id="tooltipLike" for="icon-like" value="Like" position="right"/>
+                                    <p>
+                                        <h:commandLink id="icon-assist"   disabled="true" style="font-size:20px" styleClass="icon fa-users fa-2x" />
+                                    </p>  
+                                    <!--<p><h5 style="font-size: 11px"><h:link  id="icon-assist" value="" outcome="event_info.xhtml?event=#{evento.id_evento}" class="icon fa fa-users fa-2x"/></h5></p>-->
+                                    <p:tooltip id="tooltipAssist" for="icon-assist" value="Assist" position="right"/>
+                                    <p>
+                                        <h:commandLink id="icon-follow"  disabled="true"  style="font-size:20px" styleClass="icon fa-bell fa-2x" />
+                                    </p> 
+                                    <!--<p><h5 style="font-size: 11px"><h:link id="icon-follow" value="" outcome="event_info.xhtml?event=#{evento.id_evento}" class="icon fa fa-bell fa-2x"/></h5></p>-->
+                                    <p:tooltip id="tooltipFollow" for="icon-follow" value="Follow" position="right"/>
+                                </h:form>
+                                <p><p:commandLink id="icon-map" style="font-size:20px" styleClass="icon fa fa-map" onclick="PF('gmap').show();" /></p>                     
+                                <p:tooltip id="tooltipMap" for="icon-map" value="Ver mapa" position="right"/>
+                                <p><h5 style="font-size: 11px"><a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x"></a></h5></p>
+                                <p><h5 style="font-size: 11px"><a class="fa fa-google-plus fa-2x" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
+                                <p><h5 style="font-size: 11px"><a class="fa fa-facebook fa-2x" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+
+                    <h2 class="eventTitle">#{evento.titulo}</h2>
+                    <div class="imageEvent">
+                        <h:graphicImage name="#{evento.imagen_url}" width="500" height="300"/>
+                    </div>
+                    <div>
+                        <p class="eventDesc"><br/><h:outputText value="#{evento.descripcion}" /></p>
+                        <hr/>
+                        <p><h5 class="h5bold"><h:outputText value="#{evento.localidad.nombre}&nbsp;&nbsp;&nbsp;#{evento.horario}&nbsp;&nbsp;&nbsp;#{evento.precio} "  /></h5></p>
+                        <hr/>
+                        <p>
+                            <ul class="publico">
+                                <ui:repeat value="#{evento.destinatario}" var="dest">
+                                    <li style=""><h:outputText value="#{dest.descripcion}"/></li>
+                                </ui:repeat>
+                            </ul>
+                        </p>
+                        <hr/>
+                        <p>
+                            <h:form>
+                                <p:tagCloud model="#{eventoBean.getModel(evento.id_evento)}"></p:tagCloud>
+                            </h:form>
+                        </p>
+                    </div>
+                    <div>
+                        <h5 class="h5bold">Comentarios</h5>
+                        <ul style="font-size: 16px; list-style-type: none">
+                            <ui:repeat value="#{evento.comentarios}" var="comen">
+                                <li style="padding: 10px;">
+                                    <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote> 
+                                    <i style="font-size: 14px"><h:outputText value="#{comen.usuario.pseudonimo}"/> - 
+                                        <h:outputText value="#{comen.fecha}">
+                                            <f:convertDateTime pattern="dd/MM/YY" />
+                                        </h:outputText> - 
+                                        <h:outputText value="#{comen.hora}">
+                                            <f:convertDateTime pattern="HH:mm" />
+                                        </h:outputText>
+                                    </i></li>
+                            </ui:repeat>
+                        </ul>
+                    </div>
+                    <div>
+                        <f:view contentType="text/html">
+                            <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
+                                <p:gmap id="gmap" center="#{evento.longitud}, #{evento.latitud}" zoom="15" type="HYBRID" style="width:100%;height:400px" />
+                            </p:dialog>
+                        </f:view>
+                    </div>
+                    <h:form id="formComentario">
+                        <p:dialog header="Añadir comentario" widgetVar="dlg_comen" minHeight="40">
+                            <p:inputText id="eventComentario" placeholder="Comentario" style="margin-right: 10px"/>
+                            <p:commandButton value="Enviar" id="submitComen" actionListener="#{buttonView.buttonAction}"  ajax="false" icon="ui-icon-disk" />
+                        </p:dialog>
+                    </h:form>
+                    <h:form id="formDelete">
+                        <p:dialog header="Borrar evento" widgetVar="dlg_delete" minHeight="40">
+                            <h4><h:link outcome="index" value="Se ha borrado el evento" /></h4>
+
+                        </p:dialog>
+                    </h:form>
+                    <c:if test="#{!empty ControlLog.usuario}">
+                        <p:commandLink id="addComment" styleClass="btn btn-default btn-lg" onclick="PF('dlg_comen').show();" style="font-size:15px;float:left" value="Añadir comentario"/>
+                    </c:if>
+                    <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR' || ControlLog.usuario.getRol_usuario() == 'VALIDADO'}">
+                        <p:commandLink onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="btn btn-default btn-lg" style="font-size: 15px;float:right"/>
+                        <h:link value="Editar" outcome="event_edit"   styleClass="btn btn-default btn-lg" style="font-size:15px;float:right; margin-right: 10px">
+                            <f:param name="event" value="#{evento.id_evento}" />
+                        </h:link>
+                    </c:if>
+
+                </p:column>
+            </p:dataTable>
+
+            <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>
+            <h:outputScript name="js/tweet-opt.js" />
+
+            <script>!function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                        if (!d.getElementById(id)) {
+                            js = d.createElement(s);
+                            js.id = id;
+                            js.src = p + '://platform.twitter.com/widgets.js';
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }
+                    }(document, 'script', 'twitter-wjs');
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

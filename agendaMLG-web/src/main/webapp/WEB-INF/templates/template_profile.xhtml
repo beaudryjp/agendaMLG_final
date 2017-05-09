@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="es"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <h:outputStylesheet name="css/datepicker.css"  />
+        <h:outputStylesheet name="css/bootstrap.min.css"  />
+        <h:outputStylesheet name="css/structure.css"  />
+        <h:outputStylesheet name="css/default.css"  />
+        
+        <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/img/favicon.ico"/>
+        <title>
+            <ui:insert name="title">Agenda de Malaga, ¿que hacer hoy en Malaga? | SUR.es</ui:insert>
+        </title>
+    </h:head>
+
+    <h:body>
+        <section class="container">
+            <header>
+                <ui:insert name="header">
+                    <ui:include src = "/WEB-INF/templates/header.xhtml" />
+                </ui:insert>
+            </header>
+            <div id="ad1">
+                <ui:insert name="menu">
+                    <ui:include src = "/WEB-INF/templates/ad_header.xhtml" />
+                </ui:insert>
+            </div>
+            <section id="header-tags">
+                <ui:insert name="menu">
+                    <ui:include src = "/WEB-INF/templates/header_tags.xhtml" />
+                </ui:insert>
+            </section>
+            <section id="container-main">
+                <div id="container-sidebar">
+                   <ui:insert name="sidebar"></ui:insert> 
+                </div>
+                <div id="main-left">
+                    <ui:insert name="main-content"></ui:insert> 
+                </div>
+            </section>
+        </section>
+
+        <footer>
+            <ui:insert name="header">
+                <ui:include src = "/WEB-INF/templates/footer.xhtml" />
+            </ui:insert>
+        </footer>
+        <ui:insert name="footer-links">
+            <ui:include src = "/WEB-INF/templates/footer_links.xhtml" />
+        </ui:insert>
+       <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+        <h:outputScript name="js/diariosur.js" />
+    </h:body>
+</html>

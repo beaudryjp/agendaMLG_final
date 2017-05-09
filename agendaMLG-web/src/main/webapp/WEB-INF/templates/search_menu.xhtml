@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition>
+        <div id="search-sidebar">
+            <h:outputScript name="js/prime.js" />
+            <c:if test="#{!empty ControlLog.usuario}">
+                <h3 class="search-title createEventTitle"><h:link  outcome="event_create" value="CREAR EVENTO" id="linkCreateEvent"/></h3>
+            </c:if>
+            
+            <!--<h3 class="search-title createEventTitle"><h:link  outcome="event_create" value="CREAR EVENTO" id="linkCreateEvent"/></h3>-->
+            <h3 class="search-title">BÚSQUEDA</h3>
+            <div class="search-option">
+                <h4 id="tab1-header" class="tab-title">Buscar</h4>
+                <p id="tab1-main">
+                    <h:form id="search_form_options">
+                        <!--<p:growl id="msgs" showDetail="true" />-->
+                        <div class="form-group form-group-sm">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <p:inputText class="form-control" id="search_text" placeholder="Introduzca un término de búsqueda"  disabled="true"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:selectOneMenu id="provincia" class="form-control"  value="#{provinciaBean.provincia}" disabled="true">
+                                            <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
+                                            <!--<f:selectItem itemLabel="Provincia" itemValue="" noSelectionOption="true" />-->
+                                            <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
+                                        </h:selectOneMenu>
+                                    </p:column>
+
+                                    <p:column>
+                                        <h:selectOneMenu id="localidad"  class="form-control" value="#{provinciaBean.localidad}" disabled="true">
+                                            <!--<f:selectItem itemLabel="Localidad" itemValue="" noSelectionOption="true" />-->
+                                            <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
+                                        </h:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:selectOneMenu id="search_public" class="form-control" value="#{destinatarioBean.destinatario}" disabled="true">
+                                            <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
+                                        </h:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <h:selectOneMenu id="search_tags" class="form-control" value="#{etiquetaBean.etiqueta}" disabled="true">
+                                            <f:selectItem itemLabel="Todos" itemValue="Todos"/>
+                                            <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
+                                        </h:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <h:link  outcome="events_search" value="Enviar" id="search_submit"  styleClass="btn btn-default btn-lg" style="float:right"/>
+                                        <!--<p:commandButton action="events" value="Enviar" id="search_submit"  styleClass="btn btn-default btn-lg"/>-->
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </div>
+                    </h:form>
+                </p>
+            </div>
+            <div class="search-option">
+                <h4 id="tab2-header" class="tab-title">Calendario</h4>
+                <p id="tab2-main">
+                    <h:form id="search_form_calendar">
+                        
+                        <p:growl id="growl" showDetail="true" />
+                        <p:calendar id="search_calendar" styleClass="ll-skin-melon" value="#{eventoBean.fecha}" mode="inline" locale="es">
+                            <p:ajax event="dateSelect" listener="#{eventoBean.eventosByFecha}" update="growl" />
+                        </p:calendar>
+                        
+                        <!--
+                        <p:calendar id="popup" value="#{eventoBean.fecha}"  styleClass="ll-skin-melon" locale="es" />
+                        -->
+                        <!--<p:commandButton  action="events"  value="Enviar"  id="search_submit"  styleClass="btn btn-default btn-lg"/>-->
+                    </h:form>
+                </p>
+            </div>
+            
+        </div>
+    </ui:composition>
+</html>

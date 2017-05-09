@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/WEB-INF/templates/template_profile.xhtml">
+        <ui:define name="main-content">
+            <div class="login-perfil">
+                <h:form id="profile">
+                    <p:tabView orientation="right" dynamic="true" cache="true" styleClass="panelusuario" >
+                        <p:tab title="Mis Eventos" >
+                            <h2>Eventos al que vas a asistir</h2>
+                            <c:forEach var="item" items="#{eventoBean.evento_asiste}">
+                                <p:panelGrid styleClass="mis_eventos" >
+                                    <p:row>
+                                        <p:column rowspan="2">
+                                            <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>
+                                        </p:column>
+                                        <p:column>
+
+                                            <h3 class="eventTitle" style="text-align: right">
+                                                <h:link value="#{item.titulo}" outcome="event_info" >
+                                                    <f:param name="event" value="#{item.id_evento}" />
+                                                </h:link>
+                                            </h3>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </c:forEach>
+                            <br/><h2>Eventos que estas siguiendo</h2>
+                            <c:forEach var="item" items="#{eventoBean.evento_sigue}">
+                                <p:panelGrid styleClass="mis_eventos" >
+                                    <p:row>
+                                        <p:column rowspan="2">
+                                            <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>
+                                        </p:column>
+                                        <p:column>
+
+                                            <h3 class="eventTitle" style="text-align: right">
+                                                <h:link value="#{item.titulo}" outcome="event_info" >
+                                                    <f:param name="event" value="#{item.id_evento}" />
+                                                </h:link>
+                                            </h3>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </c:forEach>
+                            <br/><h2>Eventos que te gustan</h2>
+                            <c:forEach var="item" items="#{eventoBean.evento_gusta}">
+                                <p:panelGrid styleClass="mis_eventos" >
+                                    <p:row>
+                                        <p:column rowspan="2">
+                                            <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>
+                                        </p:column>
+                                        <p:column>
+
+                                            <h3 class="eventTitle" style="text-align: right">
+                                                <h:link value="#{item.titulo}" outcome="event_info" >
+                                                    <f:param name="event" value="#{item.id_evento}" />
+                                                </h:link>
+                                            </h3>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </c:forEach>
+                        </p:tab>
+                        <p:tab title="Configuración de cuenta">
+                            <h:panelGroup id="conf-panel">
+
+                                <table >
+
+                                    <tr>
+                                        <td><p:outputLabel value="Introduzca nuevo email: " /> </td>
+                                        <td><p:inputText value="#{configuracion.email}" placeholder="#{ControlLog.usuario.email}" 
+                                                         validatorMessage="Email no válido">
+                                                <f:validateRegex pattern="(^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$){0,1}" />
+                                            </p:inputText></td>
+                                    </tr>
+
+                                    <tr>
+                                        <p:messages id="correo-messages" autoUpdate="true"/>
+                                        <td><p:outputLabel value="Introduzca nueva contraseña: " /> </td>
+                                        <td><p:password id="pass1" match="pass2" value="#{configuracion.contrasenia}" validatorMessage="Las contraseñas no coinciden"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p:outputLabel value="Confirmar contraseña: " /> </td>
+                                        <td><p:password id="pass2" value="#{configuracion.contrasenia2}" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td><p:outputLabel value="Introduzca Nombre: " /></td>
+                                        <td><p:inputText value="#{configuracion.nombre}" placeholder="#{configuracion.usuario.getNombre()}"/></td>
+                                    </tr>
+
+
+                                </table>
+                                <p:commandButton action ="#{configuracion.modificar}" value ="Modificar Perfil" id="submit"  
+                                                 styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
+
+                                <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
+                                    <p:commandButton id="solicitarValid" value="Solicitar validación" action="#{ControlLog.solicitar()}"/>
+                                </c:if>
+                            </h:panelGroup>
+                        </p:tab>
+                        <p:tab title="Notificaciones">
+                            <p:panel id="panel-noti" class="panel-tareas">
+                                <c:forEach var="noti" items="#{notification.notificaciones}">
+                                    <p:panelGrid styleClass="mis_notificaciones" id="prueba" >
+                                        <p:row>
+                                            <p:column rowspan="2" id="columna1" style="width: 1px">
+                                                <p:graphicImage class="event-image" name="img/event-general.png"/>
+                                            </p:column>
+                                            <p:column id="columna2">
+                                                <h:outputLabel  value="#{noti.mensaje}" />
+                                            </p:column>
+                                            <p:column rowspan="2" id="columna3">
+                                                <p class="notification-message-button"><p:commandButton action="#{notification.dissapear(noti)}" update="panel-noti" value="Leído" icon="ui-icon-check" /></p>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputLabel value="#{noti.fecha}" />
+                                            </p:column>
+                                        </p:row>
+                                    </p:panelGrid>
+                                </c:forEach>
+                            </p:panel>
+                        </p:tab>
+                        <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR'}">
+                            <p:tab title="Tareas" id="tarea">
+                                <p:panel id="pan" class="panel-tareas">
+                                    <c:forEach var="item" items="#{tareas.pendiente}" id="for-tar">
+                                        <p:panelGrid styleClass="mis-tareas"  id="panel-tar">
+                                            <p:row>
+                                                <p:column rowspan="2">
+                                                    <p:graphicImage class="event-image" name="img/event-general.png"/>
+                                                </p:column>
+                                                <p:column>
+                                                    <h:outputLabel  value="#{item.titulo}" />
+                                                </p:column>
+                                                <p:column>
+                                                    <p class="notification-message-button"><p:commandButton action="#{tareas.approve(item)}" value ="Aprobar" icon="ui-icon-check" update="pan"/> </p>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column>
+                                                    <h:outputLabel value="#{item.descripcion}" />
+                                                </p:column>
+                                                <p:column>
+                                                    <p class="notification-message-button"> <p:commandButton action="#{tareas.reject(item)}" value ="Denegar" icon="ui-icon-close" update="pan"/> </p>
+                                                </p:column>
+                                            </p:row>
+                                        </p:panelGrid>
+                                    </c:forEach>
+                                </p:panel>
+                            </p:tab>
+                        </c:if>
+                    </p:tabView>
+                </h:form>
+            </div>
+        </ui:define>
+    </ui:composition>
+</html>
+

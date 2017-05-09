@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="/WEB-INF/templates/template_login.xhtml">
+        <ui:define name="content">
+            <h1>Inicia sesión</h1>
+            <h4>¿Aún no tienes cuenta? Regístrate <h:link value="aquí" outcome="registration" /></h4>
+            <h4 class="login-header4">Usa una cuenta de Sur.es</h4>
+            <hr />
+             <c:choose>
+            <c:when test="#{empty ControlLog.usuario}">
+            <h:form id="login">
+                <div class="form-group form-group-lg">
+                    <p:messages id="login_messages" autoUpdate="true"/>
+                    <h:inputText  value ="#{login.email}" id="login_email"  class="form-control"  
+                                  required="true"  
+                                  requiredMessage="Introduce tu correo"
+                                  validatorMessage="Correo invalido" >
+                        <f:validateRegex pattern="[_A-Za-z0-9\-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9\-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]+)$" />
+                        </h:inputText>
+                   
+                    <h:inputSecret value = "#{login.contrasenia}" id="login_password"    class="form-control"  redisplay="true"  />
+                    <div id="login-rememberForgot">
+                        
+                        <p:selectBooleanCheckbox id="login_remember" />
+                        <h:outputText value=" Recuerdame" /><br/>
+                        <h:link value="He olvidado mi contraseña" outcome="reset_password" />
+
+                    </div>
+                    <h:commandButton action="#{login.autenticar()}" value="Iniciar sesión"  id="login_submit"  
+                            styleClass="btn btn-default btn-lg submitButtons"/>
+
+                </div>
+
+            </h:form>
+            </c:when>
+             </c:choose>
+        </ui:define>
+    </ui:composition>
+</html>

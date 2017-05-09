@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="/WEB-INF/templates/template.xhtml">
+        <ui:define name="main-content">
+            <ui:insert name="search-sidebar">
+                <ui:include src = "/WEB-INF/templates/search_menu.xhtml" />
+            </ui:insert>
+            <p class="lead"><h2>eventos proximos</h2></p>
+            <!--<p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="events" class="eventLists" paginator="true" rows="1">-->
+            <p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="eventsNext" styleClass="eventsNext">
+                <ui:insert name="search-sidebar">
+                    <ui:include src = "/WEB-INF/templates/event.xhtml" />
+                </ui:insert>
+            </p:dataTable>
+
+            <p class="lead">
+                <div id="login-goBack">
+                        
+                </div>
+                <h5 class="moreEvents">
+                    <h:link outcome="events_all" value="más eventos" class="icon fa-chevron-right fa-2x" style="float:right"/>
+                </h5>
+            </p>
+            <p class="lead"><h2 style="margin-top: 20px">eventos destacados</h2></p>
+            <p:dataTable value="#{eventoBean.eventosDestacados}" var="evento">
+                <ui:insert name="search-sidebar">
+                    <ui:include src = "/WEB-INF/templates/event.xhtml" />
+                </ui:insert>
+            </p:dataTable>
+        </ui:define>
+    </ui:composition>
+</html>
+
