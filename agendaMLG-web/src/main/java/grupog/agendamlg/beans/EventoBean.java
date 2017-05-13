@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 import java.util.Random;
@@ -20,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
+import org.joda.time.LocalTime;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
@@ -319,8 +321,7 @@ public class EventoBean implements Serializable {
 //        dt.
         c1.setId_comentario(0L);
         c1.setEvento(eventos.get(0));
-        c1.setFecha(DateUtils.asDate(LocalDate.of(2017, Month.MARCH, 30)));
-        c1.setHora(new Time(18, 14, 0));
+        c1.setFecha_hora(LocalDateTime.of(2017, Month.MARCH, 30, 18, 14, 00));
         c1.setUsuario(usuario.getUsuarios().get(0));
         c1.setMensaje("prueba 1");
         comentarios.add(c1);
@@ -328,8 +329,7 @@ public class EventoBean implements Serializable {
         c1 = new Comentario();
         c1.setId_comentario(1L);
         c1.setEvento(eventos.get(0));
-       c1.setFecha(DateUtils.asDate(LocalDate.of(2017, Month.MARCH, 30)));
-        c1.setHora(new Time(18, 17, 0));
+        c1.setFecha_hora(LocalDateTime.of(2017, Month.MARCH, 30, 18, 17, 00));
         c1.setUsuario(usuario.getUsuarios().get(0));
         c1.setMensaje("prueba 2");
         comentarios.add(c1);
@@ -337,8 +337,7 @@ public class EventoBean implements Serializable {
         c1 = new Comentario();
         c1.setId_comentario(2L);
         c1.setEvento(eventos.get(0));
-        c1.setFecha(DateUtils.asDate(LocalDate.of(2017, Month.MARCH, 30)));
-        c1.setHora(new Time(18, 24, 0));
+        c1.setFecha_hora(LocalDateTime.of(2017, Month.MARCH, 30, 18, 24, 00));
         c1.setUsuario(usuario.getUsuarios().get(0));
         c1.setMensaje("prueba 3");
         comentarios.add(c1);

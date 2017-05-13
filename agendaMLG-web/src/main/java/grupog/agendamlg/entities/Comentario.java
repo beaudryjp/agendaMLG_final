@@ -1,15 +1,13 @@
 package grupog.agendamlg.entities;
 
 import java.io.Serializable;
-import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  * Comentario.java
@@ -26,9 +24,7 @@ public class Comentario implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_comentario;
     private String mensaje;
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
-    private Time hora;
+    private LocalDateTime fecha_hora;
     @ManyToOne(optional = true)
     private Evento evento;
     @ManyToOne(optional = true)
@@ -73,21 +69,18 @@ public class Comentario implements Serializable {
         this.mensaje = mensaje;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public LocalDateTime getFecha_hora() {
+        return fecha_hora;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFecha_hora(LocalDateTime fecha_hora) {
+        this.fecha_hora = fecha_hora;
     }
 
-    public Time getHora() {
-        return hora;
+    public String getFecha_hora_formateado(){
+        return fecha_hora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
     }
-
-    public void setHora(Time hora) {
-        this.hora = hora;
-    }
+    
 
     @Override
     public boolean equals(Object object) {
@@ -104,7 +97,8 @@ public class Comentario implements Serializable {
 
     @Override
     public String toString() {
-        return "Comentario{" + "id_comentario=" + id_comentario + ", mensaje=" + mensaje + ", fecha=" + fecha + ", hora=" + hora + ", evento=" + evento + ", usuario=" + usuario + '}';
+        return "Comentario{" + "id_comentario=" + id_comentario + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", evento=" + evento + ", usuario=" + usuario + '}';
     }
-
+    
+    
 }

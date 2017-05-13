@@ -106,27 +106,37 @@
                                     <p:inputText id="eventImage" class="form-control"  value="#{evento.imagen_url}"  placeholder="Imagén"/>
                                 </p:column>
                             </p:row>
-                            <!--
-                        <p:row>
-                            <p:column>
-                                Provincia
-                            </p:column>
-                            <p:column>
-                                <h:selectOneMenu id="provincia" class="form-control"  value="#{evento.localidad.provincia}" >
-                                    <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
-                                </h:selectOneMenu>
-                            </p:column></p:row>
-                        <p:row>
-                            <p:column>
-                                Localidad
-                            </p:column>
-                            <p:column>
-                                <h:selectOneMenu id="localidad"  class="form-control" value="#{evento.localidad}" >
-                                    <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
-                                </h:selectOneMenu>
-                            </p:column>
-                        </p:row>
-                            -->
+                            <p:row>
+                                <p:column>
+                                    Destacado
+                                </p:column>
+                                <p:column>
+                                    <p:selectBooleanCheckbox id="destacado" />
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column>
+                                    Provincia
+                                </p:column>
+                                <p:column>
+                                    <h:selectOneMenu id="provincia" class="form-control"  value="#{evento.localidad.provincia}" >
+                                        <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
+                                        <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
+                                    </h:selectOneMenu>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Localidad
+                                </p:column>
+                                <p:column>
+                                    <h:selectOneMenu id="localidad"  class="form-control" value="#{evento.localidad}" >
+                                        <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
+                                    </h:selectOneMenu>
+                                </p:column>
+                            </p:row>
+
                             <p:row>
                                 <p:column colspan="2">
                                     <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="btn btn-default btn-lg" style="float: right"/>

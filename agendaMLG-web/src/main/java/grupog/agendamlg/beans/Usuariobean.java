@@ -46,7 +46,7 @@ public class Usuariobean implements Serializable {
         String hash;
         String sal;
         usuarios = new ArrayList<>();
-        email = "SLJ@gmail.com";
+        email = "Poppo@gmail.com";
         contrasenia = "potato";
         Usuario usuario = new Usuario("Susana", "LJ", "SLJ@gmail.com");
         usuario.setRol_usuario(Usuario.Tipo_Rol.REGISTRADO);

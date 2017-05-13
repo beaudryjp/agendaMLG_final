@@ -81,14 +81,11 @@
                             <ui:repeat value="#{evento.comentarios}" var="comen">
                                 <li style="padding: 10px;">
                                     <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote> 
-                                    <i style="font-size: 14px"><h:outputText value="#{comen.usuario.pseudonimo}"/> - 
-                                        <h:outputText value="#{comen.fecha}">
-                                            <f:convertDateTime pattern="dd/MM/YY" />
-                                        </h:outputText> - 
-                                        <h:outputText value="#{comen.hora}">
-                                            <f:convertDateTime pattern="HH:mm" />
-                                        </h:outputText>
-                                    </i></li>
+                                    <i style="font-size: 14px">
+                                        <h:outputText value="#{comen.usuario.pseudonimo}"/> - 
+                                        <h:outputText value="#{comen.getFecha_hora_formateado()}"/>
+                                    </i>
+                                </li>
                             </ui:repeat>
                         </ul>
                     </div>
