@@ -20,17 +20,32 @@ import javax.mail.internet.MimeMessage;
  */
 public class Sendmail {
 
+    /**
+     * Default email to send notifications via emal
+     */
+    public static String username = "agendamlgsii@outlook.com";
+    //public final static String username = "agendamlgsii@gmail.com";
+    private static final String password = "Q_Z!v#u@SrlO";
+
     public static void mail(String destino, String not, String msg) throws AddressException {
-        final String username = "agendamlgsii@outlook.com";
-        final String password = "Q_Z!v#u@SrlO";
-       Properties props = new Properties();
+
+        Properties props = new Properties();
+        // GMAIL
+        /*
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+         */
+
+        //OUTLOOK
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "outlook.office365.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.host", "outlook.office365.com");
 
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(username, password);
@@ -41,14 +56,14 @@ public class Sendmail {
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO,
-                    InternetAddress.parse(destino));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destino));
             message.setSubject(not);
-            message.setText(msg);
+            message.setContent(msg, "text/html");
+            //message.setText(msg);
 
             Transport.send(message);
 
-            System.out.println("Done");
+            //System.out.println("Done");
 
         } catch (MessagingException e) {
             throw new RuntimeException(e);

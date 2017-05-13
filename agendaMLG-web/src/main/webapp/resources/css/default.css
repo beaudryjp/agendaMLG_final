@@ -266,7 +266,7 @@ h4.login-header4 {
     padding-bottom: 20px;
 }
 
-.submitButtons {
+form .submitButtons{
     padding: 15px 25px 15px 25px;
 }
 

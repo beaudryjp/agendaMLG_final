@@ -2,7 +2,7 @@ $(document).ready(function () {
     $(".searchBox").hide();
     $("#tab2-main").hide();
     $("#search_form_calendar").hide();
-
+    //$("#form_contactUs").validate();
     
     //Click event to scroll to top
     $('.scrollToTop').click(function () {

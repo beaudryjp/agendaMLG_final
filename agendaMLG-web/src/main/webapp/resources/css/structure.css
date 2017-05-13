@@ -48,7 +48,7 @@ background: linear-gradient(to right, #E29587, #D66D75);
 }
 
 header {
-    margin-top: 20px;
+    margin-top: 0px;
     padding: 5px;
     border-bottom: 1px dashed #ccc;
 }
@@ -290,7 +290,7 @@ header>.login-headerLogo {
 }
 
 .spacer2 {
-    padding-top: 70px;
+    padding-top: 30px;
     background: transparent;
 }
 
