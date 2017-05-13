@@ -5,7 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
-import date.DateUtils;
+import grupog.agendamlg.general.DateUtils;
 import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Provincia;

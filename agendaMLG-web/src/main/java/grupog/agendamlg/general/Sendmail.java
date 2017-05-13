@@ -1,4 +1,4 @@
-package grupog.agendamlg.mail;
+package grupog.agendamlg.general;
 
 import java.util.Properties;
 

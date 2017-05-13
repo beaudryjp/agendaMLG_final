@@ -1,6 +1,6 @@
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.mail.Sendmail;
+import grupog.agendamlg.general.Sendmail;
 import org.joda.time.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

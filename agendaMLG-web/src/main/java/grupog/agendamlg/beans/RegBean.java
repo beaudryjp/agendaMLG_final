@@ -5,6 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.general.Password;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -22,12 +23,12 @@ import org.primefaces.context.RequestContext;
 @ManagedBean
 public class RegBean implements Serializable {
 
-    String Nombre;
-    String Apellidos;
-    String email;
-    String pseudonimo;
-    String contrasenia;
-    String contrasenia2;
+    private String Nombre;
+    private String Apellidos;
+    private String email;
+    private String pseudonimo;
+    private String contrasenia;
+    private String contrasenia2;
     boolean acepta;
 
     public RegBean() {
@@ -39,7 +40,7 @@ public class RegBean implements Serializable {
     }
 
     public void setNombre(String Nombre) {
-        this.Nombre =Nombre;
+        this.Nombre = Nombre;
     }
 
     public String getApellidos() {
@@ -91,26 +92,38 @@ public class RegBean implements Serializable {
     }
 
     public String valido() {
-            
+
         if (Apellidos.isEmpty() || Nombre.isEmpty() || email.isEmpty() || pseudonimo.isEmpty() || contrasenia.isEmpty() || contrasenia2.isEmpty() || !acepta || !contrasenia.equals(contrasenia2)) {
-            if(!acepta)
-            {
+            if (!acepta) {
                 addMessage();
             }
-            
-            
+
             return "registration?faces-redirect=true";
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Registrado satisfactoriamente"));
+        //TODO - Validate user with the the database
         
+        //Generate salt
+        byte[] salt_bytes = Password.getNextSalt();
+        //Convert password to char[]
+        char[] password = contrasenia.toCharArray();
+        //Generate hash
+        byte[] hash_bytes = Password.hash(password, salt_bytes);
+        //Convert hash and salt to hexadecimal
+        String hash = Password.bytesToHex(salt_bytes);
+        String sal = Password.bytesToHex(hash_bytes);
+        
+        //TODO - Call to EJB to insert new user
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Registrado satisfactoriamente"));
+
         return "login?faces-redirect=true";
     }
-    
+
     public void addMessage() {
         String summary = acepta ? "Checked" : "Unchecked";
-        FacesContext.getCurrentInstance().addMessage(FacesMessage.FACES_MESSAGES, new  FacesMessage("Debe aceptar los terminos de uso"));
+        FacesContext.getCurrentInstance().addMessage(FacesMessage.FACES_MESSAGES, new FacesMessage("Debe aceptar los terminos de uso"));
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "What we do in life", "Echoes in eternity.");
-        
+
         RequestContext.getCurrentInstance().showMessageInDialog(message);
     }
 }

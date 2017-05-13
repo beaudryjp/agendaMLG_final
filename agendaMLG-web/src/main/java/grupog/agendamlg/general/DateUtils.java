@@ -1,4 +1,4 @@
-package date;
+package grupog.agendamlg.general;
 
 import java.time.Instant;
 import java.time.LocalDate;

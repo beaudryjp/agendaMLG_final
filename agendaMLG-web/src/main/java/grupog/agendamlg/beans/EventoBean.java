@@ -1,6 +1,6 @@
 package grupog.agendamlg.beans;
 
-import date.DateUtils;
+import grupog.agendamlg.general.DateUtils;
 import grupog.agendamlg.entities.Comentario;
 import grupog.agendamlg.entities.Destinatario;
 import grupog.agendamlg.entities.Etiqueta;
