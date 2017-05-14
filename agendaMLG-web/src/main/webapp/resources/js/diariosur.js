@@ -3,7 +3,7 @@ $(document).ready(function () {
     $("#tab2-main").hide();
     $("#search_form_calendar").hide();
     //$("#form_contactUs").validate();
-    
+
     //Click event to scroll to top
     $('.scrollToTop').click(function () {
         $('html, body').animate({scrollTop: 0}, 800);
@@ -40,5 +40,11 @@ $(document).ready(function () {
         $("#search_form_calendar").hide('slow');
         $("#tab1-main").show('slow');
     });
+    $('.eventLists table').DataTable({
+        'sPaginationType': 'full_numbers',
+        'aLengthMenu': [[3, 6], [3, 6]],
+        'iDisplayLength': 3,
+        "bAutoWidth": true
 
+    });
 });

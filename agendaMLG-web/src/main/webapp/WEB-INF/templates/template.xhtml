@@ -2,9 +2,7 @@
 <html lang="es"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
 
     <h:head>
         <meta charset="utf-8" />
@@ -23,7 +21,7 @@
         <script src="https://apis.google.com/js/platform.js" async="defer" />
     </h:head>
 
-    <h:body>        
+    <h:body id="entirePage">        
         <section class="container">
             <header>
                 <ui:insert name="header">
@@ -67,8 +65,5 @@
         
         <h:outputScript name="js/diariosur.js" />
         <h:outputScript name="js/ad.js" />
-        
-
-
     </h:body>
 </html>

@@ -9,7 +9,8 @@
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
-                <f:viewAction action="#{ControlLog.redirectUrl('index.xhtml')}" />
+                <f:viewAction action="#{ControlLog.checkEventParameter()}" />
+                <f:viewAction action="#{ControlLog.checkUserPrivileges()}" />
             </f:metadata>
             <h:form id="editEvent">
                 <p:dataTable value="#{eventoBean.getEvento(param['event'])}" var="evento" id="eventEdit">
@@ -18,7 +19,9 @@
                             <p:row>
                                 <p:column colspan="2">
                                     <div id="event-goBack">
-                                        <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
+                                        <h:link value="Volver" outcome="event_info" class="icon fa-chevron-left">
+                                            <f:param name="event" value="#{param['event']}" />
+                                        </h:link>
                                     </div>
                                     <h2 class="eventTitle">Editar evento </h2>
                                 </p:column>

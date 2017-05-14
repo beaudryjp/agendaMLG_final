@@ -59,6 +59,7 @@ public class Sendmail {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destino));
             message.setSubject(not);
             message.setContent(msg, "text/html");
+            message.setHeader("Content-Type", "text/html; charset=UTF-8");
             //message.setText(msg);
 
             Transport.send(message);

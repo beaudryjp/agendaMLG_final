@@ -8,6 +8,9 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="/WEB-INF/templates/template_login.xhtml">
         <ui:define name="content">
+            <f:metadata>
+                <f:viewAction action="#{ControlLog.checkLoggedIn()}" />
+            </f:metadata>
             <h1>Inicia sesión</h1>
             <h4>¿Aún no tienes cuenta? Regístrate <h:link value="aquí" outcome="registration" /></h4>
             <h4 class="login-header4">Usa una cuenta de Sur.es</h4>

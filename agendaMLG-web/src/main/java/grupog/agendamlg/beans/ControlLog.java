@@ -6,12 +6,15 @@
 package grupog.agendamlg.beans;
 
 import grupog.agendamlg.entities.Usuario;
+import grupog.agendamlg.general.Redirect;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -52,19 +55,43 @@ public class ControlLog implements Serializable {
 
     }
 
-    public void redirectUrl(String url) throws IOException {
+    public void checkUserPrivileges() throws IOException {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         if (usuario == null) {
-            url = "index.xhtml";
-            FacesContext.getCurrentInstance().getExternalContext().dispatch(url + "?facesRedirect=true");
-        } else if (usuario.getRol_usuario() != Usuario.Tipo_Rol.REDACTOR && usuario.getRol_usuario() != Usuario.Tipo_Rol.VALIDADO) {
-            url = "events_all.xhtml";
-            FacesContext.getCurrentInstance().getExternalContext().dispatch(url + "?facesRedirect=true");
+            Redirect.redirectTo("index.xhtml");
+        } else if (hsr.getParameterMap().containsKey("event") && (usuario.getRol_usuario() != Usuario.Tipo_Rol.REDACTOR && usuario.getRol_usuario() != Usuario.Tipo_Rol.VALIDADO)) {
+            Redirect.redirectTo("events_all.xhtml");
         }
+        
+    }
 
+    public void checkEventParameter() throws IOException, Exception {
+        String eventId;
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        
+        if (hsr.getParameterMap().containsKey("event")) {
+            eventId = hsr.getParameter("event");
+            if (hsr.getParameter("event") != null && !eventId.isEmpty()) {
+                //System.out.println("attribute " + hsr.getParameter("event"));
+                //TODO - Optional, verify that the event exists
+            }
+            else{
+                Redirect.redirectTo("index.xhtml");
+            }
+        } else {
+            Redirect.redirectTo("index.xhtml");
+        }
     }
     
-    public void solicitar(){
+    public void checkLoggedIn(){
+        if(usuario != null){
+            Redirect.redirectTo("profile.xhtml");
+        }   
+    }
+
+    public void solicitar() {
         //this.usuario.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Se ha solicitado la validación al redactor."));
     }
+
 }

@@ -7,21 +7,29 @@ import grupog.agendamlg.entities.Etiqueta;
 import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Provincia;
+import grupog.agendamlg.entities.Usuario;
+import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.view.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-import org.joda.time.LocalTime;
+import javax.mail.internet.AddressException;
+import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
@@ -32,7 +40,7 @@ import org.primefaces.model.tagcloud.TagCloudModel;
  * @author Jean Paul Beaudry
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class EventoBean implements Serializable {
 
     /**
@@ -54,7 +62,6 @@ public class EventoBean implements Serializable {
     private List<Destinatario> publico_evento3;
     private List<Destinatario> publico_evento4;
     private List<Comentario> comentarios;
-    private int evento;
     private LocalDate fecha;
     private String searchProvincia;
     private String searchLocalidad;
@@ -62,8 +69,7 @@ public class EventoBean implements Serializable {
     private String searchEtiqueta;
     private String searchText;
     private String tag;
-    private String evento_info = "0";
-    private String event_type = "0";
+    private String eventId;
     private UploadedFile uploadedPicture;
 
     public EventoBean() {
@@ -343,19 +349,17 @@ public class EventoBean implements Serializable {
         comentarios.add(c1);
 
         eventos.get(0).setComentarios(comentarios);
-        
+
         evento_asiste = new ArrayList<>();
         evento_asiste.add(eventos.get(0));
         evento_asiste.add(eventos.get(1));
         usuario.getUsuarios().get(0).setAsiste(evento_asiste);
-        
-        
+
         evento_gusta = new ArrayList<>();
         evento_gusta.add(eventos.get(2));
         evento_gusta.add(eventos.get(3));
         usuario.getUsuarios().get(1).setMegusta(evento_gusta);
-        
-        
+
         evento_sigue = new ArrayList<>();
         evento_sigue.add(eventos.get(4));
         evento_sigue.add(eventos.get(5));
@@ -440,21 +444,13 @@ public class EventoBean implements Serializable {
         return destinatarios;
     }
 
-    public Evento getEvento(String e) {
-        try{
-            return eventos.get(Integer.parseInt(e));
-        }catch(NumberFormatException n){
+    public Evento getEvento() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        try {
+            return eventos.get(Integer.parseInt(hsr.getParameter("event")));
+        } catch (NumberFormatException n) {
             return null;
         }
-    }
-    
-    public int getId()
-    {
-        return evento;
-    }
-
-    public void setEvento(int evento) {
-        this.evento = evento;
     }
 
     public String getSearchProvincia() {
@@ -527,65 +523,124 @@ public class EventoBean implements Serializable {
         }
         return s;
     }
-    
-    public String sendNotification(String e){
-        System.out.println("Evento " + e);
+
+    public void sendNotificationLike(ActionEvent e) {
+        System.out.println("Like notification");
+        final StringBuilder msg = new StringBuilder();
+        System.out.println(this.eventId);
+        final Usuario u = current_user.getUsuario();
+        final Evento ev = eventos.get(Integer.parseInt(eventId));
+        System.out.println("usuario " + u.getNombre());
+        System.out.println("titulo " + ev.getTitulo());
         System.out.println();
-        
-//        String s1 = "" + e;
-//        String s2 = "" + o;
-//        
-//        System.out.println("evento " + s1);
-//        System.out.println("opcion " + o);
-//        
-//        Usuario u = current_user.getUsuario();
-//        
-//        Evento ev = eventos.get(Integer.parseInt(s1));
-//        System.out.println("usuario " + u.getNombre());
-//        System.out.println("titulo " + ev.getTitulo());
-//        System.out.println();
-//        String message = "";
-//        switch(Integer.parseInt(s2)){
-//            case 0:
-//                message = "Has pinchado like en el evento " + ev.getTitulo();
-//                break;
-//            case 1:
-//                message = "Has indicado que vas a asistir al evento " + ev.getTitulo() + "\n"
-//                        + "Hora: " + ev.getHorario() + " Precio: " + ev.getPrecio();
-//                break;
-//            case 2:
-//                message = "Has indicado que quieres seguir al evento " + ev.getTitulo() + "\n"
-//                        + "Hora: " + ev.getHorario() + " Precio: " + ev.getPrecio();
-//                break;
-//        }
-//        System.out.println(u.isEmail_notifier());
-//        if(u.isEmail_notifier()){
-//            try {
-//                System.out.println("send mail");
-//                Sendmail.mail(u.getEmail(), "Notificaion: " + ev.getTitulo(), message);
-//            } catch (AddressException ex) {
-//                Logger.getLogger(EventoBean.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        System.out.println("terminado");
-        //return "event_info?event="+evento_info+"?faces-redirect=true";
-        return "index?faces-redirect=true";
+        msg.append("<h2>Notificación</h2><span style='float:right; font-size: 11px'>")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append("</span>")
+                .append("<p>Has pinchado like en el evento <b>")
+                .append(ev.getTitulo())
+                .append("</b></p>");
+        System.out.println("Recieves internal and external notifications " + u.isEmail_notifier());
+        if (u.isEmail_notifier()) {
+            // TODO -- Send an internal notification
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Sendmail.mail(u.getEmail(), "Notificación: " + ev.getTitulo(), msg.toString());
+                    } catch (AddressException ex) {
+                        Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }).start();
+        }
+        System.out.println("terminado");
     }
-
-    public String getEvento_info() {
-        return evento_info;
+    
+    public void sendNotificationAssist(ActionEvent e) {
+        System.out.println("Assist notification");
+        final StringBuilder msg = new StringBuilder();
+        System.out.println(this.eventId);
+        final Usuario u = current_user.getUsuario();
+        final Evento ev = eventos.get(Integer.parseInt(eventId));
+        System.out.println("usuario " + u.getNombre());
+        System.out.println("titulo " + ev.getTitulo());
+        System.out.println();
+        msg.append("<h2>Notificación</h2><span style='float:right; font-size: 11px'>")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append("</span>")
+                .append("<p>Has indicado que vas a asistir al evento <b>")
+                .append(ev.getTitulo())
+                .append("</b></p></p>Horario: ")
+                .append(ev.getHorario())
+                .append(" Precio: ")
+                .append(ev.getPrecio())
+                .append("</p>");
+        System.out.println("Recieves internal and external notifications " + u.isEmail_notifier());
+        if (u.isEmail_notifier()) {
+            // TODO -- Send an internal notification
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Sendmail.mail(u.getEmail(), "Notificación: " + ev.getTitulo(), msg.toString());
+                    } catch (AddressException ex) {
+                        Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }).start();
+        }
+        System.out.println("terminado");
     }
-
-    public void setEvento_info(String evento_info) {
-        this.evento_info = evento_info;
-    }
-
-    public String getEvent_type() {
-        return event_type;
-    }
-
-    public void setEvent_type(String event_type) {
-        this.event_type = event_type;
+    
+    public void sendNotificationFollow(ActionEvent e) {
+        System.out.println("Follow notification");
+        final StringBuilder msg = new StringBuilder();
+        System.out.println(this.eventId);
+        final Usuario u = current_user.getUsuario();
+        final Evento ev = eventos.get(Integer.parseInt(eventId));
+        System.out.println("usuario " + u.getNombre());
+        System.out.println("titulo " + ev.getTitulo());
+        System.out.println();
+        msg.append("<h2>Notificación</h2><span style='float:right; font-size: 11px'>")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append("</span>")
+                .append("<p>Has indicado que quieres seguir al tanto del evento <b>")
+                .append(ev.getTitulo())
+                .append("</b></p></p>Horario: ")
+                .append(ev.getHorario())
+                .append("</p><p>Precio: ")
+                .append(ev.getPrecio())
+                .append("</p>");
+        System.out.println("Recieves internal and external notifications " + u.isEmail_notifier());
+        if (u.isEmail_notifier()) {
+            // TODO -- Send an internal notification
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Sendmail.mail(u.getEmail(), "Notificación: " + ev.getTitulo(), msg.toString());
+                    } catch (AddressException ex) {
+                        Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }).start();
+        }
+        System.out.println("terminado");
     }
 
     public List<Evento> getEvento_asiste() {
@@ -611,6 +666,17 @@ public class EventoBean implements Serializable {
     public void setEvento_sigue(List<Evento> evento_sigue) {
         this.evento_sigue = evento_sigue;
     }
-    
-    
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
+    }
+
+    public void onload() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        this.setEventId(hsr.getParameter("event"));
+    }
 }

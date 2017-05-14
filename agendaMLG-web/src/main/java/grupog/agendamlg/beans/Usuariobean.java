@@ -46,7 +46,7 @@ public class Usuariobean implements Serializable {
         String hash;
         String sal;
         usuarios = new ArrayList<>();
-        email = "Poppo@gmail.com";
+        email = "jeanpaul.beaudry@gmail.com";
         contrasenia = "potato";
         Usuario usuario = new Usuario("Susana", "LJ", "SLJ@gmail.com");
         usuario.setRol_usuario(Usuario.Tipo_Rol.REGISTRADO);
@@ -80,11 +80,20 @@ public class Usuariobean implements Serializable {
         hash_bytes = Password.hash(contrasenia.toCharArray(), salt_bytes);
         usuario2.setPassword_hash(Password.bytesToHex(hash_bytes));
         
+        Usuario usuario3 = new Usuario("Jean-Paul", "Beaudry", "jeanpaul.beaudry@gmail.com");
+        usuario3.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
+        usuario3.setEmail_notifier(true);
+        
+        salt_bytes = Password.getNextSalt();
+        usuario3.setSal(Password.bytesToHex(salt_bytes));
+        hash_bytes = Password.hash(contrasenia.toCharArray(), salt_bytes);
+        usuario3.setPassword_hash(Password.bytesToHex(hash_bytes));
+        
 
         usuarios.add(usuario);
         usuarios.add(usuario1);
         usuarios.add(usuario2);
-
+        usuarios.add(usuario3);
     }
 
     public String getEmail() {

@@ -8,8 +8,22 @@
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
-
-            <p:dataTable value="#{eventoBean.getEvento(param['event'])}" var="evento" id="eventInfo">
+            <f:metadata>
+                <f:viewAction action="#{ControlLog.checkEventParameter()}" />
+                <f:viewParam name="eventId" value="#{eventoBean.eventId}" />
+                <f:viewAction action="#{eventoBean.onload}" />
+            </f:metadata>
+            <h:form id="formLike">
+                <h:inputHidden id="hidden2" value="#{eventoBean.eventId}" />
+                <p:commandLink id="linkLike" actionListener="#{eventoBean.sendNotificationLike}" />
+                <p:commandLink id="linkAssist" actionListener="#{eventoBean.sendNotificationAssist}" />
+                <p:commandLink id="linkFollow" actionListener="#{eventoBean.sendNotificationFollow}" />
+                <p:blockUI block=":entirePage" trigger="linkLike linkAssist linkFollow" class="block-ui" >
+                    Espere un momento..<br />
+                    <p:graphicImage name="img/loader.gif" />
+                </p:blockUI>
+            </h:form>
+            <p:dataTable value="#{eventoBean.getEvento()}" var="evento" id="eventInfo">
 
                 <p:column>
                     <div id="event-goBack">
@@ -18,38 +32,30 @@
                     <div style="float: right">
 
                         <c:choose>
-                            <c:when test="#{empty ControlLog.usuario}">
-                                <p><p:commandLink id="icon-map" style="font-size:20px" styleClass="icon fa fa-map" onclick="PF('gmap').show();" /></p>                     
-                                <p:tooltip id="tooltipMap" for="icon-map" value="Ver mapa" position="right"/>
-                                <p><h5 style="font-size: 11px"><a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x"></a></h5></p>
-                                <p><h5 style="font-size: 11px"><a class="fa fa-google-plus fa-2x" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
-                                <p><h5 style="font-size: 11px"><a class="fa fa-facebook fa-2x" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
+                            <c:when test="#{!empty ControlLog.usuario}">
+                                <h5 style="font-size: 12px">
+                                    <a data-toggle="tooltip" title="Like"  data-placement="right" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
+                                </h5>
+                                <h5 style="font-size: 12px">
+                                    <a data-toggle="tooltip" title="Assist"  data-placement="right" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
+                                </h5>
+                                <h5 style="font-size: 12px">
+                                    <a data-toggle="tooltip" title="Follow"  data-placement="right" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
+                                </h5>
                             </c:when>
-                            <c:otherwise>
-                                <h:form id="eventInfoForm">
-                                    <p>
-                                        <h:commandLink id="icon-like"  disabled="true" style="font-size:20px" styleClass="icon fa-thumbs-up fa-2x" />
-                                    </p>  
-                                    <!--<p><h5 style="font-size: 11px"><h:link id="icon-like" value="" outcome="event_info.xhtml?event=#{evento.id_evento}" class="icon fa-thumbs-up fa-2x"/></h5></p>-->
-                                    <p:tooltip id="tooltipLike" for="icon-like" value="Like" position="right"/>
-                                    <p>
-                                        <h:commandLink id="icon-assist"   disabled="true" style="font-size:20px" styleClass="icon fa-users fa-2x" />
-                                    </p>  
-                                    <!--<p><h5 style="font-size: 11px"><h:link  id="icon-assist" value="" outcome="event_info.xhtml?event=#{evento.id_evento}" class="icon fa fa-users fa-2x"/></h5></p>-->
-                                    <p:tooltip id="tooltipAssist" for="icon-assist" value="Assist" position="right"/>
-                                    <p>
-                                        <h:commandLink id="icon-follow"  disabled="true"  style="font-size:20px" styleClass="icon fa-bell fa-2x" />
-                                    </p> 
-                                    <!--<p><h5 style="font-size: 11px"><h:link id="icon-follow" value="" outcome="event_info.xhtml?event=#{evento.id_evento}" class="icon fa fa-bell fa-2x"/></h5></p>-->
-                                    <p:tooltip id="tooltipFollow" for="icon-follow" value="Follow" position="right"/>
-                                </h:form>
-                                <p><p:commandLink id="icon-map" style="font-size:20px" styleClass="icon fa fa-map" onclick="PF('gmap').show();" /></p>                     
-                                <p:tooltip id="tooltipMap" for="icon-map" value="Ver mapa" position="right"/>
-                                <p><h5 style="font-size: 11px"><a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x"></a></h5></p>
-                                <p><h5 style="font-size: 11px"><a class="fa fa-google-plus fa-2x" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
-                                <p><h5 style="font-size: 11px"><a class="fa fa-facebook fa-2x" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a></h5></p>
-                            </c:otherwise>
                         </c:choose>
+                        <h5 style="font-size: 11px">
+                            <a id="icon-map" class="icon fa fa-map fa-2x" onclick="PF('gmap').show();"  data-toggle="tooltip" title="Show map"  data-placement="right"/>
+                        </h5>                   
+                        <h5 style="font-size: 13px">
+                            <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank"></a>
+                        </h5>
+                        <h5 style="font-size: 13px">
+                            <a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a>
+                        </h5>
+                        <h5 style="font-size: 13px">
+                            <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a>
+                        </h5>
                     </div>
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
@@ -82,7 +88,7 @@
                                 <li style="padding: 10px;">
                                     <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote> 
                                     <i style="font-size: 14px">
-                                        <h:outputText value="#{comen.usuario.pseudonimo}"/> - 
+                                        <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> - 
                                         <h:outputText value="#{comen.getFecha_hora_formateado()}"/>
                                     </i>
                                 </li>
@@ -120,19 +126,32 @@
 
                 </p:column>
             </p:dataTable>
-
             <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>
             <h:outputScript name="js/tweet-opt.js" />
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script type="text/javascript">
+                                !function (d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                                    if (!d.getElementById(id)) {
+                                        js = d.createElement(s);
+                                        js.id = id;
+                                        js.src = p + '://platform.twitter.com/widgets.js';
+                                        fjs.parentNode.insertBefore(js, fjs);
+                                    }
+                                }(document, 'script', 'twitter-wjs');
+                                function invokeClickLike() {
+                                    document.getElementById('formLike:linkLike').click();
+                                }
+                                function invokeClickAssist() {
+                                    document.getElementById('formLike:linkAssist').click();
+                                }
+                                function invokeClickFollow() {
+                                    document.getElementById('formLike:linkFollow').click();
+                                }
+                                $(document).ready(function () {
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                });
 
-            <script>!function (d, s, id) {
-                        var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-                        if (!d.getElementById(id)) {
-                            js = d.createElement(s);
-                            js.id = id;
-                            js.src = p + '://platform.twitter.com/widgets.js';
-                            fjs.parentNode.insertBefore(js, fjs);
-                        }
-                    }(document, 'script', 'twitter-wjs');
             </script>
         </ui:define>
     </ui:composition>

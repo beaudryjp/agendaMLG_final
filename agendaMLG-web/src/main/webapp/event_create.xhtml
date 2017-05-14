@@ -9,7 +9,7 @@
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
-                <f:viewAction action="#{ControlLog.redirectUrl('index.xhtml')}" />
+                <f:viewAction action="#{ControlLog.checkUserPrivileges()}" />
             </f:metadata>
 
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">

@@ -13,4 +13,3 @@ $window.scroll(function () {
         });
     }
 });
-

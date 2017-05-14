@@ -211,7 +211,7 @@ header>.login-headerLogo {
     text-align: center;
     margin-bottom: 20px;
     border: 0px dashed #fff;
-    
+
     /*
     width: auto;
     height: 80;
@@ -219,7 +219,7 @@ header>.login-headerLogo {
 }
 
 #ad1>img {
-    
+
 }
 
 #ad2, #ad3 {
@@ -254,7 +254,7 @@ header>.login-headerLogo {
 }
 
 .pass-container {
-     /*border: 5px solid #fff;*/
+    /*border: 5px solid #fff;*/
     width: 100%;
     padding: 40px;
     margin: 0 auto;
@@ -351,9 +351,9 @@ header>.login-headerLogo {
 
 #sidebar-ad {
     float: right;
-    
+
     text-align: center;
-    
+
     margin-left: 20px;
     margin-top: 20px;
     font-size: 19px;
@@ -398,7 +398,7 @@ header>.login-headerLogo {
 }
 
 #container-adLeft img{
-    
+
     overflow: scroll;
     margin-bottom: 100px;
 }
@@ -415,15 +415,15 @@ header>.login-headerLogo {
 }
 
 .mis_eventos td,.mis_eventos tr{
-     border: none !important;
-     background: #edeeef !important;
+    border: none !important;
+    background: #edeeef !important;
 }
 .mis_eventos {
     border: none !important;
     padding: 10px !important;
     width: 100% !important;
     margin-bottom: 10px !important;
-    
+
 }
 
 .mis_notificaciones td, .mis_notificaciones tr {
@@ -433,7 +433,7 @@ header>.login-headerLogo {
 
 
 .mis_notificaciones{
-    
+
     border: 0px solid #95989b;
     margin-bottom: 10px;
     border-radius: 2px;
@@ -467,25 +467,25 @@ header>.login-headerLogo {
     margin-top: 10%;
     border-style: none !important;
     margin-left: 20%;
-    
-    
+
+
 }
 
 .reset-button {
-   
-    
+
+
 }
 
 .correo td , .correo tr{
-     background: transparent !important;
+    background: transparent !important;
     border-style: none !important;
- 
+
 }
 
 .correo-anterior{
     margin-left:80px;
     color: #4f4f4f
-    
+
 }
 
 .panelusuario, .panelusuario td {
@@ -494,7 +494,7 @@ header>.login-headerLogo {
 }
 
 .ui-tabs.ui-tabs-right > .ui-tabs-nav {
-   background: transparent !important;
+    background: transparent !important;
 }
 
 .panel-tareas {
@@ -519,4 +519,12 @@ header>.login-headerLogo {
 
 .notification-message-button {
     text-align: right;
+}
+
+.ui-blockui-content{
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    margin-top: -50px !important;
+    margin-left: -100px !important;
 }
