@@ -19,8 +19,7 @@
                 <p:commandLink id="linkAssist" actionListener="#{eventoBean.sendNotificationAssist}" />
                 <p:commandLink id="linkFollow" actionListener="#{eventoBean.sendNotificationFollow}" />
                 <p:blockUI block=":entirePage" trigger="linkLike linkAssist linkFollow" class="block-ui" >
-                    Espere un momento..<br />
-                    <p:graphicImage name="img/loader.gif" />
+                    <ui:include src = "/WEB-INF/templates/loader_dialog.xhtml" />
                 </p:blockUI>
             </h:form>
             <p:dataTable value="#{eventoBean.getEvento()}" var="evento" id="eventInfo">
@@ -59,9 +58,6 @@
                     </div>
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
-                    <h5 style="float: right">
-
-                    </h5>
                     <div class="imageEvent">
                         <h:graphicImage name="#{evento.imagen_url}" width="500" height="300"/>
                     </div>
@@ -69,28 +65,15 @@
 
                         <p class="eventDesc"><br/><h:outputText value="#{evento.descripcion}" /></p>
                         <p style="font-size: 13px"><i>
-                                <c:choose>
-                                    <c:when test="#{eventoBean.eventDatesEqual()}">
-                                        Día
-                                        <h:outputText value="#{evento.fecha_inicio}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                                        </h:outputText>
-                                    </c:when>
-                                    <c:otherwise>
-                                        Fecha
-                                        <h:outputText value="#{evento.fecha_inicio}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                                        </h:outputText> - 
-                                        <h:outputText value="#{evento.fecha_fin}">
-                                            <f:convertDateTime pattern="dd/MM/yyyy" />
-                                        </h:outputText>
-                                    </c:otherwise>
-                                </c:choose>
-
+                                Fecha
+                                <h:outputText value="#{evento.fecha_inicio}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText> - 
+                                <h:outputText value="#{evento.fecha_fin}">
+                                    <f:convertDateTime pattern="dd/MM/yyyy" />
+                                </h:outputText>
                             </i></p>
-
                         <hr/>
-
                         <p><h5 class="h5bold"><h:outputText value="#{evento.localidad.nombre}&nbsp;&nbsp;&nbsp;#{evento.horario}&nbsp;&nbsp;&nbsp;#{evento.precio} "  /></h5></p>
                         <hr/>
                         <p>
@@ -143,7 +126,7 @@
                     <c:if test="#{!empty ControlLog.usuario}">
                         <p:commandLink id="addComment" styleClass="btn btn-default btn-lg" onclick="PF('dlg_comen').show();" style="font-size:15px;float:left" value="Añadir comentario"/>
                     </c:if>
-                    <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR' || ControlLog.usuario.getRol_usuario() == 'VALIDADO'}">
+                    <c:if test="#{ControlLog.isUserValidated()}">
                         <p:commandLink onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="btn btn-default btn-lg" style="font-size: 15px;float:right"/>
                         <h:link value="Editar" outcome="event_edit"   styleClass="btn btn-default btn-lg" style="font-size:15px;float:right; margin-right: 10px">
                             <f:param name="event" value="#{evento.id_evento}" />

@@ -9,8 +9,12 @@
     <ui:composition>
         <div id="search-sidebar">
             <h:outputScript name="js/prime.js" />
-            <c:if test="#{!empty ControlLog.usuario}">
+            <c:if test="#{ControlLog.isUserValidated()}">
                 <h3 class="search-title createEventTitle"><h:link  outcome="event_create" value="CREAR EVENTO" id="linkCreateEvent"/></h3>
+            </c:if>
+            
+            <c:if test="#{ControlLog.isUserRegistered()}">
+                <h3 class="search-title createEventTitle"><h:link  outcome="event_create" value="PROPÓN UN EVENTO" id="linkSuggestEvent"/></h3>
             </c:if>
             
             <!--<h3 class="search-title createEventTitle"><h:link  outcome="event_create" value="CREAR EVENTO" id="linkCreateEvent"/></h3>-->

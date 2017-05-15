@@ -651,10 +651,4 @@ public class EventoBean implements Serializable {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("event"));
     }
-    
-    public boolean eventDatesEqual(){
-        Evento e = eventos.get(Integer.parseInt(this.eventId));
-        
-        return e.getFecha_inicio().compareTo(e.getFecha_fin()) == 0;
-    }
 }

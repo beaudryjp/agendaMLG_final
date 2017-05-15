@@ -38,8 +38,7 @@
                         </p:commandButton>
                     </div>
                     <p:blockUI block=":entirePage" trigger="contact_submit" class="block-ui">
-                        Espere un momento..<br />
-                        <p:graphicImage name="img/loader.gif" />
+                        <ui:include src = "/WEB-INF/templates/loader_dialog.xhtml" />
                     </p:blockUI>
                 </p:panel>
             </h:form> 

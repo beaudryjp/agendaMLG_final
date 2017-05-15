@@ -90,8 +90,15 @@ public class ControlLog implements Serializable {
     }
 
     public void solicitar() {
-        //this.usuario.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Se ha solicitado la validación al redactor."));
+    }
+    
+    public boolean isUserValidated(){
+        return (this.usuario != null) && (this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.VALIDADO) || this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR) );
+    }
+    
+    public boolean isUserRegistered(){
+        return this.usuario != null && this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REGISTRADO);
     }
 
 }
