@@ -1,7 +1,8 @@
 package grupog.agendamlg.general;
 
 import java.util.Properties;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -23,8 +24,9 @@ public class Sendmail {
     /**
      * Default email to send notifications via emal
      */
-    public static String username = "agendamlgsii@outlook.com";
+    //public static String username = "agendamlgsii@outlook.com";
     //public final static String username = "agendamlgsii@gmail.com";
+    public final static String username = "agendamlgsii@zoho.eu";
     private static final String password = "Q_Z!v#u@SrlO";
 
     public static void mail(String destino, String not, String msg) throws AddressException {
@@ -38,12 +40,21 @@ public class Sendmail {
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
          */
+        
+        //ZOHO
+        props.put("mail.smtp.host", "smtp.zoho.eu");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
 
         //OUTLOOK
+        /*
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.port", "587");
         props.put("mail.smtp.host", "outlook.office365.com");
+        */
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             @Override
@@ -58,8 +69,9 @@ public class Sendmail {
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destino));
             message.setSubject(not);
+            
             message.setContent(msg, "text/html");
-            message.setHeader("Content-Type", "text/html; charset=UTF-8");
+            message.setHeader("Content-Type", "text/html; charset=charset=iso-8859-1");
             //message.setText(msg);
 
             Transport.send(message);
@@ -69,5 +81,24 @@ public class Sendmail {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+    
+    public static void mailThread(final String d, final String s, final String m){
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Sendmail.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //System.out.println(m);
+                try {
+                    Sendmail.mail(d, s, m);
+                } catch (AddressException ex) {
+                    Logger.getLogger(Sendmail.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }).start();
     }
 }

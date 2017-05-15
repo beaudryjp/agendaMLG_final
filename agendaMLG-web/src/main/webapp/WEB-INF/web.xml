@@ -13,7 +13,7 @@
         <location>/faces/error.xhtml</location>
     </error-page>
     <context-param>
-        <param-name>javax.faces.facelets.SKIP_COMMENTS</param-name>
+        <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
         <param-value>true</param-value>
     </context-param>
     <context-param>

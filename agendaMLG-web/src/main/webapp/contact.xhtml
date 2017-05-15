@@ -37,7 +37,7 @@
                             <!--<f:ajax execute="@form" render="@form" />-->
                         </p:commandButton>
                     </div>
-                    <p:blockUI block="test" trigger="contact_submit">
+                    <p:blockUI block=":entirePage" trigger="contact_submit" class="block-ui">
                         Espere un momento..<br />
                         <p:graphicImage name="img/loader.gif" />
                     </p:blockUI>

@@ -59,12 +59,38 @@
                     </div>
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
+                    <h5 style="float: right">
+
+                    </h5>
                     <div class="imageEvent">
                         <h:graphicImage name="#{evento.imagen_url}" width="500" height="300"/>
                     </div>
                     <div>
+
                         <p class="eventDesc"><br/><h:outputText value="#{evento.descripcion}" /></p>
+                        <p style="font-size: 13px"><i>
+                                <c:choose>
+                                    <c:when test="#{eventoBean.eventDatesEqual()}">
+                                        Día
+                                        <h:outputText value="#{evento.fecha_inicio}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </c:when>
+                                    <c:otherwise>
+                                        Fecha
+                                        <h:outputText value="#{evento.fecha_inicio}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText> - 
+                                        <h:outputText value="#{evento.fecha_fin}">
+                                            <f:convertDateTime pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+                                    </c:otherwise>
+                                </c:choose>
+
+                            </i></p>
+
                         <hr/>
+
                         <p><h5 class="h5bold"><h:outputText value="#{evento.localidad.nombre}&nbsp;&nbsp;&nbsp;#{evento.horario}&nbsp;&nbsp;&nbsp;#{evento.precio} "  /></h5></p>
                         <hr/>
                         <p>
@@ -130,27 +156,27 @@
             <h:outputScript name="js/tweet-opt.js" />
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
             <script type="text/javascript">
-                                !function (d, s, id) {
-                                    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-                                    if (!d.getElementById(id)) {
-                                        js = d.createElement(s);
-                                        js.id = id;
-                                        js.src = p + '://platform.twitter.com/widgets.js';
-                                        fjs.parentNode.insertBefore(js, fjs);
-                                    }
-                                }(document, 'script', 'twitter-wjs');
-                                function invokeClickLike() {
-                                    document.getElementById('formLike:linkLike').click();
+                            !function (d, s, id) {
+                                var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                                if (!d.getElementById(id)) {
+                                    js = d.createElement(s);
+                                    js.id = id;
+                                    js.src = p + '://platform.twitter.com/widgets.js';
+                                    fjs.parentNode.insertBefore(js, fjs);
                                 }
-                                function invokeClickAssist() {
-                                    document.getElementById('formLike:linkAssist').click();
-                                }
-                                function invokeClickFollow() {
-                                    document.getElementById('formLike:linkFollow').click();
-                                }
-                                $(document).ready(function () {
-                                    $('[data-toggle="tooltip"]').tooltip();
-                                });
+                            }(document, 'script', 'twitter-wjs');
+                            function invokeClickLike() {
+                                document.getElementById('formLike:linkLike').click();
+                            }
+                            function invokeClickAssist() {
+                                document.getElementById('formLike:linkAssist').click();
+                            }
+                            function invokeClickFollow() {
+                                document.getElementById('formLike:linkFollow').click();
+                            }
+                            $(document).ready(function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                            });
 
             </script>
         </ui:define>

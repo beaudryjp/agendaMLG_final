@@ -74,7 +74,7 @@
                     <h:form id="search_form_calendar">
                         
                         <p:growl id="growl" showDetail="true" />
-                        <p:calendar id="search_calendar" styleClass="ll-skin-melon" value="#{eventoBean.fecha}" mode="inline" locale="es">
+                        <p:calendar id="search_calendar" styleClass="ll-skin-melon" value="#{eventoBean.dateSelected}" mode="inline" locale="es">
                             <p:ajax event="dateSelect" listener="#{eventoBean.eventosByFecha}" update="growl" />
                         </p:calendar>
                         

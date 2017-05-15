@@ -1,12 +1,11 @@
 package grupog.agendamlg.beans;
 
 import grupog.agendamlg.general.Sendmail;
-import org.joda.time.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.mail.internet.AddressException;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
@@ -72,39 +71,21 @@ public class ContactarBean {
     }
 
     public String submit() {
-        LocalTime localTime = new LocalTime();
-        LocalDate localDate = new LocalDate();
         final StringBuilder msg = new StringBuilder();
         msg.append("<h2>Formulario de contacto</h2>");
         msg.append("<h3>Se ha enviado un nuevo mensaje el dia ")
-                .append(localDate.toString())
-                .append(" a la hora ")
-                .append(localTime.toString())
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
                 .append(": </h3>");
         msg.append("<h3><b>Nombre completo: </b></h3>")
-                .append(this.nombre).append(" ")
-                .append(this.apellidos);
+                .append(StringEscapeUtils.escapeHtml4(this.nombre)).append(" ")
+                .append(StringEscapeUtils.escapeHtml4(this.apellidos));
         msg.append("<h3><b>Email: </b></h3>")
                 .append(this.email);
         msg.append("<h3><b>Mensaje: </b></h3>")
                 .append("<p>")
-                .append(this.mensaje)
+                .append(StringEscapeUtils.escapeHtml4(this.mensaje))
                 .append("</p>");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Sendmail.mail(Sendmail.username, "Formulario de contacto", msg.toString());
-                } catch (AddressException ex) {
-                    Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }).start();
+        Sendmail.mailThread(Sendmail.username, "Formulario de contacto", msg.toString());
         return "index?faces-redirect=true";
     }
 }

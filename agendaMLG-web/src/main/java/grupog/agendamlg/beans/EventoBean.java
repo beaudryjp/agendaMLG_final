@@ -18,18 +18,18 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
-import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Past;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
@@ -62,7 +62,6 @@ public class EventoBean implements Serializable {
     private List<Destinatario> publico_evento3;
     private List<Destinatario> publico_evento4;
     private List<Comentario> comentarios;
-    private LocalDate fecha;
     private String searchProvincia;
     private String searchLocalidad;
     private String searchDestinatario;
@@ -71,12 +70,20 @@ public class EventoBean implements Serializable {
     private String tag;
     private String eventId;
     private UploadedFile uploadedPicture;
+    @Past
+    private Date dateStart;
+    @Future
+    private Date dateEnd;
+    private Date dateSelected;
 
     public EventoBean() {
     }
 
     @PostConstruct
     public void init() {
+        dateStart = DateUtils.asDate(LocalDate.now());
+        dateEnd = DateUtils.asDate(LocalDate.now().plusMonths(1));
+        dateSelected = dateStart;
         List<Etiqueta> e = new ArrayList<>();
         eventos = new ArrayList<>();
         etiquetas = new ArrayList<>();
@@ -403,7 +410,9 @@ public class EventoBean implements Serializable {
     public List<Evento> getEventosByFecha() {
         List<Evento> evf = new ArrayList<>();
         for (Evento x : eventos) {
-            if (x.getFecha_inicio() == DateUtils.asDate(fecha)) {
+            System.out.println("event " + x.getTitulo() + " date: " + x.getFecha_inicio());
+            if (dateSelected.compareTo(x.getFecha_inicio()) >= 0 && dateSelected.compareTo(x.getFecha_fin()) <= 0) {
+                System.out.println("event " + x.getId_evento());
                 evf.add(x);
             }
         }
@@ -430,14 +439,6 @@ public class EventoBean implements Serializable {
             }
         }
         return s;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
     }
 
     public List<Destinatario> getDestinatarios() {
@@ -526,121 +527,64 @@ public class EventoBean implements Serializable {
 
     public void sendNotificationLike(ActionEvent e) {
         System.out.println("Like notification");
-        final StringBuilder msg = new StringBuilder();
-        System.out.println(this.eventId);
-        final Usuario u = current_user.getUsuario();
-        final Evento ev = eventos.get(Integer.parseInt(eventId));
-        System.out.println("usuario " + u.getNombre());
-        System.out.println("titulo " + ev.getTitulo());
-        System.out.println();
-        msg.append("<h2>Notificación</h2><span style='float:right; font-size: 11px'>")
-                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
-                .append("</span>")
-                .append("<p>Has pinchado like en el evento <b>")
-                .append(ev.getTitulo())
-                .append("</b></p>");
-        System.out.println("Recieves internal and external notifications " + u.isEmail_notifier());
-        if (u.isEmail_notifier()) {
-            // TODO -- Send an internal notification
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Sendmail.mail(u.getEmail(), "Notificación: " + ev.getTitulo(), msg.toString());
-                    } catch (AddressException ex) {
-                        Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }).start();
-        }
+        sendMailSocial("Has pinchado like en el evento");
         System.out.println("terminado");
     }
-    
+
     public void sendNotificationAssist(ActionEvent e) {
         System.out.println("Assist notification");
-        final StringBuilder msg = new StringBuilder();
-        System.out.println(this.eventId);
-        final Usuario u = current_user.getUsuario();
-        final Evento ev = eventos.get(Integer.parseInt(eventId));
-        System.out.println("usuario " + u.getNombre());
-        System.out.println("titulo " + ev.getTitulo());
-        System.out.println();
-        msg.append("<h2>Notificación</h2><span style='float:right; font-size: 11px'>")
-                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
-                .append("</span>")
-                .append("<p>Has indicado que vas a asistir al evento <b>")
-                .append(ev.getTitulo())
-                .append("</b></p></p>Horario: ")
-                .append(ev.getHorario())
-                .append(" Precio: ")
-                .append(ev.getPrecio())
-                .append("</p>");
-        System.out.println("Recieves internal and external notifications " + u.isEmail_notifier());
-        if (u.isEmail_notifier()) {
-            // TODO -- Send an internal notification
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Sendmail.mail(u.getEmail(), "Notificación: " + ev.getTitulo(), msg.toString());
-                    } catch (AddressException ex) {
-                        Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }).start();
-        }
+        sendMailSocial("Has indicado que vas a asistir al evento");
         System.out.println("terminado");
     }
-    
+
     public void sendNotificationFollow(ActionEvent e) {
         System.out.println("Follow notification");
-        final StringBuilder msg = new StringBuilder();
-        System.out.println(this.eventId);
+        sendMailSocial("Has indicado que quieres seguir el evento");
+        System.out.println("terminado");
+    }
+
+    private void sendMailSocial(String msg) {
+        Evento ev = eventos.get(Integer.parseInt(eventId));
         final Usuario u = current_user.getUsuario();
-        final Evento ev = eventos.get(Integer.parseInt(eventId));
-        System.out.println("usuario " + u.getNombre());
-        System.out.println("titulo " + ev.getTitulo());
-        System.out.println();
-        msg.append("<h2>Notificación</h2><span style='float:right; font-size: 11px'>")
+        final StringBuilder m = new StringBuilder();
+        String full_url = "http://localhost:8080/" 
+                + ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI() 
+                + "?event=" + this.eventId;
+        m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
                 .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
-                .append("</span>")
-                .append("<p>Has indicado que quieres seguir al tanto del evento <b>")
-                .append(ev.getTitulo())
-                .append("</b></p></p>Horario: ")
+                .append(")</span></h2><p>")
+                .append(msg)
+                .append(" <b>\"")
+                .append(changeHtmlChars(ev.getTitulo()))
+                .append("\"</b></p></p>Horario: ")
                 .append(ev.getHorario())
-                .append("</p><p>Precio: ")
-                .append(ev.getPrecio())
+                .append("<br>Precio: ")
+                .append(changeHtmlChars(ev.getPrecio()))
+                .append("<br>Puede ver m&aacute;s informaci&oacute;n en el siguiente <a href='").append(full_url).append("' target='_blank'>enlace</a>")
                 .append("</p>");
-        System.out.println("Recieves internal and external notifications " + u.isEmail_notifier());
+        /*
+        System.out.println("Event ID: " + this.eventId);
+        System.out.println("Event Title:  " + ev.getTitulo());
+        System.out.println("Current user:  " + u.getNombre());
+        System.out.println("Email notifications enabled: " + u.isEmail_notifier());
+        System.out.println("URI: " + full_url);
+        System.out.println();
+        */
         if (u.isEmail_notifier()) {
             // TODO -- Send an internal notification
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Sendmail.mail(u.getEmail(), "Notificación: " + ev.getTitulo(), msg.toString());
-                    } catch (AddressException ex) {
-                        Logger.getLogger(ContactarBean.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }).start();
+            Sendmail.mailThread(u.getEmail(), "Notificación agendaMLG - diariosur", m.toString());
         }
-        System.out.println("terminado");
+    }
+    
+    private String changeHtmlChars(String m){
+        m = m.replaceAll("á","&aacute;");
+        m = m.replaceAll("é","&eacute;");
+        m = m.replaceAll("í","&iacute;");
+        m = m.replaceAll("ó","&oacute;");
+        m = m.replaceAll("ú","&uacute;");
+        m = m.replaceAll("ñ","&ntilde;");
+        m = m.replaceAll("€","&euro;");
+        return m;
     }
 
     public List<Evento> getEvento_asiste() {
@@ -675,8 +619,42 @@ public class EventoBean implements Serializable {
         this.eventId = eventId;
     }
 
+    public Date getDateStart() {
+        return dateStart;
+    }
+
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public Date getDateSelected() {
+        return dateSelected;
+    }
+
+    public void setDateSelected(Date dateSelected) {
+        this.dateSelected = dateSelected;
+    }
+
+    public void calendarSelected(ActionEvent e) {
+
+    }
+
     public void onload() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("event"));
+    }
+    
+    public boolean eventDatesEqual(){
+        Evento e = eventos.get(Integer.parseInt(this.eventId));
+        
+        return e.getFecha_inicio().compareTo(e.getFecha_fin()) == 0;
     }
 }
