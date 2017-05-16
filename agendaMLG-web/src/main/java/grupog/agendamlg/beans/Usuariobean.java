@@ -9,18 +9,17 @@ import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.mail.internet.AddressException;
 
 /**
  *
@@ -51,43 +50,23 @@ public class Usuariobean implements Serializable {
         Usuario usuario = new Usuario("Susana", "LJ", "SLJ@gmail.com");
         usuario.setRol_usuario(Usuario.Tipo_Rol.REGISTRADO);
         usuario.setEmail_notifier(true);
-        
-        //Generate a salt
-        salt_bytes = Password.getNextSalt();
-        //Convert salt to hexadecimal and set it for the corresponding user
-        usuario.setSal(Password.bytesToHex(salt_bytes));
-        //Generate a hash from the password and the salt
-        hash_bytes = Password.hash(contrasenia.toCharArray(), salt_bytes);
-        //Convert hash to hexadecimal and set it for the corresponding user
-        usuario.setPassword_hash(Password.bytesToHex(hash_bytes));
+        setPassword(usuario, contrasenia);
 
         Usuario usuario1 = new Usuario("Marie", "Poppo", "Poppo@gmail.com");
         usuario1.setRol_usuario(Usuario.Tipo_Rol.REDACTOR);
         usuario1.setEmail_notifier(true);
-        
-        salt_bytes = Password.getNextSalt();
-        usuario1.setSal(Password.bytesToHex(salt_bytes));
-        hash_bytes = Password.hash(contrasenia.toCharArray(), salt_bytes);
-        usuario1.setPassword_hash(Password.bytesToHex(hash_bytes));
+        setPassword(usuario1, contrasenia);
         
 
         Usuario usuario2 = new Usuario("Pepe", "Patata", "Pepe@patata.com");
         usuario2.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
         usuario2.setEmail_notifier(true);
-        
-        salt_bytes = Password.getNextSalt();
-        usuario2.setSal(Password.bytesToHex(salt_bytes));
-        hash_bytes = Password.hash(contrasenia.toCharArray(), salt_bytes);
-        usuario2.setPassword_hash(Password.bytesToHex(hash_bytes));
+        setPassword(usuario2, contrasenia);
         
         Usuario usuario3 = new Usuario("Jean-Paul", "Beaudry", "jeanpaul.beaudry@gmail.com");
         usuario3.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
         usuario3.setEmail_notifier(true);
-        
-        salt_bytes = Password.getNextSalt();
-        usuario3.setSal(Password.bytesToHex(salt_bytes));
-        hash_bytes = Password.hash(contrasenia.toCharArray(), salt_bytes);
-        usuario3.setPassword_hash(Password.bytesToHex(hash_bytes));
+        setPassword(usuario3, contrasenia);
         
 
         usuarios.add(usuario);
@@ -145,27 +124,26 @@ public class Usuariobean implements Serializable {
     }
 
     public String resetPassword(String em) {
-        String password = "123456";
-        String message = "Se ha reseteado la contraseña a " + password
-                + "\n\nCambie la contraseña en cuanto sea posible. Fuck you";
-        /*
-        try {
-            Sendmail.mail("", "Reseteo de la contraseña", message);
-        } catch (AddressException ex) {
-            Logger.getLogger(Usuariobean.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         */
+        //TODO - verify that the user exists in the database
+        final StringBuilder msg = new StringBuilder();
+        String new_password = Password.generateSecurePassword(16);
+        msg.append("<h2>Reseteo de password</h2>");
+        msg.append("<h3>A d&iacute;a y hora ")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append(" ha solicitado que se resetee la constraseña de su cuenta de agendaMLG")
+                .append("</h3>")
+                .append("<h3><b>Su nueva contraseña es: </b>")
+                .append(new_password)
+                .append("</h3>")
+                .append("<p>En cuanto acceda a su perfil, por motivos de seguridad resetee de nuevo su contraseña.</p><p style='font-size: 12px'>diariosur</p>");
+
+        
         for (Usuario x : usuarios) {
             if (x.getEmail().equals(em)) {
-                x.setPassword_hash(password);
-                try {
-                    Sendmail.mail(x.getEmail(), "Reseteo de la contraseña", message);
-                } catch (AddressException ex) {
-                    Logger.getLogger(Usuariobean.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                setPassword(x, new_password);
+                Sendmail.mailThread(x.getEmail(), "Reseteo de password", msg.toString());
                 break;
             }
-
         }
 
         return "index?faces-redirect=true";
@@ -179,4 +157,14 @@ public class Usuariobean implements Serializable {
         this.usuarios = usuarios;
     }
 
+    private void setPassword(Usuario usuario, String password){
+        //Generate a salt
+        byte[] salt_bytes = Password.getNextSalt();
+        //Convert salt to hexadecimal and set it for the corresponding user
+        usuario.setSal(Password.bytesToHex(salt_bytes));
+        //Generate a hash from the password and the salt
+        byte[] hash_bytes = Password.hash(password.toCharArray(), salt_bytes);
+        //Convert hash to hexadecimal and set it for the corresponding user
+        usuario.setPassword_hash(Password.bytesToHex(hash_bytes));
+    }
 }

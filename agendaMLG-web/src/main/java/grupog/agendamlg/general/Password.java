@@ -3,10 +3,15 @@ package grupog.agendamlg.general;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 
 /**
  * Password.java
@@ -117,8 +122,17 @@ public class Password {
         }
         return sb.toString();
     }
-    
-    
+
+    //http://www.devglan.com/corejava/random-password-generator-java
+    public static String generateSecurePassword(int length) {
+        List<CharacterRule> rules = new ArrayList<>();
+        rules.add(new CharacterRule(EnglishCharacterData.UpperCase, 1));
+        rules.add(new CharacterRule(EnglishCharacterData.LowerCase, 1));
+        rules.add(new CharacterRule(EnglishCharacterData.Digit, 1));
+        //rules.add(new CharacterRule(EnglishCharacterData.Special, 1));
+        return new PasswordGenerator().generatePassword(length, rules);
+    }
+
     public static String bytesToHex(byte[] bytes) {
         char[] hexArray = "0123456789ABCDEF".toCharArray();
         char[] hexChars = new char[bytes.length * 2];

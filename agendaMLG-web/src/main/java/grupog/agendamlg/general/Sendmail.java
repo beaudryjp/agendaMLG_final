@@ -92,7 +92,7 @@ public class Sendmail {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //System.out.println(m);
+//                System.out.println(m);
                 try {
                     Sendmail.mail(d, s, m);
                 } catch (AddressException ex) {

@@ -8,6 +8,7 @@ import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Provincia;
 import grupog.agendamlg.entities.Usuario;
+import grupog.agendamlg.general.Password;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -561,7 +562,8 @@ public class EventoBean implements Serializable {
                 .append("<br>Precio: ")
                 .append(changeHtmlChars(ev.getPrecio()))
                 .append("<br>Puede ver m&aacute;s informaci&oacute;n en el siguiente <a href='").append(full_url).append("' target='_blank'>enlace</a>")
-                .append("</p>");
+                .append("</p><p style='font-size: 12px'>diariosur</p>")
+                ;
         /*
         System.out.println("Event ID: " + this.eventId);
         System.out.println("Event Title:  " + ev.getTitulo());
