@@ -5,7 +5,9 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import java.io.Serializable;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -23,6 +25,8 @@ public class PassBean implements Serializable{
     @Inject
     private Usuariobean usuario;
     private String email;
+    @EJB
+    private Business business;
 
     public PassBean() {
 

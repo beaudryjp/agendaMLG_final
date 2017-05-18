@@ -5,8 +5,10 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.general.Password;
 import java.io.Serializable;
+import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -30,6 +32,9 @@ public class RegBean implements Serializable {
     private String contrasenia;
     private String contrasenia2;
     boolean acepta;
+    
+    @EJB
+    private Business business;
 
     public RegBean() {
 

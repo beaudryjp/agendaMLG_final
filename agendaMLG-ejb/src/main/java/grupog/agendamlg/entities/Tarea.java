@@ -20,7 +20,7 @@ import javax.persistence.NamedQuery;
 */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="getTasks", query="SELECT t from Tarea t WHERE usuario = :user")
+    @NamedQuery(name="getTasks", query="SELECT t from Tarea t WHERE usuario.id_usuario = :id_usuario")
 })
 public class Tarea implements Serializable {
 

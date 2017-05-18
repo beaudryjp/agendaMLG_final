@@ -5,10 +5,12 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Redirect;
 import java.io.IOException;
 import java.io.Serializable;
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -25,6 +27,8 @@ import javax.servlet.http.HttpServletRequest;
 public class ControlLog implements Serializable {
 
     private Usuario usuario;
+    @EJB
+    private Business business;
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;

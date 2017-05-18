@@ -1,5 +1,6 @@
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Destinatario;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.Dependent;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -25,6 +27,8 @@ public class DestinatarioBean implements Serializable {
      */
     private List<Destinatario> destinatarios;
     private String destinatario;
+    @EJB
+    private Business business;
 
     public DestinatarioBean() {
     }

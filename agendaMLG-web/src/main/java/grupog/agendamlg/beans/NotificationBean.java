@@ -5,6 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.*;
 import java.io.Serializable;
 import java.sql.Date;
@@ -14,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.inject.Named;
@@ -28,6 +30,8 @@ import javax.inject.Named;
 public class NotificationBean implements Serializable {
 
     List<Notificacion> notificaciones;
+    @EJB
+    private Business business;
 
     public NotificationBean() {
     }

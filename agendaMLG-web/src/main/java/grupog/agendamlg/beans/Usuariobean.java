@@ -5,6 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
 import grupog.agendamlg.general.Sendmail;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -37,6 +39,8 @@ public class Usuariobean implements Serializable {
     private ControlLog ctrl;
     @Inject
     private ConfigurationBean conf;
+    @EJB
+    private Business business;
 
     @PostConstruct
     public void init() {

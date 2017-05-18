@@ -29,7 +29,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="getEventById", query="SELECT e from Evento e WHERE e.id_evento = :id_evento"),
     @NamedQuery(name="getAllEvents", query="SELECT e from Evento e"),
     @NamedQuery(name="getEventsImportant", query="SELECT e from Evento e WHERE e.destacado = true"),
     @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha"),

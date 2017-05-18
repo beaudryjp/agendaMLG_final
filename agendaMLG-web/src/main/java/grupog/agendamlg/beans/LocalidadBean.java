@@ -1,5 +1,6 @@
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Provincia;
 import javax.enterprise.context.SessionScoped;
@@ -9,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 
 /**
@@ -23,6 +25,8 @@ public class LocalidadBean implements Serializable {
      * Creates a new instance of LocalidadBean
      */
     private List<Localidad> localidades;
+    @EJB
+    private Business business;
 
     public LocalidadBean() {
     }

@@ -5,6 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.general.DateUtils;
 import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Localidad;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -28,12 +30,13 @@ import javax.faces.bean.ViewScoped;
 public class TareasBean implements Serializable {
 
     private List<Evento> pendiente;
+    @EJB
+    private Business business;
 
     public TareasBean() {
     }
 
     @PostConstruct
-
     public void init() {
 
         pendiente = new ArrayList<>();

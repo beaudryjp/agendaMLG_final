@@ -5,9 +5,11 @@
  */
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Usuario;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.inject.Inject;
@@ -24,6 +26,8 @@ public class ConfigurationBean implements Serializable {
     private String nombre;
     private String contrasenia;
     private String contrasenia2;
+    @EJB
+    private Business business;
 
     public ConfigurationBean()
     {

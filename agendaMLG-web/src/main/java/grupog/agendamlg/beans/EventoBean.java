@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
@@ -39,6 +40,7 @@ import org.primefaces.model.tagcloud.TagCloudModel;
  *
  * @author Jean Paul Beaudry
  */
+import grupog.agendamlg.business.Business;
 @ManagedBean
 @SessionScoped
 public class EventoBean implements Serializable {
@@ -46,6 +48,8 @@ public class EventoBean implements Serializable {
     /**
      * Creates a new instance of EventoBean
      */
+    @EJB
+    private Business business;
     @Inject
     private ControlLog current_user;
     @Inject
@@ -76,6 +80,17 @@ public class EventoBean implements Serializable {
     @Future
     private Date dateEnd;
     private Date dateSelected;
+    private String event_new_titulo;
+    private String event_new_descripcion;
+    private Date event_new_fecha_inicio;
+    private Date event_new_fecha_fin;
+    private String event_new_horario;
+    private String event_new_precio;
+    private double event_new_longitud;
+    private double event_new_latitud;
+    private boolean event_new_destacado;
+    private String event_new_imagen_url;
+    private String event_new_imagen_titulo;
 
     public EventoBean() {
     }
@@ -95,7 +110,7 @@ public class EventoBean implements Serializable {
         publico_evento4 = new ArrayList<>();
         comentarios = new ArrayList<>();
         model = new DefaultTagCloudModel();
-
+        
         model.addTag(new DefaultTagCloudItem("Actos académicos", "event_tags.xhtml?tag=Actos académicos", 3));
         model.addTag(new DefaultTagCloudItem("Conciertos", "event_tags.xhtml?tag=Conciertos", 2));
         model.addTag(new DefaultTagCloudItem("Espectáculos", "event_tags.xhtml?tag=Espectáculos", 4));
@@ -680,5 +695,20 @@ public class EventoBean implements Serializable {
         this.setTag(hsr.getParameter("tag"));
     }
 
+    public void createEvent(){
+        Evento e = new Evento();
+        e.setTitulo(event_new_titulo);
+        e.setDescripcion(event_new_descripcion);
+        e.setFecha_inicio(event_new_fecha_inicio);
+        e.setFecha_fin(event_new_fecha_fin);
+        e.setHorario(event_new_horario);
+        e.setPrecio(event_new_precio);
+        e.setLongitud(event_new_longitud);
+        e.setLatitud(event_new_latitud);
+        e.setDestacado(event_new_destacado);
+        e.setImagen_url(event_new_imagen_url);
+        e.setImagen_titulo(event_new_imagen_titulo);
+        business.createEvent(e);
+    }
     
 }
