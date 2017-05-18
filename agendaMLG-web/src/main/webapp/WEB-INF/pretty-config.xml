@@ -1,0 +1,95 @@
+<pretty-config xmlns="http://ocpsoft.com/prettyfaces/3.3.0" 
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+               xsi:schemaLocation="http://ocpsoft.com/prettyfaces/3.3.0
+                                   		http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.3.0.xsd">
+    
+    <!--<rewrite match="^[^(/primefaces_resource/)|^(javascript)]" trailingSlash="append"  toCase="lowercase" redirect="301"/>-->
+
+    <url-mapping id="index"> 
+        <pattern value="/" /> 
+        <view-id value="/faces/index.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="contact"> 
+        <pattern value="/contact" /> 
+        <view-id value="/faces/contact.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="error"> 
+        <pattern value="/error" /> 
+        <view-id value="/faces/error.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="createEvent"> 
+        <pattern value="/event/create" /> 
+        <view-id value="/faces/event_create.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="allEvents"> 
+        <pattern value="/event/all" /> 
+        <view-id value="/faces/event_all.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="searchEvent"> 
+        <pattern value="/event/search" /> 
+        <view-id value="/faces/event_search.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="legalAdvice"> 
+        <pattern value="/legal" /> 
+        <view-id value="/faces/legal_advice.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="login"> 
+        <pattern value="/profile/login" /> 
+        <view-id value="/faces/login.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="profile"> 
+        <pattern value="/profile" /> 
+        <view-id value="/faces/profile.xhtml" />
+        <action>#{ControlLog.checkUserPrivileges()}</action>
+    </url-mapping> 
+    
+    <url-mapping id="registration"> 
+        <pattern value="/profile/register" /> 
+        <view-id value="/faces/registration.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="resetPassword"> 
+        <pattern value="/profile/reset" /> 
+        <view-id value="/faces/reset_password.xhtml" />
+    </url-mapping> 
+
+    <url-mapping id="terms"> 
+        <pattern value="/terms" /> 
+        <view-id value="/faces/terms.xhtml" />
+    </url-mapping> 
+        
+    <url-mapping id="editEvent"> 
+        <pattern value="/event/edit/#{id}" /> 
+        <view-id value="/faces/event_edit.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="infoEvent"> 
+        <pattern value="/event/show/#{id}" /> 
+        <view-id value="/faces/event_info.xhtml" />
+        <action>#{ControlLog.checkEventParameter()}</action>
+    </url-mapping> 
+    
+    <url-mapping id="tag"> 
+        <pattern value="/event/tag/#{tag}" /> 
+        <view-id value="/faces/events_tags.xhtml" />
+    </url-mapping> 
+
+    <url-mapping id="editPublic"> 
+        <pattern value="/public/edit/#{id}" /> 
+        <view-id value="/faces/public_edit.xhtml" />
+    </url-mapping> 
+    
+    <url-mapping id="infoPublic"> 
+        <pattern value="/public/show/#{id}" /> 
+        <view-id value="/faces/public_info.xhtml" />
+    </url-mapping> 
+    
+</pretty-config>

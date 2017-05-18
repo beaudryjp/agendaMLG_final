@@ -8,12 +8,16 @@
     <ui:composition template="/WEB-INF/templates/template.xhtml">
 
         <ui:define name="main-content">
+            <f:metadata>
+                <f:viewParam name="tag" value="#{eventoBean.tag}" />
+                <f:viewAction action="#{eventoBean.tag_onLoad}" />
+            </f:metadata>
             <ui:insert name="search-sidebar">
                 <ui:include src = "/WEB-INF/templates/search_menu.xhtml" />
             </ui:insert>
             <p class="lead"><h2>eventos</h2></p>
             <h:form>
-            <p:dataTable value="#{eventoBean.getSearchEventosEtiquetas(param['tag'])}" var="evento" id="searchEventsTags" class="eventLists">
+            <p:dataTable value="#{eventoBean.getSearchEventosEtiquetas()}" var="evento" id="searchEventsTags" class="eventLists">
                 <ui:insert name="search-sidebar">
                  <ui:include src = "/WEB-INF/templates/event.xhtml" />
                 </ui:insert>

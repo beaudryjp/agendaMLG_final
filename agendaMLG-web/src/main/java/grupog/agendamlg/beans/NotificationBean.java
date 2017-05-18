@@ -8,6 +8,9 @@ package grupog.agendamlg.beans;
 import grupog.agendamlg.entities.*;
 import java.io.Serializable;
 import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -36,14 +39,14 @@ public class NotificationBean implements Serializable {
         Notificacion not_0 = new Notificacion();
         not_0.setId_notificacion(0L);
         not_0.setMensaje("El evento ha cambiado.");
-        not_0.setFecha(new Date(System.currentTimeMillis()));
+        not_0.setFecha_hora(LocalDateTime.now());
         
     
         
         Notificacion not_2 = new Notificacion();
         not_2.setId_notificacion(1L);
         not_2.setMensaje("El evento ha sido cancelado de nuevo.");
-        not_2.setFecha(new Date(System.currentTimeMillis()));
+        not_2.setFecha_hora(LocalDateTime.now());
 
         notificaciones.add(not_0);
     

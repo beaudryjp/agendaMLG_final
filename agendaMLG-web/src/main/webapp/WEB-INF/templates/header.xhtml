@@ -3,7 +3,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition> 
         <section id="header-logo">
             <h1>
@@ -41,7 +43,11 @@
         <!--Normal  menu, big screen-->
         <section id="header-option-icons">
             <ul class="icons">
-                <li><h:link value="Eventos" outcome="events_tags.xhtml?tag=Todos"  class="icon fa-calendar"/></li>
+                <li>
+                    <pretty:link mappingId="tag" class="icon fa-calendar">
+                        Eventos
+                        <f:param value="Todos" />
+                    </pretty:link></li>
                 <c:choose>
                     <c:when test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR' || ControlLog.usuario.getRol_usuario() == 'VALIDADO'  || ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
                         <li><h:link value="Perfil" outcome="profile"  class="icon fa-user-circle"/></li>               

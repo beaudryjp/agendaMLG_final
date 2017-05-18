@@ -43,7 +43,7 @@ background: linear-gradient(to right, #E29587, #D66D75);
     */
     background: #616161;
     background: -webkit-linear-gradient(to right, #9bc5c3, #616161);
-    background: linear-gradient(to right, #9bc5c3, #616161); 
+    background: linear-gradient(to right, #9bc5c3, #616161);
 
 }
 
@@ -527,4 +527,12 @@ header>.login-headerLogo {
     left: 50% !important;
     margin-top: -50px !important;
     margin-left: -100px !important;
+}
+
+.errorPage{
+    margin-top: 70px;
+}
+
+h2.eventsImportant{
+    margin-top: 20px;
 }

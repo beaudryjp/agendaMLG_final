@@ -16,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -28,6 +30,12 @@ import javax.persistence.UniqueConstraint;
 */
 @Entity
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"email","pseudonimo","sal"}))
+@NamedQueries({
+    @NamedQuery(name="checkEmail", query="SELECT u from Usuario u WHERE u.email = :uemail"),
+    @NamedQuery(name="checkUsername", query="SELECT u from Usuario u WHERE u.pseudonimo = :upseudonimo"),
+    @NamedQuery(name="getAllUsers", query="SELECT u from Usuario u"),
+    @NamedQuery(name="getUser", query="SELECT u from Usuario u WHERE u.id_usuario = :id_usuario")
+})
 public class Usuario implements Serializable, Comparable {
     
     public enum Tipo_Rol {

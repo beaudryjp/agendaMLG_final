@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -21,6 +23,9 @@ import javax.persistence.UniqueConstraint;
 */
 @Entity
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"nombre"}))
+@NamedQueries({
+    @NamedQuery(name="getAllTags", query="SELECT t from Tags t")
+})
 public class Etiqueta implements Serializable, Comparable<Etiqueta>  {
 
     private static final long serialVersionUID = 1L;

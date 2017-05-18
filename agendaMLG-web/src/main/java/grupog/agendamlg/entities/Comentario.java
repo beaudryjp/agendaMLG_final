@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * Comentario.java
@@ -17,6 +19,9 @@ import javax.persistence.ManyToOne;
  * @author Jean Paul Beaudry
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name="getAllCommentsFromEvent", query="SELECT c from Comentario c WHERE c.evento = :evento")
+})
 public class Comentario implements Serializable {
 
     private static final long serialVersionUID = 1L;

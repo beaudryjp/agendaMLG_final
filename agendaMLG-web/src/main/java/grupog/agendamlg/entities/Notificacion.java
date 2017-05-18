@@ -2,15 +2,14 @@
 package grupog.agendamlg.entities;
 
 import java.io.Serializable;
-import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
 * Notificacion.java
@@ -19,6 +18,9 @@ import javax.persistence.TemporalType;
 * @author Jean Paul Beaudry
 */
 @Entity
+@NamedQueries({
+    @NamedQuery(name="getNotifications", query="SELECT n from Notificacion n WHERE usuario = :user")
+})
 public class Notificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -26,9 +28,7 @@ public class Notificacion implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id_notificacion;
     private String mensaje;
-    @Temporal(TemporalType.DATE)
-    private Date fecha;
-    private Time hora;
+    private LocalDateTime fecha_hora;
     @ManyToOne(optional=true)
     private Usuario usuario;
     @ManyToOne(optional=true)
@@ -67,23 +67,13 @@ public class Notificacion implements Serializable {
         this.id_notificacion = id_notificacion;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public LocalDateTime getFecha_hora() {
+        return fecha_hora;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+    public void setFecha_hora(LocalDateTime fecha_hora) {
+        this.fecha_hora = fecha_hora;
     }
-
-    public Time getHora() {
-        return hora;
-    }
-
-    public void setHora(Time hora) {
-        this.hora = hora;
-    }
-    
-    
 
     @Override
     public int hashCode() {
@@ -107,9 +97,8 @@ public class Notificacion implements Serializable {
 
     @Override
     public String toString() {
-        return "Notificacion{" + "id_notificacion=" + id_notificacion + ", mensaje=" + mensaje + ", fecha=" + fecha + ", hora=" + hora + ", user=" + usuario + ", evento=" + evento + '}';
+        return "Notificacion{" + "id_notificacion=" + id_notificacion + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", usuario=" + usuario + ", evento=" + evento + '}';
     }
 
-    
 
 }

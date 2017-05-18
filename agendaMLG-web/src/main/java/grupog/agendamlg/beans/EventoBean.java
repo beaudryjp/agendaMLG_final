@@ -8,7 +8,6 @@ import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Provincia;
 import grupog.agendamlg.entities.Usuario;
-import grupog.agendamlg.general.Password;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,8 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.view.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
@@ -41,7 +40,7 @@ import org.primefaces.model.tagcloud.TagCloudModel;
  * @author Jean Paul Beaudry
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class EventoBean implements Serializable {
 
     /**
@@ -56,6 +55,7 @@ public class EventoBean implements Serializable {
     private List<Evento> evento_asiste;
     private List<Evento> evento_gusta;
     private List<Evento> evento_sigue;
+    private List<Evento> evento_etiquetas;
     private List<Etiqueta> etiquetas;
     private List<Destinatario> destinatarios;
     private List<Destinatario> publico_evento;
@@ -430,15 +430,19 @@ public class EventoBean implements Serializable {
         return s;
     }
 
-    public List<Evento> getSearchEventosEtiquetas(String e) {
+    public List<Evento> getSearchEventosEtiquetas() {
         List<Evento> s = new ArrayList<>();
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        tag = hsr.getParameter("tag");
+        //tag = "Todos";
         for (Evento x : eventos) {
             for (Etiqueta et : x.getEtiqueta()) {
-                if (et.getNombre().equals(e)) {
+                if (et.getNombre().equals(tag)) {
                     s.add(x);
                 }
             }
         }
+
         return s;
     }
 
@@ -449,7 +453,7 @@ public class EventoBean implements Serializable {
     public Evento getEvento() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         try {
-            return eventos.get(Integer.parseInt(hsr.getParameter("event")));
+            return eventos.get(Integer.parseInt(hsr.getParameter("id")));
         } catch (NumberFormatException n) {
             return null;
         }
@@ -518,7 +522,7 @@ public class EventoBean implements Serializable {
         for (Evento x : eventos) {
             if (x.getId_evento() == Integer.parseInt(e)) {
                 for (Etiqueta et : x.getEtiqueta()) {
-                    s.addTag(new DefaultTagCloudItem(et.getNombre(), "events_tags.xhtml?tag=" + et.getNombre(), r.nextInt(4) + 1));
+                    s.addTag(new DefaultTagCloudItem(et.getNombre(), "/event/tag/" + et.getNombre(), r.nextInt(4) + 1));
                 }
             }
 
@@ -548,9 +552,7 @@ public class EventoBean implements Serializable {
         Evento ev = eventos.get(Integer.parseInt(eventId));
         final Usuario u = current_user.getUsuario();
         final StringBuilder m = new StringBuilder();
-        String full_url = "http://localhost:8080/" 
-                + ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURI() 
-                + "?event=" + this.eventId;
+        String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
         m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
                 .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
                 .append(")</span></h2><p>")
@@ -562,8 +564,7 @@ public class EventoBean implements Serializable {
                 .append("<br>Precio: ")
                 .append(changeHtmlChars(ev.getPrecio()))
                 .append("<br>Puede ver m&aacute;s informaci&oacute;n en el siguiente <a href='").append(full_url).append("' target='_blank'>enlace</a>")
-                .append("</p><p style='font-size: 12px'>diariosur</p>")
-                ;
+                .append("</p><p style='font-size: 12px'>diariosur</p>");
         /*
         System.out.println("Event ID: " + this.eventId);
         System.out.println("Event Title:  " + ev.getTitulo());
@@ -571,21 +572,21 @@ public class EventoBean implements Serializable {
         System.out.println("Email notifications enabled: " + u.isEmail_notifier());
         System.out.println("URI: " + full_url);
         System.out.println();
-        */
+         */
         if (u.isEmail_notifier()) {
             // TODO -- Send an internal notification
             Sendmail.mailThread(u.getEmail(), "Notificación agendaMLG - diariosur", m.toString());
         }
     }
-    
-    private String changeHtmlChars(String m){
-        m = m.replaceAll("á","&aacute;");
-        m = m.replaceAll("é","&eacute;");
-        m = m.replaceAll("í","&iacute;");
-        m = m.replaceAll("ó","&oacute;");
-        m = m.replaceAll("ú","&uacute;");
-        m = m.replaceAll("ñ","&ntilde;");
-        m = m.replaceAll("€","&euro;");
+
+    private String changeHtmlChars(String m) {
+        m = m.replaceAll("á", "&aacute;");
+        m = m.replaceAll("é", "&eacute;");
+        m = m.replaceAll("í", "&iacute;");
+        m = m.replaceAll("ó", "&oacute;");
+        m = m.replaceAll("ú", "&uacute;");
+        m = m.replaceAll("ñ", "&ntilde;");
+        m = m.replaceAll("€", "&euro;");
         return m;
     }
 
@@ -649,8 +650,35 @@ public class EventoBean implements Serializable {
 
     }
 
+    public List<Etiqueta> getEtiquetas() {
+        return etiquetas;
+    }
+
+    public void setEtiquetas(List<Etiqueta> etiquetas) {
+        this.etiquetas = etiquetas;
+    }
+
+    public List<Evento> getEvento_etiquetas() {
+        return evento_etiquetas;
+    }
+
+    public void setEvento_etiquetas(List<Evento> evento_etiquetas) {
+        this.evento_etiquetas = evento_etiquetas;
+    }
+    
+    
+
     public void onload() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        this.setEventId(hsr.getParameter("event"));
+        //System.out.println(hsr.getRequestURI());
+        this.setEventId(hsr.getParameter("id"));
     }
+
+    public void tag_onLoad() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        //System.out.println(hsr.getRequestURI());
+        this.setTag(hsr.getParameter("tag"));
+    }
+
+    
 }

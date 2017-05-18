@@ -3,9 +3,7 @@ package grupog.agendamlg.entities;
 import com.google.common.collect.ComparisonChain;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,6 +28,38 @@ import javax.persistence.TemporalType;
  * @author Jean Paul Beaudry
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name="getEventById", query="SELECT e from Evento e WHERE e.id_evento = :id_evento"),
+    @NamedQuery(name="getAllEvents", query="SELECT e from Evento e"),
+    @NamedQuery(name="getEventsImportant", query="SELECT e from Evento e WHERE e.destacado = true"),
+    @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha"),
+    //Event search with 7 parameters(localidad, provincia, fecha_ini, fecha_fin, texto, etiqueta, destinatario)
+    //Event by tag
+    @NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
+})
+/*
+
+StringBuilder queryAsiste = new StringBuilder(); 
+        sb.append("SELECT * FROM jn_asiste_id WHERE id_usuario = ");
+        sb.append(usuario.id_usuario);
+        sb.append(" AND id_evento = ");
+        sb.append(evento.id_evento);
+
+StringBuilder queryGusta = new StringBuilder(); 
+        sb.append("SELECT * FROM jn_megusta_id WHERE id_usuario = ");
+        sb.append(usuario.id_usuario);
+        sb.append(" AND id_evento = ");
+        sb.append(evento.id_evento);
+
+StringBuilder querySigue = new StringBuilder(); 
+        sb.append("SELECT * FROM jn_sigue_id WHERE id_usuario = ");
+        sb.append(usuario.id_usuario);
+        sb.append(" AND id_evento = ");
+        sb.append(evento.id_evento);
+
+    Query query = em.createNativeQuery(queryString);
+    List<Hospital> result = query.getResultList();
+*/
 public class Evento implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;

@@ -5,7 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
@@ -28,32 +29,32 @@
                     <div id="event-goBack">
                         <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
                     </div>
-                    <div style="float: right">
+                    <div class="floatRight">
 
                         <c:choose>
                             <c:when test="#{!empty ControlLog.usuario}">
-                                <h5 style="font-size: 12px">
-                                    <a data-toggle="tooltip" title="Like"  data-placement="right" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
+                                <h5 class="icon">
+                                    <a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
                                 </h5>
-                                <h5 style="font-size: 12px">
-                                    <a data-toggle="tooltip" title="Assist"  data-placement="right" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
+                                <h5 class="icon">
+                                    <a data-toggle="tooltip" title="Assist"  data-placement="left" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
                                 </h5>
-                                <h5 style="font-size: 12px">
-                                    <a data-toggle="tooltip" title="Follow"  data-placement="right" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
+                                <h5 class="icon">
+                                    <a data-toggle="tooltip" title="Follow"  data-placement="left" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
                                 </h5>
                             </c:when>
                         </c:choose>
-                        <h5 style="font-size: 11px">
-                            <a id="icon-map" class="icon fa fa-map fa-2x" onclick="PF('gmap').show();"  data-toggle="tooltip" title="Show map"  data-placement="right"/>
-                        </h5>                   
-                        <h5 style="font-size: 13px">
-                            <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank"></a>
+                        <h5 class="icon">
+                            <a class="icon fa fa-map fa-2x" onclick="PF('gmap').show();"  data-toggle="tooltip" title="Show map"  data-placement="left" />
                         </h5>
-                        <h5 style="font-size: 13px">
-                            <a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a>
+                        <h5 class="icon">
+                            <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank" data-toggle="tooltip" title="Twitter"  data-placement="left" ></a>
                         </h5>
-                        <h5 style="font-size: 13px">
-                            <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}"></a>
+                        <h5 class="icon">
+                            <a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Google+"  data-placement="left" ></a>
+                        </h5>
+                        <h5 class="icon">
+                            <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
                         </h5>
                     </div>
 
@@ -64,11 +65,11 @@
                     <div>
 
                         <p class="eventDesc"><br/><h:outputText value="#{evento.descripcion}" /></p>
-                        <p style="font-size: 13px"><i>
+                        <p class="showDate"><i>
                                 Fecha
                                 <h:outputText value="#{evento.fecha_inicio}">
                                     <f:convertDateTime pattern="dd/MM/yyyy" />
-                                </h:outputText> - 
+                                </h:outputText> -
                                 <h:outputText value="#{evento.fecha_fin}">
                                     <f:convertDateTime pattern="dd/MM/yyyy" />
                                 </h:outputText>
@@ -79,7 +80,7 @@
                         <p>
                             <ul class="publico">
                                 <ui:repeat value="#{evento.destinatario}" var="dest">
-                                    <li style=""><h:outputText value="#{dest.descripcion}"/></li>
+                                    <li><h:outputText value="#{dest.descripcion}"/></li>
                                 </ui:repeat>
                             </ul>
                         </p>
@@ -92,12 +93,12 @@
                     </div>
                     <div>
                         <h5 class="h5bold">Comentarios</h5>
-                        <ul style="font-size: 16px; list-style-type: none">
+                        <ul class="comments">
                             <ui:repeat value="#{evento.comentarios}" var="comen">
-                                <li style="padding: 10px;">
-                                    <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote> 
-                                    <i style="font-size: 14px">
-                                        <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> - 
+                                <li>
+                                    <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote>
+                                    <i>
+                                        <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> -
                                         <h:outputText value="#{comen.getFecha_hora_formateado()}"/>
                                     </i>
                                 </li>
@@ -107,13 +108,13 @@
                     <div>
                         <f:view contentType="text/html">
                             <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
-                                <p:gmap id="gmap" center="#{evento.longitud}, #{evento.latitud}" zoom="15" type="HYBRID" style="width:100%;height:400px" />
+                                <p:gmap id="gmap" center="#{evento.longitud}, #{evento.latitud}" zoom="15" type="HYBRID" styleClass="mapDialog" />
                             </p:dialog>
                         </f:view>
                     </div>
                     <h:form id="formComentario">
                         <p:dialog header="Añadir comentario" widgetVar="dlg_comen" minHeight="40">
-                            <p:inputText id="eventComentario" placeholder="Comentario" style="margin-right: 10px"/>
+                            <p:inputText id="eventComentario" placeholder="Comentario"/>
                             <p:commandButton value="Enviar" id="submitComen" actionListener="#{buttonView.buttonAction}"  ajax="false" icon="ui-icon-disk" />
                         </p:dialog>
                     </h:form>
@@ -124,13 +125,14 @@
                         </p:dialog>
                     </h:form>
                     <c:if test="#{!empty ControlLog.usuario}">
-                        <p:commandLink id="addComment" styleClass="btn btn-default btn-lg" onclick="PF('dlg_comen').show();" style="font-size:15px;float:left" value="Añadir comentario"/>
+                        <p:commandLink id="addComment" styleClass="addComment btn btn-default btn-lg" onclick="PF('dlg_comen').show();" value="Añadir comentario"/>
                     </c:if>
                     <c:if test="#{ControlLog.isUserValidated()}">
-                        <p:commandLink onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="btn btn-default btn-lg" style="font-size: 15px;float:right"/>
-                        <h:link value="Editar" outcome="event_edit"   styleClass="btn btn-default btn-lg" style="font-size:15px;float:right; margin-right: 10px">
-                            <f:param name="event" value="#{evento.id_evento}" />
-                        </h:link>
+                        <p:commandLink id="deleteEvent" onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg"/>
+                        <pretty:link mappingId="editEvent" id="editEvent" styleClass="editEvent btn btn-default btn-lg">
+                            Editar
+                            <f:param value="#{evento.id_evento}" />
+                        </pretty:link>
                     </c:if>
 
                 </p:column>

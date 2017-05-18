@@ -4,13 +4,14 @@ package grupog.agendamlg.entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -21,6 +22,9 @@ import javax.persistence.UniqueConstraint;
 * @author Jean Paul Beaudry
 */
 @Entity
+@NamedQueries({
+    @NamedQuery(name="getAllAudience", query="SELECT d from Destinatario d")
+})
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"descripcion"}))
 public class Destinatario implements Serializable, Comparable<Destinatario> {
 

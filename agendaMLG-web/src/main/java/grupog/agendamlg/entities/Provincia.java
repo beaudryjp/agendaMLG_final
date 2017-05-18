@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -22,6 +24,10 @@ import javax.persistence.UniqueConstraint;
 */
 @Entity
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"nombre"}))
+@NamedQueries({
+    @NamedQuery(name="getAllLocality", query="SELECT p from Provincia p"),
+    @NamedQuery(name="getAllTowns", query="SELECT p from Provincia p WHERE p.nombre = :provincia")
+})
 public class Provincia implements Serializable {
 
     private static final long serialVersionUID = 1L;

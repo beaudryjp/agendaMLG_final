@@ -5,16 +5,16 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <ui:composition template="/WEB-INF/templates/template_noad_sidebar.xhtml">
         <ui:define name="main-content">
-            <div id="main-left" class="login" style="margin-top: 70px;">
-                <div id="login-goBack" style="font-size: 11px">
-                        <h:link value="Volver a la página principal" outcome="index" class="icon fa-chevron-left fa-2x"/>
-                    </div>
+            <div id="main-left" class="login errorPage">
+                <div id="login-goBack">
+                    <h:link value="Volver a la página principal" outcome="index" class="icon fa-chevron-left fa-2x"/>
+                </div>
                 <!-- Show minimal error information -->
-                
+
                 <p class="lead"><h2>Error #{errorHandler.statusCode}</h2>
-                    #{errorHandler.exceptionType}
+                    <h4>Ha aparecido un error en la página web, por favor vuelva al Inicio.</h4>
                 </p>
-                
+
                 <!-- Show full error information -->
                 <!--
                 <p><h:outputText value="Error Code: #{errorHandler.statusCode}" /></p>

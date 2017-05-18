@@ -4,13 +4,15 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition>
         <p:column>
             <h3 class="eventTitle">
-                <h:link value="#{evento.titulo}" outcome="event_info" >
-                    <f:param name="event" value="#{evento.id_evento}" />
-                </h:link>
+                <pretty:link mappingId="infoEvent">
+                    #{evento.titulo}
+                    <f:param value="#{evento.id_evento}" />
+                </pretty:link>
             </h3>
             <div class="imageEventList">
                 <h:graphicImage name="#{evento.imagen_url}" width="200px" height="200px"/>

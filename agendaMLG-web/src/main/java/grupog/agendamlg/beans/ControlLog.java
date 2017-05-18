@@ -55,37 +55,75 @@ public class ControlLog implements Serializable {
 
     }
 
-    public void checkUserPrivileges() throws IOException {
+    public void checkUserPrivileges(){
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        System.out.println(hsr.getRequestURI());
         if (usuario == null) {
-            Redirect.redirectTo("index.xhtml");
+            Redirect.redirectTo("/faces/index.xhtml");
         } else if (hsr.getParameterMap().containsKey("event") && (usuario.getRol_usuario() != Usuario.Tipo_Rol.REDACTOR && usuario.getRol_usuario() != Usuario.Tipo_Rol.VALIDADO)) {
-            Redirect.redirectTo("events_all.xhtml");
+            Redirect.redirectTo("/faces/events_all.xhtml");
         }
         
     }
+    
+    public void userHasAdminPrivilege(){
+        if(usuario != null){
+            if(!usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR)){
+                Redirect.redirectTo("/faces/index.xhtml");
+            }
+        }
+        else{
+            Redirect.redirectTo("/faces/index.xhtml");
+        }
+    }
 
-    public void checkEventParameter() throws IOException, Exception {
+    public void checkEventParameter(){
         String eventId;
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        
-        if (hsr.getParameterMap().containsKey("event")) {
-            eventId = hsr.getParameter("event");
-            if (hsr.getParameter("event") != null && !eventId.isEmpty()) {
+        //System.out.println("1");
+        if (hsr.getParameterMap().containsKey("id")) {
+             //System.out.println("2");
+            eventId = hsr.getParameter("id");
+            if (eventId != null && !eventId.isEmpty()) {
+                 //System.out.println("3");
                 //System.out.println("attribute " + hsr.getParameter("event"));
                 //TODO - Optional, verify that the event exists
             }
             else{
-                Redirect.redirectTo("index.xhtml");
+                 //System.out.println("4");
+                Redirect.redirectTo("/faces/index.xhtml");
             }
         } else {
-            Redirect.redirectTo("index.xhtml");
+             //System.out.println("5");
+            Redirect.redirectTo("/faces/index.xhtml");
+        }
+    }
+    
+    public void checkPublicParameter(){
+        String name;
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        //System.out.println("1");
+        if (hsr.getParameterMap().containsKey("id")) {
+             //System.out.println("2");
+            name = hsr.getParameter("id");
+            if (name != null && !name.isEmpty()) {
+                 //System.out.println("3");
+                //System.out.println("attribute " + hsr.getParameter("event"));
+                //TODO - Optional, verify that the event exists
+            }
+            else{
+                 //System.out.println("4");
+                Redirect.redirectTo("/faces/index.xhtml");
+            }
+        } else {
+             //System.out.println("5");
+            Redirect.redirectTo("/faces/index.xhtml");
         }
     }
     
     public void checkLoggedIn(){
         if(usuario != null){
-            Redirect.redirectTo("profile.xhtml");
+            Redirect.redirectTo("/faces/profile.xhtml");
         }   
     }
 
@@ -99,6 +137,10 @@ public class ControlLog implements Serializable {
     
     public boolean isUserRegistered(){
         return this.usuario != null && this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REGISTRADO);
+    }
+    
+    public boolean isUserAdmin(){
+        return this.usuario != null && this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR);
     }
 
 }

@@ -5,7 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition template="/WEB-INF/templates/template_profile.xhtml">
         <ui:define name="main-content">
             <f:metadata>
@@ -24,10 +25,11 @@
                                         </p:column>
                                         <p:column>
 
-                                            <h3 class="eventTitle" style="text-align: right">
-                                                <h:link value="#{item.titulo}" outcome="event_info" >
-                                                    <f:param name="event" value="#{item.id_evento}" />
-                                                </h:link>
+                                            <h3 class="eventTitleProfile">
+                                                <pretty:link mappingId="infoEvent">
+                                                    #{item.titulo}
+                                                    <f:param value="#{item.id_evento}" />
+                                                </pretty:link>
                                             </h3>
                                         </p:column>
                                     </p:row>
@@ -42,10 +44,11 @@
                                         </p:column>
                                         <p:column>
 
-                                            <h3 class="eventTitle" style="text-align: right">
-                                                <h:link value="#{item.titulo}" outcome="event_info" >
-                                                    <f:param name="event" value="#{item.id_evento}" />
-                                                </h:link>
+                                            <h3 class="eventTitleProfile">
+                                                <pretty:link mappingId="infoEvent">
+                                                    #{item.titulo}
+                                                    <f:param value="#{item.id_evento}" />
+                                                </pretty:link>
                                             </h3>
                                         </p:column>
                                     </p:row>
@@ -60,10 +63,11 @@
                                         </p:column>
                                         <p:column>
 
-                                            <h3 class="eventTitle" style="text-align: right">
-                                                <h:link value="#{item.titulo}" outcome="event_info" >
-                                                    <f:param name="event" value="#{item.id_evento}" />
-                                                </h:link>
+                                            <h3 class="eventTitleProfile">
+                                                <pretty:link mappingId="infoEvent">
+                                                    #{item.titulo}
+                                                    <f:param value="#{item.id_evento}" />
+                                                </pretty:link>
                                             </h3>
                                         </p:column>
                                     </p:row>
@@ -77,7 +81,7 @@
 
                                     <tr>
                                         <td><p:outputLabel value="Introduzca nuevo email: " /> </td>
-                                        <td><p:inputText value="#{configuracion.email}" placeholder="#{ControlLog.usuario.email}" 
+                                        <td><p:inputText value="#{configuracion.email}" placeholder="#{ControlLog.usuario.email}"
                                                          validatorMessage="Email no válido">
                                                 <f:validateRegex pattern="(^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$){0,1}" />
                                             </p:inputText></td>
@@ -99,7 +103,7 @@
 
 
                                 </table>
-                                <p:commandButton action ="#{configuracion.modificar}" value ="Modificar Perfil" id="submit"  
+                                <p:commandButton action ="#{configuracion.modificar}" value ="Modificar Perfil" id="submit"
                                                  styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
 
                                 <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
@@ -112,7 +116,7 @@
                                 <c:forEach var="noti" items="#{notification.notificaciones}">
                                     <p:panelGrid styleClass="mis_notificaciones" id="prueba" >
                                         <p:row>
-                                            <p:column rowspan="2" id="columna1" style="width: 1px">
+                                            <p:column rowspan="2" id="columna1">
                                                 <p:graphicImage class="event-image" name="img/event-general.png"/>
                                             </p:column>
                                             <p:column id="columna2">
@@ -166,4 +170,3 @@
         </ui:define>
     </ui:composition>
 </html>
-

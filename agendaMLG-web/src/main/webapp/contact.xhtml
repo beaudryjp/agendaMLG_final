@@ -12,27 +12,27 @@
             <hr />
 
             <h:form id="form_contactUs" >
-                <p:panel id="test" style="background: transparent; border: 0; padding: 5px; width: 100%; ">
-                    <!--<p:growl id="growl" life="2000" sticky="true"/>-->  
+                <p:panel id="test" styleClass="contactPanel">
+                    <!--<p:growl id="growl" life="2000" sticky="true"/>-->
                     <div class="form-group form-group-lg">
                         <p:messages id="contact_messages" autoUpdate="true"/>
-                        <p:inputText value="#{contactarBean.nombre}" class="form-control"  id="contact_name"  placeholder="Nombre" 
-                                     required="true"  
+                        <p:inputText value="#{contactarBean.nombre}" class="form-control"  id="contact_name"  placeholder="Nombre"
+                                     required="true"
                                      requiredMessage="Introduce tu nombre" />
-                        <p:inputText  value="#{contactarBean.apellidos}"  class="form-control"  id="contact_surname"  placeholder="Apellidos"  
-                                      required="true"   
+                        <p:inputText  value="#{contactarBean.apellidos}"  class="form-control"  id="contact_surname"  placeholder="Apellidos"
+                                      required="true"
                                       requiredMessage="Introduce tus apellidos"/>
                         <p:inputText  value="#{contactarBean.email}" id="contact_email"  class="form-control"  placeholder="Correo eléctronico"
-                                      required="true"  
+                                      required="true"
                                       requiredMessage="Introduce tu correo"
                                       validatorMessage="Correo invalido">
                             <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 
                         </p:inputText>
-                        <p:inputTextarea  value="#{contactarBean.mensaje}" id="contact_message"  class="form-control"  rows="7"  cols="60"  placeholder="Mensaje"  
-                                          required="true"  
+                        <p:inputTextarea  value="#{contactarBean.mensaje}" id="contact_message"  class="form-control"  rows="7"  cols="60"  placeholder="Mensaje"
+                                          required="true"
                                           requiredMessage="Introduce tu mensaje"/><br />
-                        <p:commandButton  process="@form" update="test"  value="Enviar"  validateClient="true"  id="contact_submit"  action="#{contactarBean.submit()}" 
+                        <p:commandButton  process="@form" update="test"  value="Enviar"  validateClient="true"  id="contact_submit"  action="#{contactarBean.submit()}"
                                           styleClass="btn btn-default btn-lg submitButtons">
                             <!--<f:ajax execute="@form" render="@form" />-->
                         </p:commandButton>
@@ -41,7 +41,7 @@
                         <ui:include src = "/WEB-INF/templates/loader_dialog.xhtml" />
                     </p:blockUI>
                 </p:panel>
-            </h:form> 
+            </h:form>
 
         </ui:define>
     </ui:composition>

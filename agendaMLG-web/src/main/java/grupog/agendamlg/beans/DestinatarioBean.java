@@ -9,6 +9,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -56,4 +58,12 @@ public class DestinatarioBean implements Serializable {
         this.destinatario = destinatario;
     }
     
+    public Destinatario getSpecificDestinatario() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        try {
+            return destinatarios.get(Integer.parseInt(hsr.getParameter("id")));
+        } catch (NumberFormatException n) {
+            return null;
+        }
+    }
 }
