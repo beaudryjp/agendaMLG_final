@@ -53,19 +53,19 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Notificacion> getNotifications(Usuario u) {
+    public List getNotifications(Usuario u) {
         Query query = em.createNamedQuery("getNotifications").setParameter("id_usuario", u.getId_usuario());
         return query.getResultList();
     }
 
     @Override
-    public List<Tarea> getTasks(Usuario u) {
+    public List getTasks(Usuario u) {
         Query query = em.createNamedQuery("getTasks").setParameter("id_usuario", u.getId_usuario());
         return query.getResultList();
     }
 
     @Override
-    public List<Evento> getEventsImportant() {
+    public List getEventsImportant() {
         Query query = em.createNamedQuery("getEventsImportant").setMaxResults(2);
         return query.getResultList();
     }
@@ -77,7 +77,14 @@ public class Business implements BusinessLocal {
 
     @Override
     public Evento updateEvent(Evento e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        em.getTransaction().begin();
+        em.merge(e);
+        em.getTransaction().commit();
+        //[Optional] RF-005 Mandar notificaciones al correo y notificaciones internas si un evento cambia
+        //Get all users who are liking, assisting or following
+        //Check if the users have the email notifier enabled
+        //Send internal notification in any case
+        return e;
     }
 
     @Override
