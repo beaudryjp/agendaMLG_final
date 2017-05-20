@@ -18,7 +18,7 @@
                         <p:tab title="Mis Eventos" >
                             <h2>Eventos al que vas a asistir</h2>
                             <c:forEach var="item" items="#{eventoBean.evento_asiste}">
-                                <p:panelGrid styleClass="mis_eventos" >
+                                <p:panelGrid styleClass="mis_eventos" styleClass="eventLists">
                                     <p:row>
                                         <p:column rowspan="2">
                                             <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>

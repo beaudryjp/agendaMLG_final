@@ -8,11 +8,11 @@
     </parent>
 
     <groupId>grupog</groupId>
-    <artifactId>agendaMLG-web</artifactId>
+    <artifactId>agenda</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
 
-    <name>agendaMLG-web</name>
+    <name>agenda</name>
 
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -31,6 +31,37 @@
             <artifactId>agendaMLG-ejb</artifactId>
             <version>1.0</version>
             <type>ejb</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.ocpsoft.rewrite</groupId>
+            <artifactId>rewrite-servlet</artifactId>
+            <version>3.4.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ocpsoft.rewrite</groupId>
+            <artifactId>rewrite-config-prettyfaces</artifactId>
+            <version>3.4.1.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>1.2.0</version>
         </dependency>
     </dependencies>
 
