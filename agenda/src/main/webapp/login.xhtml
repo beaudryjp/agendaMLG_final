@@ -20,14 +20,14 @@
             <h:form id="login">
                 <div class="form-group form-group-lg">
                     <p:messages id="login_messages" autoUpdate="true"/>
-                    <h:inputText  value ="#{login.email}" id="login_email"  class="form-control"  
+                    <h:inputText  value ="#{usuario.email}" id="login_email"  class="form-control"  
                                   required="true"  
                                   requiredMessage="Introduce tu correo"
                                   validatorMessage="Correo invalido" >
                         <f:validateRegex pattern="[_A-Za-z0-9\-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9\-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]+)$" />
                         </h:inputText>
                    
-                    <h:inputSecret value = "#{login.contrasenia}" id="login_password"    class="form-control"  redisplay="true"  />
+                    <h:inputSecret value = "#{usuario.contrasenia}" id="login_password"    class="form-control"  redisplay="true"  />
                     <div id="login-rememberForgot">
                         
                         <p:selectBooleanCheckbox id="login_remember" />
@@ -35,7 +35,7 @@
                         <h:link value="He olvidado mi contraseña" outcome="reset_password" />
 
                     </div>
-                    <h:commandButton action="#{login.autenticar()}" value="Iniciar sesión"  id="login_submit"  
+                    <h:commandButton action="#{usuario.autenticar()}" value="Iniciar sesión"  id="login_submit"  
                             styleClass="btn btn-default btn-lg submitButtons"/>
 
                 </div>

@@ -30,11 +30,15 @@ import javax.persistence.TemporalType;
 @Entity
 @NamedQueries({
     @NamedQuery(name="getAllEvents", query="SELECT e from Evento e"),
+    @NamedQuery(name="getEventsById", query="SELECT e from Evento e WHERE e.id_evento = :evento"),
     @NamedQuery(name="getEventsImportant", query="SELECT e from Evento e WHERE e.destacado = true"),
     @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha"),
-    //Event search with 7 parameters(localidad, provincia, fecha_ini, fecha_fin, texto, etiqueta, destinatario)
+    //revisar que funcione
+    @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e, Etiqueta et, Destinatario d "
+            + "WHERE e.localidad.nombre = :localidad and "
+            + "e.localidad.provincia.nombre = :provincia and et.nombre = :etiqueta and d.descripcion = :destinatario"),
     //Event by tag
-    @NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
+    //@NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
 })
 /*
 

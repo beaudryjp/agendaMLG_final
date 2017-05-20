@@ -5,7 +5,8 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition>
         <div id="search-sidebar">
             <h:outputScript name="js/prime.js" />
@@ -67,7 +68,9 @@
 
                                 <p:row>
                                     <p:column colspan="2">
-                                        <h:link  outcome="events_search" value="Enviar" id="search_submit"  styleClass="btn btn-default btn-lg floatRight"/>
+                                        <pretty:link mappingId="searchEvent" id="searchEvent" styleClass="btn btn-default btn-lg floatRight">
+                                            Enviar
+                                        </pretty:link>
                                         <!--<p:commandButton action="events" value="Enviar" id="search_submit"  styleClass="btn btn-default btn-lg"/>-->
                                     </p:column>
                                 </p:row>

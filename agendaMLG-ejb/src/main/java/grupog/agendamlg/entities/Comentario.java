@@ -20,7 +20,7 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="getAllCommentsFromEvent", query="SELECT c from Comentario c WHERE c.evento = :evento")
+    @NamedQuery(name="getAllCommentsFromEvent", query="SELECT c from Comentario c WHERE c.evento.id_evento = :evento")
 })
 public class Comentario implements Serializable {
 

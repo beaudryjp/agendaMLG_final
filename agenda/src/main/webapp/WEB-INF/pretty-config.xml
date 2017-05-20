@@ -27,12 +27,12 @@
     
     <url-mapping id="allEvents"> 
         <pattern value="/event/all" /> 
-        <view-id value="/faces/event_all.xhtml" />
+        <view-id value="/faces/events_all.xhtml" />
     </url-mapping> 
     
     <url-mapping id="searchEvent"> 
         <pattern value="/event/search" /> 
-        <view-id value="/faces/event_search.xhtml" />
+        <view-id value="/faces/events_search.xhtml" />
     </url-mapping> 
     
     <url-mapping id="legalAdvice"> 

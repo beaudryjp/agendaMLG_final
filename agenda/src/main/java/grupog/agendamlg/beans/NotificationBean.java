@@ -8,17 +8,11 @@ package grupog.agendamlg.beans;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.*;
 import java.io.Serializable;
-import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.inject.Named;
+import javax.inject.Inject;
 
 /**
  *
@@ -32,31 +26,10 @@ public class NotificationBean implements Serializable {
     List<Notificacion> notificaciones;
     @EJB
     private Business business;
+    @Inject
+    private ControlLog usuario;
 
     public NotificationBean() {
-    }
-
-    @PostConstruct
-    public void init() {
-        notificaciones = new ArrayList<>();
-
-        Notificacion not_0 = new Notificacion();
-        not_0.setId_notificacion(0L);
-        not_0.setMensaje("El evento ha cambiado.");
-        not_0.setFecha_hora(LocalDateTime.now());
-        
-    
-        
-        Notificacion not_2 = new Notificacion();
-        not_2.setId_notificacion(1L);
-        not_2.setMensaje("El evento ha sido cancelado de nuevo.");
-        not_2.setFecha_hora(LocalDateTime.now());
-
-        notificaciones.add(not_0);
-    
-        notificaciones.add(not_2);
-        
-        //System.out.println(notificaciones.get(1).getMensaje());
     }
 
     public void dissapear(Notificacion not) {
@@ -64,11 +37,14 @@ public class NotificationBean implements Serializable {
     }
 
     public List<Notificacion> getNotificaciones() {
+        notificaciones = business.getNotifications(usuario.getUsuario());
         return notificaciones;
     }
 
-    public void setNotificaciones(List<Notificacion> notificaciones) {
-        this.notificaciones = notificaciones;
+    /*
+    public void addNotificacion(Notificacion n){
+        n.setUsuario(usuario.getUsuario());
+        business.setNotifications(n);
     }
-
+    */
 }

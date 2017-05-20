@@ -38,7 +38,7 @@
                     <p:password id="registration_pwd1" value="#{registro.contrasenia}"  match="registration_pwd2" placeholder="Contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden"/>
                     <p:password id="registration_pwd2" value="#{registro.contrasenia2}" match="registration_pwd2"  placeholder="Repite la contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden"/>
                     <div id="login-rememberForgot">
-                        <p:selectBooleanCheckbox id="registration_notifications" />
+                        <p:selectBooleanCheckbox id="registration_notifications" #{registro.email_notifier}/>
                         <h:outputText value=" Desea recibir notificaciones por email." /><br/>
                         <p:selectBooleanCheckbox id="registration_terms"  value="#{registro.acepta}" required="true"  requiredMessage="Debe aceptar los terminos de uso" />
                             

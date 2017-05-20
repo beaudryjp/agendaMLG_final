@@ -19,6 +19,9 @@
         border-left:0px #9c9696 dashed;
         padding-left: 0px;
     }
+    #header-tags ul li {
+        display: block;
+    }
 }
 
 @media (min-width: 1100px) {
@@ -34,6 +37,10 @@
     header>#header-page-phrase{
         border-left:1px #9c9696 dashed;
         padding-left: 10px;
+    }
+
+    #header-tags ul li {
+        display: inline-block;
     }
 }
 
@@ -463,7 +470,7 @@ form .submitButtons{
 }
 
 .eventTitleProfile{
-        text-align: right;
+    text-align: right;
 }
 
 p.eventListDesc{
@@ -501,7 +508,7 @@ p.eventListDesc{
 }
 
 #eventsAll table{
-   width: 100%;
+    width: 100%;
 }
 
 ul#headerTags{

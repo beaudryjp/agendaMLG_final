@@ -3,13 +3,11 @@ package grupog.agendamlg.beans;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Destinatario;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.Dependent;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -19,12 +17,9 @@ import javax.servlet.http.HttpServletRequest;
  * @author Jean Paul Beaudry
  */
 @ManagedBean
-@Dependent
+@SessionScoped
 public class DestinatarioBean implements Serializable {
 
-    /**
-     * Creates a new instance of PublicoBean
-     */
     private List<Destinatario> destinatarios;
     private String destinatario;
     @EJB
@@ -33,18 +28,8 @@ public class DestinatarioBean implements Serializable {
     public DestinatarioBean() {
     }
 
-    @PostConstruct
-    public void init() {
-        destinatario = "Todos";
-        destinatarios = new ArrayList<>();
-        destinatarios.add(new Destinatario("Ancianos"));
-        destinatarios.add(new Destinatario("Niños"));
-        destinatarios.add(new Destinatario("Todos"));
-        destinatarios.add(new Destinatario("Adultos"));
-        destinatarios.add(new Destinatario("Jóvenes"));
-    }
-
     public List<Destinatario> getDestinatarios() {
+        destinatarios = business.getAudiences();
         Collections.sort(destinatarios, new Comparator<Destinatario>() {
             @Override
             public int compare(Destinatario o1, Destinatario o2) {

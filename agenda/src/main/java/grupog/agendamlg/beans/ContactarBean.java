@@ -14,22 +14,11 @@ import org.apache.commons.lang3.StringEscapeUtils;
 @Named(value = "contactarBean")
 @RequestScoped
 public class ContactarBean {
-    /*
-    private String nombre = "Jean-Paul";
-    private String apellidos = "Beaudry";
-    private String email = "jeanpaul.beaudry@outlook.com";
-    private String mensaje = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel ultricies nunc. "
-            + "Maecenas lacinia porta posuere. Fusce vel ullamcorper odio, a iaculis turpis. Pellentesque viverra porttitor congue. "
-            + "Nam sed congue quam, in efficitur diam. Sed ac ex elementum, imperdiet ex sit amet, ornare mauris. "
-            + "Donec accumsan, lacus sed ultrices dignissim, urna orci mollis lectus, nec consectetur justo sem nec leo.\n";
-    */
     private String nombre;
     private String apellidos;
     private String email;
     private String mensaje;
-    /**
-     * Creates a new instance of ContactarBean
-     */
+
     public ContactarBean() {
     }
 

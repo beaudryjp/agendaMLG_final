@@ -1,19 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package grupog.agendamlg.beans;
 
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Redirect;
-import java.io.IOException;
 import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -63,9 +57,9 @@ public class ControlLog implements Serializable {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         System.out.println(hsr.getRequestURI());
         if (usuario == null) {
-            Redirect.redirectTo("/faces/index.xhtml");
+            Redirect.redirectTo("index?faces-redirect=true");
         } else if (hsr.getParameterMap().containsKey("event") && (usuario.getRol_usuario() != Usuario.Tipo_Rol.REDACTOR && usuario.getRol_usuario() != Usuario.Tipo_Rol.VALIDADO)) {
-            Redirect.redirectTo("/faces/events_all.xhtml");
+            Redirect.redirectTo("events_all?faces-redirect=true");
         }
         
     }
@@ -73,61 +67,58 @@ public class ControlLog implements Serializable {
     public void userHasAdminPrivilege(){
         if(usuario != null){
             if(!usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR)){
-                Redirect.redirectTo("/faces/index.xhtml");
+                Redirect.redirectTo("index?faces-redirect=true");
             }
         }
         else{
-            Redirect.redirectTo("/faces/index.xhtml");
+            Redirect.redirectTo("index?faces-redirect=true");
         }
     }
 
+    //Event
     public void checkEventParameter(){
         String eventId;
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        //System.out.println("1");
         if (hsr.getParameterMap().containsKey("id")) {
-             //System.out.println("2");
             eventId = hsr.getParameter("id");
             if (eventId != null && !eventId.isEmpty()) {
-                 //System.out.println("3");
-                //System.out.println("attribute " + hsr.getParameter("event"));
-                //TODO - Optional, verify that the event exists
+                if(business.getEventById(Integer.parseInt(eventId)) != null){
+                    
+                }
+                else{
+                    Redirect.redirectTo("index?faces-redirect=true");
+                }
             }
             else{
-                 //System.out.println("4");
-                Redirect.redirectTo("/faces/index.xhtml");
+                Redirect.redirectTo("index?faces-redirect=true");
             }
         } else {
-             //System.out.println("5");
-            Redirect.redirectTo("/faces/index.xhtml");
+            Redirect.redirectTo("index?faces-redirect=true");
         }
     }
     
+    //Destinatario
     public void checkPublicParameter(){
         String name;
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        //System.out.println("1");
         if (hsr.getParameterMap().containsKey("id")) {
-             //System.out.println("2");
             name = hsr.getParameter("id");
             if (name != null && !name.isEmpty()) {
-                 //System.out.println("3");
+                //System.out.println("3");
                 //System.out.println("attribute " + hsr.getParameter("event"));
-                //TODO - Optional, verify that the event exists
+                //TODO - Optional, verify that the event exists 
             }
             else{
-                 //System.out.println("4");
-                Redirect.redirectTo("/faces/index.xhtml");
+                Redirect.redirectTo("index?faces-redirect=true");
             }
         } else {
-             //System.out.println("5");
-            Redirect.redirectTo("/faces/index.xhtml");
+            Redirect.redirectTo("index?faces-redirect=true");
         }
     }
     
     public void checkLoggedIn(){
         if(usuario != null){
-            Redirect.redirectTo("/faces/profile.xhtml");
+            Redirect.redirectTo("profile?faces-redirect=true");
         }   
     }
 

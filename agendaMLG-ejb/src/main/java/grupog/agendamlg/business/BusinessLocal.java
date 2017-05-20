@@ -1,6 +1,7 @@
 package grupog.agendamlg.business;
 
 import grupog.agendamlg.entities.*;
+import java.time.LocalDate;
 import java.util.List;
 import javax.ejb.Local; 
 
@@ -12,22 +13,36 @@ import javax.ejb.Local;
 public interface BusinessLocal {
     public boolean validateLogin(String email, String password);
     public boolean validateRegister(String pseudonimo, String email);
-    public Usuario updateUser(Usuario u);
+    public void updateUser(Usuario u);
     public void createUser(Usuario u);
     public List<Notificacion> getNotifications(Usuario u);
     public List<Tarea> getTasks(Usuario u);
     public List<Evento> getEventsImportant(); 
-    public List<Evento> getEventsBySearch(); //and getEventsByTag
+    public List<Evento> getEventsBySearch(String text, String prov, String loca, String etiq, String dest);
+    public List<Evento> getEventsByTag(String etiq); 
+    public List<Evento> getEventsByDate(LocalDate fecha); 
     public Evento updateEvent(Evento e);
     public void createEvent(Evento e);
     public void deleteEvent(Evento e);
     public Evento getEvent(int id);
-    public List<Comentario> createComment(Comentario c);
-    //asiste, megusta, sigue
+    public Usuario getUserByEmail(String email);
+    public void createComment(Comentario c);
+    public void assist(Evento e, Usuario u);
+    public void like(Evento e, Usuario u);
+    public void follow(Evento e, Usuario u);
     public void createTag(Etiqueta e);
-    public Etiqueta updateTag(Etiqueta e);
+    public void updateTag(Etiqueta e);
     public void deleteTag(Etiqueta e);
     public void createAudience(Destinatario e);
-    public Destinatario updateAudience(Destinatario e);
+    public void updateAudience(Destinatario e);
     public void deleteAudience(Destinatario e);
+    public List<Provincia> getProvinces();
+    public List<Localidad> getTowns(String prov);
+    public List<Etiqueta> getTags();
+    public List<Destinatario> getAudiences();
+    public List<Comentario> getComentarios(Evento e);
+    public List<Usuario> getUsers();
+    public Evento getEventById(int event);
+    public List<Evento> getEvents();
+    public void setNotifications(Notificacion n);
 }

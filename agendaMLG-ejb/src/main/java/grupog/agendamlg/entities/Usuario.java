@@ -62,8 +62,6 @@ public class Usuario implements Serializable, Comparable {
     private String password_hash;
     @Column(name="sal", nullable=false)
     private String sal;
-    private double longitud;
-    private double latitud; 
     @Enumerated(EnumType.STRING)
     private Tipo_Rol rol;
     
@@ -154,22 +152,6 @@ public class Usuario implements Serializable, Comparable {
         this.sal = sal;
     }
 
-    public double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
-    public double getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
-
     public List<Comentario> getComentarios() {
         return comentarios;
     }
@@ -253,8 +235,10 @@ public class Usuario implements Serializable, Comparable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "id_usuario=" + id_usuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", pseudonimo=" + pseudonimo + ", email=" + email + ", email_notifier=" + email_notifier + ", password_hash=" + password_hash + ", sal=" + sal + ", longitud=" + longitud + ", latitud=" + latitud + ", comentarios=" + comentarios + ", notificaciones=" + notificaciones + ", megusta=" + megusta + ", sigue=" + sigue + ", asiste=" + asiste + ", rol=" + rol + '}';
+        return "Usuario{" + "id_usuario=" + id_usuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", pseudonimo=" + pseudonimo + ", email=" + email + ", email_notifier=" + email_notifier + ", password_hash=" + password_hash + ", sal=" + sal + ", rol=" + rol + ", comentarios=" + comentarios + ", notificaciones=" + notificaciones + ", megusta=" + megusta + ", sigue=" + sigue + ", asiste=" + asiste + '}';
     }
+
+    
 
     @Override
     public int compareTo(Object o) {

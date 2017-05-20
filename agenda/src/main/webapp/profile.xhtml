@@ -18,7 +18,7 @@
                         <p:tab title="Mis Eventos" >
                             <h2>Eventos al que vas a asistir</h2>
                             <c:forEach var="item" items="#{eventoBean.evento_asiste}">
-                                <p:panelGrid styleClass="mis_eventos" styleClass="eventLists">
+                                <p:panelGrid styleClass="mis_eventos eventLists">
                                     <p:row>
                                         <p:column rowspan="2">
                                             <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>
@@ -81,7 +81,7 @@
 
                                     <tr>
                                         <td><p:outputLabel value="Introduzca nuevo email: " /> </td>
-                                        <td><p:inputText value="#{configuracion.email}" placeholder="#{ControlLog.usuario.email}"
+                                        <td><p:inputText value="#{usuario.emailLogueado}"
                                                          validatorMessage="Email no válido">
                                                 <f:validateRegex pattern="(^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$){0,1}" />
                                             </p:inputText></td>
@@ -90,20 +90,20 @@
                                     <tr>
                                         <p:messages id="correo-messages" autoUpdate="true"/>
                                         <td><p:outputLabel value="Introduzca nueva contraseña: " /> </td>
-                                        <td><p:password id="pass1" match="pass2" value="#{configuracion.contrasenia}" validatorMessage="Las contraseñas no coinciden"/></td>
+                                        <td><p:password id="pass1" match="pass2" value="#{usuario.contraseniaLogueado}" validatorMessage="Las contraseñas no coinciden"/></td>
                                     </tr>
                                     <tr>
                                         <td><p:outputLabel value="Confirmar contraseña: " /> </td>
-                                        <td><p:password id="pass2" value="#{configuracion.contrasenia2}" /></td>
+                                        <td><p:password id="pass2" value="#{usuario.contrasenia2Logueado}" /></td>
                                     </tr>
                                     <tr>
                                         <td><p:outputLabel value="Introduzca Nombre: " /></td>
-                                        <td><p:inputText value="#{configuracion.nombre}" placeholder="#{configuracion.usuario.getNombre()}"/></td>
+                                        <td><p:inputText value="#{usuario.nombreLogueado}"/></td>
                                     </tr>
 
 
                                 </table>
-                                <p:commandButton action ="#{configuracion.modificar}" value ="Modificar Perfil" id="submit"
+                                <p:commandButton action ="#{usuario.modificar}" value ="Modificar Perfil" id="submit"
                                                  styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
 
                                 <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
@@ -128,7 +128,7 @@
                                         </p:row>
                                         <p:row>
                                             <p:column>
-                                                <h:outputLabel value="#{noti.fecha}" />
+                                                <h:outputLabel value="#{noti.fecha_hora}" />
                                             </p:column>
                                         </p:row>
                                     </p:panelGrid>

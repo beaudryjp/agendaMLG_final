@@ -12,72 +12,36 @@ import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.context.RequestContext;
 
 /**
  *
  * @author Susana
  */
-@Named(value = "login")
+@Named(value = "usuario")
 @SessionScoped
-public class Usuariobean implements Serializable {
+public class UsuarioBean implements Serializable {
 
     private String email;
+    private String email2;
     private String contrasenia;
-    private List<Usuario> usuarios;
+    
+    private String emailLogueado;
+    private String nombreLogueado;
+    private String contraseniaLogueado;
+    private String contrasenia2Logueado;
 
     @Inject
     private ControlLog ctrl;
-    @Inject
-    private ConfigurationBean conf;
     @EJB
     private Business business;
-
-    @PostConstruct
-    public void init() {
-        byte[] salt_bytes;
-        byte[] hash_bytes;
-        String hash;
-        String sal;
-        usuarios = new ArrayList<>();
-        email = "jeanpaul.beaudry@gmail.com";
-        contrasenia = "potato";
-        Usuario usuario = new Usuario("Susana", "LJ", "SLJ@gmail.com");
-        usuario.setRol_usuario(Usuario.Tipo_Rol.REGISTRADO);
-        usuario.setEmail_notifier(true);
-        setPassword(usuario, contrasenia);
-
-        Usuario usuario1 = new Usuario("Marie", "Poppo", "Poppo@gmail.com");
-        usuario1.setRol_usuario(Usuario.Tipo_Rol.REDACTOR);
-        usuario1.setEmail_notifier(true);
-        setPassword(usuario1, contrasenia);
-        
-
-        Usuario usuario2 = new Usuario("Pepe", "Patata", "Pepe@patata.com");
-        usuario2.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
-        usuario2.setEmail_notifier(true);
-        setPassword(usuario2, contrasenia);
-        
-        Usuario usuario3 = new Usuario("Jean-Paul", "Beaudry", "jeanpaul.beaudry@gmail.com");
-        usuario3.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
-        usuario3.setEmail_notifier(true);
-        setPassword(usuario3, contrasenia);
-        
-
-        usuarios.add(usuario);
-        usuarios.add(usuario1);
-        usuarios.add(usuario2);
-        usuarios.add(usuario3);
-    }
 
     public String getEmail() {
         return email;
@@ -95,13 +59,58 @@ public class Usuariobean implements Serializable {
         this.contrasenia = contrasenia;
     }
 
+    public String getEmail2() {
+        return email2;
+    }
+
+    public void setEmail2(String email2) {
+        this.email2 = email2;
+    }
+
+    public String getEmailLogueado() {
+        return emailLogueado;
+    }
+
+    public void setEmailLogueado(String emailLogueado) {
+        this.emailLogueado = emailLogueado;
+    }
+
+    public String getNombreLogueado() {
+        return nombreLogueado;
+    }
+
+    public void setNombreLogueado(String nombreLogueado) {
+        this.nombreLogueado = nombreLogueado;
+    }
+
+    public String getContraseniaLogueado() {
+        return contraseniaLogueado;
+    }
+
+    public void setContraseniaLogueado(String contraseniaLogueado) {
+        this.contraseniaLogueado = contraseniaLogueado;
+    }
+
+    public String getContrasenia2Logueado() {
+        return contrasenia2Logueado;
+    }
+
+    public void setContrasenia2Logueado(String contrasenia2Logueado) {
+        this.contrasenia2Logueado = contrasenia2Logueado;
+    }
+    
+    public void setControl(ControlLog con){
+        ctrl = con;
+    }
+    
+
     public String autenticar() {
         char[] password;
         byte[] hash;
         byte[] sal;
         byte[] expected_hash;
         String authentication_result_site = "login?faces-redirect=true";
-        for (Usuario index_user : usuarios) {
+        for (Usuario index_user : business.getUsers()) {
             if (index_user.getEmail().equals(email)) {
                 //Convert string password to char[]
                 password = contrasenia.toCharArray();
@@ -127,38 +136,24 @@ public class Usuariobean implements Serializable {
         return authentication_result_site;
     }
 
-    public String resetPassword(String em) {
+    public String resetPassword(Usuario u) {
         //TODO - verify that the user exists in the database
         final StringBuilder msg = new StringBuilder();
         String new_password = Password.generateSecurePassword(16);
         msg.append("<h2>Reseteo de password</h2>");
         msg.append("<h3>A d&iacute;a y hora ")
                 .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
-                .append(" ha solicitado que se resetee la constraseña de su cuenta de agendaMLG")
+                .append(" ha solicitado que se resetee la contraseña de su cuenta de agendaMLG")
                 .append("</h3>")
                 .append("<h3><b>Su nueva contraseña es: </b>")
                 .append(new_password)
                 .append("</h3>")
                 .append("<p>En cuanto acceda a su perfil, por motivos de seguridad resetee de nuevo su contraseña.</p><p style='font-size: 12px'>diariosur</p>");
-
         
-        for (Usuario x : usuarios) {
-            if (x.getEmail().equals(em)) {
-                setPassword(x, new_password);
-                Sendmail.mailThread(x.getEmail(), "Reseteo de password", msg.toString());
-                break;
-            }
-        }
+        setPassword(u, new_password);
+        Sendmail.mailThread(u.getEmail(), "Reseteo de password", msg.toString());
 
         return "index?faces-redirect=true";
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
     }
 
     private void setPassword(Usuario usuario, String password){
@@ -171,4 +166,43 @@ public class Usuariobean implements Serializable {
         //Convert hash to hexadecimal and set it for the corresponding user
         usuario.setPassword_hash(Password.bytesToHex(hash_bytes));
     }
+    public String validate() {
+        if(ctrl.getUsuario() == null){
+            Usuario u = business.getUserByEmail(email);
+            if(u != null){
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correo enviado a:", email);
+
+                RequestContext.getCurrentInstance().showMessageInDialog(message);
+                return resetPassword(u);
+            }
+            
+        }
+        return "index?faces-redirect=true";
+    }
+    
+    public void modificar (){
+        boolean modificado = false;
+        if(!email.isEmpty()){
+            ctrl.getUsuario().setEmail(email);
+            modificado = true;
+        } 
+        if (!nombreLogueado.isEmpty()){
+            ctrl.getUsuario().setNombre(nombreLogueado);
+            modificado = true;
+        }
+        if(!contrasenia.isEmpty() && !contrasenia2Logueado.isEmpty() && contrasenia.equals(contrasenia2Logueado)){
+            //Generate salt
+            byte[] salt_bytes = Password.getNextSalt();
+            //Convert password to char[]
+            char[] password = contrasenia.toCharArray();
+            //Generate hash
+            byte[] hash_bytes = Password.hash(password, salt_bytes);
+            ctrl.getUsuario().setPassword_hash(Password.bytesToHex(salt_bytes));
+            ctrl.getUsuario().setSal(Password.bytesToHex(hash_bytes));
+            modificado = true;
+        }
+        if(modificado){
+            business.updateUser(ctrl.getUsuario());
+        }
+    } 
 }

@@ -31,25 +31,8 @@ public class EtiquetaBean implements Serializable {
     public EtiquetaBean() {
     }
 
-    @PostConstruct
-    public void init() {
-        etiqueta = "Todos";
-        etiquetas = new ArrayList<>();
-//        etiquetas.add(new Etiqueta("Actos académicos"));
-        etiquetas.add(new Etiqueta("Conciertos"));
-        etiquetas.add(new Etiqueta("Espectáculos"));
-        etiquetas.add(new Etiqueta("Cineclub"));
-        etiquetas.add(new Etiqueta("Exposiciones"));
-        etiquetas.add(new Etiqueta("Conferencias"));
-        etiquetas.add(new Etiqueta("Libros"));
-        etiquetas.add(new Etiqueta("Varios"));
-        etiquetas.add(new Etiqueta("Festivales"));
-        etiquetas.add(new Etiqueta("Teatro"));
-        etiquetas.add(new Etiqueta("Todos"));
-
-    }
-
     public List<Etiqueta> getEtiquetas() {
+        etiquetas = business.getTags();
         Collections.sort(etiquetas, new Comparator<Etiqueta>() {
             @Override
             public int compare(Etiqueta o1, Etiqueta o2) {

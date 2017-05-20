@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <ui:insert name="search-sidebar">
@@ -22,7 +22,9 @@
 
                 </div>
                 <h5 class="moreEvents">
-                    <h:link outcome="events_all" value="más eventos" class="icon fa-chevron-right fa-2x"/>
+                    <pretty:link mappingId="allEvents" id="allEvents" styleClass="icon fa-chevron-right fa-2x">
+                            más eventos
+                    </pretty:link>
                 </h5>
             </p>
             <p class="lead"><h2 class="eventsImportant">eventos destacados</h2></p>

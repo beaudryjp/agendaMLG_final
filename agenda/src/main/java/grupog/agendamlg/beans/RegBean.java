@@ -6,6 +6,7 @@
 package grupog.agendamlg.beans;
 
 import grupog.agendamlg.business.Business;
+import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
 import java.io.Serializable;
 import javax.ejb.EJB;
@@ -31,8 +32,9 @@ public class RegBean implements Serializable {
     private String pseudonimo;
     private String contrasenia;
     private String contrasenia2;
-    boolean acepta;
-    
+    private boolean acepta;
+    private boolean email_notifier;
+
     @EJB
     private Business business;
 
@@ -84,6 +86,15 @@ public class RegBean implements Serializable {
         this.acepta = acepta;
     }
 
+    public boolean isEmail_notifier() {
+        return email_notifier;
+    }
+
+    public void setEmail_notifier(boolean email_notifier) {
+        this.email_notifier = email_notifier;
+    }
+   
+
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
@@ -105,20 +116,25 @@ public class RegBean implements Serializable {
 
             return "registration?faces-redirect=true";
         }
-        //TODO - Validate user with the the database
-        
-        //Generate salt
-        byte[] salt_bytes = Password.getNextSalt();
-        //Convert password to char[]
-        char[] password = contrasenia.toCharArray();
-        //Generate hash
-        byte[] hash_bytes = Password.hash(password, salt_bytes);
-        //Convert hash and salt to hexadecimal
-        String hash = Password.bytesToHex(salt_bytes);
-        String sal = Password.bytesToHex(hash_bytes);
-        
-        //TODO - Call to EJB to insert new user
-        
+
+        if (business.validateRegister(pseudonimo, email)) {
+            //Generate salt
+            byte[] salt_bytes = Password.getNextSalt();
+            //Convert password to char[]
+            char[] password = contrasenia.toCharArray();
+            //Generate hash
+            byte[] hash_bytes = Password.hash(password, salt_bytes);
+            Usuario u = new Usuario();
+            u.setApellidos(Apellidos);
+            u.setEmail(email);
+            u.setNombre(Nombre);
+            u.setPassword_hash(Password.bytesToHex(hash_bytes));
+            u.setSal(Password.bytesToHex(salt_bytes));
+            u.setPseudonimo(pseudonimo);
+            u.setEmail_notifier(acepta);
+            business.createUser(u);
+        }
+
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Registrado satisfactoriamente"));
 
         return "login?faces-redirect=true";
@@ -127,7 +143,7 @@ public class RegBean implements Serializable {
     public void addMessage() {
         String summary = acepta ? "Checked" : "Unchecked";
         FacesContext.getCurrentInstance().addMessage(FacesMessage.FACES_MESSAGES, new FacesMessage("Debe aceptar los terminos de uso"));
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "What we do in life", "Echoes in eternity.");
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "informacion", "informacion");
 
         RequestContext.getCurrentInstance().showMessageInDialog(message);
     }
