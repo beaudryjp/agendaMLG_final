@@ -45,4 +45,6 @@ public interface BusinessLocal {
     public Evento getEventById(int event);
     public List<Evento> getEvents();
     public void setNotifications(Notificacion n);
+    public Destinatario getAudienceById(int audience);
+    public Etiqueta getTagById(int tag);
 }

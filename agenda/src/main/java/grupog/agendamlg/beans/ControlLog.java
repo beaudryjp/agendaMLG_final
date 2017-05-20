@@ -104,9 +104,12 @@ public class ControlLog implements Serializable {
         if (hsr.getParameterMap().containsKey("id")) {
             name = hsr.getParameter("id");
             if (name != null && !name.isEmpty()) {
-                //System.out.println("3");
-                //System.out.println("attribute " + hsr.getParameter("event"));
-                //TODO - Optional, verify that the event exists 
+                 if(business.getAudienceById(Integer.parseInt(name)) != null){
+                    
+                }
+                else{
+                    Redirect.redirectTo("index?faces-redirect=true");
+                }
             }
             else{
                 Redirect.redirectTo("index?faces-redirect=true");

@@ -42,7 +42,7 @@ public class Business implements BusinessLocal {
             byte[] hash_bytes = Password.hash(pass, salt_bytes);
             String hash = Password.bytesToHex(hash_bytes);
 
-            if(hash.equals(u.getPassword_hash())){
+            if (hash.equals(u.getPassword_hash())) {
                 validado = true;
             }
         }
@@ -57,13 +57,13 @@ public class Business implements BusinessLocal {
                 .setParameter("upseudonimo", pseudonimo);
         boolean validado = false;
         Usuario u = query.getSingleResult();
-        if(u == null){
+        if (u == null) {
             Usuario u2 = query2.getSingleResult();
-            if(u2 == null){
+            if (u2 == null) {
                 validado = true;
             }
         }
-        
+
         return validado;
     }
 
@@ -113,14 +113,14 @@ public class Business implements BusinessLocal {
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
         List<Evento> ev = new ArrayList<>();
-        for(Evento e : query.getResultList()){
-            if(e.getTitulo().toUpperCase().contains(text.toUpperCase())){
+        for (Evento e : query.getResultList()) {
+            if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {
                 ev.add(e);
             }
         }
         return ev;
     }
-    
+
     @Override
     public List<Evento> getEventsByTag(String etiq) {
         List<Evento> ev = new ArrayList<>();
@@ -140,7 +140,6 @@ public class Business implements BusinessLocal {
                 .setParameter("fecha", fecha);
         return query.getResultList();
     }
-
 
     @Override
     public Evento updateEvent(Evento e) {
@@ -255,26 +254,26 @@ public class Business implements BusinessLocal {
                 .setParameter("uemail", email);
         return query.getSingleResult();
     }
-    
+
     @Override
-    public List<Provincia> getProvinces(){
+    public List<Provincia> getProvinces() {
         TypedQuery<Provincia> query = em.createNamedQuery("Provincia.getAllProvinces", Provincia.class);
         return query.getResultList();
     }
-    
+
     @Override
-    public List<Localidad> getTowns(String prov){
+    public List<Localidad> getTowns(String prov) {
         List<Localidad> l = new ArrayList<>();
-        for(Provincia p : getProvinces()){
-            if(p.getNombre().equals(prov)){
+        for (Provincia p : getProvinces()) {
+            if (p.getNombre().equals(prov)) {
                 l = p.getLocalidades();
             }
         }
         return l;
     }
-    
+
     @Override
-    public List<Etiqueta> getTags(){
+    public List<Etiqueta> getTags() {
         TypedQuery<Etiqueta> query = em.createNamedQuery("Etiqueta.getAllTags", Etiqueta.class);
         return query.getResultList();
     }
@@ -291,30 +290,44 @@ public class Business implements BusinessLocal {
                 .setParameter("evento", e.getId_evento());
         return query.getResultList();
     }
-    
+
     @Override
-    public List<Usuario> getUsers(){
+    public List<Usuario> getUsers() {
         TypedQuery<Usuario> query = em.createNamedQuery("Usuario.getAllUsers", Usuario.class);
         return query.getResultList();
     }
-    
+
     @Override
-    public Evento getEventById(int event){
+    public Evento getEventById(int event) {
         TypedQuery<Evento> query = em.createNamedQuery("Evento.getEventById", Evento.class)
                 .setParameter("evento", event);
         return query.getSingleResult();
     }
-    
+
     @Override
-    public List<Evento> getEvents(){
+    public List<Evento> getEvents() {
         TypedQuery<Evento> query = em.createNamedQuery("Evento.getAllEvents", Evento.class);
         return query.getResultList();
     }
-    
+
     @Override
-    public void setNotifications(Notificacion n){
+    public void setNotifications(Notificacion n) {
         em.getTransaction().begin();
         em.persist(n);
         em.getTransaction().commit();
+    }
+
+    @Override
+    public Destinatario getAudienceById(int audience) {
+        TypedQuery<Destinatario> query = em.createNamedQuery("Destinatario.getEventById", Destinatario.class)
+                .setParameter("destinatario", audience);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Etiqueta getTagById(int tag) {
+        TypedQuery<Etiqueta> query = em.createNamedQuery("Etiqueta.getEventById", Etiqueta.class)
+                .setParameter("etiqueta", tag);
+        return query.getSingleResult();
     }
 }

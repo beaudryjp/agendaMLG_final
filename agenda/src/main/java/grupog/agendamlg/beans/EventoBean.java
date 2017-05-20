@@ -5,6 +5,8 @@ import grupog.agendamlg.entities.Destinatario;
 import grupog.agendamlg.entities.Etiqueta;
 import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
+import grupog.agendamlg.entities.Notificacion;
+import grupog.agendamlg.business.Business;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -31,22 +33,15 @@ import org.primefaces.model.tagcloud.TagCloudModel;
  *
  * @author Jean Paul Beaudry
  */
-import grupog.agendamlg.business.Business;
-import grupog.agendamlg.entities.Notificacion;
 
 @ManagedBean
 @SessionScoped
 public class EventoBean implements Serializable {
 
-    /**
-     * Creates a new instance of EventoBean
-     */
     @EJB
     private Business business;
     @Inject
     private ControlLog current_user;
-    @Inject
-    private UsuarioBean usuario;
     private TagCloudModel model;
     private List<Evento> eventos;
     private List<Evento> evento_asiste;
@@ -124,10 +119,6 @@ public class EventoBean implements Serializable {
         return business.getEventsByTag(hsr.getParameter("tag"));
     }
 
-    public List<Destinatario> getDestinatarios() {
-        return destinatarios;
-    }
-
     public Evento getEvento() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         try {
@@ -177,14 +168,6 @@ public class EventoBean implements Serializable {
         this.searchText = searchText;
     }
 
-    public List<Comentario> getComentarios() {
-        return comentarios;
-    }
-
-    public void setComentarios(List<Comentario> comentarios) {
-        this.comentarios = comentarios;
-    }
-
     public String getTag() {
         return tag;
     }
@@ -202,27 +185,20 @@ public class EventoBean implements Serializable {
                     s.addTag(new DefaultTagCloudItem(et.getNombre(), "/event/tag/" + et.getNombre(), r.nextInt(4) + 1));
                 }
             }
-
         }
         return s;
     }
 
     public void sendNotificationLike(ActionEvent e) {
-        System.out.println("Like notification");
         sendMailSocial("Has pinchado like en el evento");
-        System.out.println("terminado");
     }
 
     public void sendNotificationAssist(ActionEvent e) {
-        System.out.println("Assist notification");
         sendMailSocial("Has indicado que vas a asistir al evento");
-        System.out.println("terminado");
     }
 
     public void sendNotificationFollow(ActionEvent e) {
-        System.out.println("Follow notification");
         sendMailSocial("Has indicado que quieres seguir el evento");
-        System.out.println("terminado");
     }
 
     private void sendMailSocial(String msg) {
@@ -263,52 +239,12 @@ public class EventoBean implements Serializable {
         return m;
     }
 
-    public List<Evento> getEvento_asiste() {
-        return evento_asiste;
-    }
-
-    public void setEvento_asiste(List<Evento> evento_asiste) {
-        this.evento_asiste = evento_asiste;
-    }
-
-    public List<Evento> getEvento_gusta() {
-        return evento_gusta;
-    }
-
-    public void setEvento_gusta(List<Evento> evento_gusta) {
-        this.evento_gusta = evento_gusta;
-    }
-
-    public List<Evento> getEvento_sigue() {
-        return evento_sigue;
-    }
-
-    public void setEvento_sigue(List<Evento> evento_sigue) {
-        this.evento_sigue = evento_sigue;
-    }
-
     public String getEventId() {
         return eventId;
     }
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
-    }
-
-    public List<Etiqueta> getEtiquetas() {
-        return etiquetas;
-    }
-
-    public void setEtiquetas(List<Etiqueta> etiquetas) {
-        this.etiquetas = etiquetas;
-    }
-
-    public List<Evento> getEvento_etiquetas() {
-        return evento_etiquetas;
-    }
-
-    public void setEvento_etiquetas(List<Evento> evento_etiquetas) {
-        this.evento_etiquetas = evento_etiquetas;
     }
 
     public void onload() {
@@ -335,6 +271,62 @@ public class EventoBean implements Serializable {
         e.setImagen_url(event_new_imagen_url);
         e.setImagen_titulo(event_new_imagen_titulo);
         business.createEvent(e);
+    }
+
+    // verify if these are necessary
+    
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+    
+    
+    public List<Destinatario> getDestinatarios() {
+        return destinatarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public List<Etiqueta> getEtiquetas() {
+        return etiquetas;
+    }
+
+    public void setEtiquetas(List<Etiqueta> etiquetas) {
+        this.etiquetas = etiquetas;
+    }
+
+    public List<Evento> getEvento_etiquetas() {
+        return evento_etiquetas;
+    }
+
+    public void setEvento_etiquetas(List<Evento> evento_etiquetas) {
+        this.evento_etiquetas = evento_etiquetas;
+    }
+    
+    
+    public List<Evento> getEvento_asiste() {
+        return evento_asiste;
+    }
+
+    public void setEvento_asiste(List<Evento> evento_asiste) {
+        this.evento_asiste = evento_asiste;
+    }
+
+    public List<Evento> getEvento_gusta() {
+        return evento_gusta;
+    }
+
+    public void setEvento_gusta(List<Evento> evento_gusta) {
+        this.evento_gusta = evento_gusta;
+    }
+
+    public List<Evento> getEvento_sigue() {
+        return evento_sigue;
+    }
+
+    public void setEvento_sigue(List<Evento> evento_sigue) {
+        this.evento_sigue = evento_sigue;
     }
 
 }
