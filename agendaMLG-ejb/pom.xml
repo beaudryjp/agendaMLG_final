@@ -60,9 +60,10 @@
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
-                    <compilerArgs>
+                    <compilerArgs> 
                         <arg>-verbose</arg>
                         <arg>-Xlint:unchecked</arg>
+                        <arg>-Xbootclasspath/p:${basedir}/target/classe‌​s/</arg>
                     </compilerArgs>
                     <showDeprecation>true</showDeprecation>
                 </configuration>

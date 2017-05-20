@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -53,20 +54,24 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List getNotifications(Usuario u) {
-        Query query = em.createNamedQuery("getNotifications").setParameter("id_usuario", u.getId_usuario());
+    public List<Notificacion> getNotifications(Usuario u) {
+        TypedQuery<Notificacion> query = em.createNamedQuery("Notificacion.getNotifications",Notificacion.class)
+                .setParameter("id_usuario", u.getId_usuario());
+        //Query query = em.createNamedQuery("getNotifications").setParameter("id_usuario", u.getId_usuario());
         return query.getResultList();
     }
 
     @Override
-    public List getTasks(Usuario u) {
-        Query query = em.createNamedQuery("getTasks").setParameter("id_usuario", u.getId_usuario());
+    public List<Tarea> getTasks(Usuario u) {
+        TypedQuery<Tarea> query = em.createNamedQuery("Tarea.getTasks",Tarea.class)
+                .setParameter("id_usuario", u.getId_usuario());
         return query.getResultList();
     }
 
     @Override
-    public List getEventsImportant() {
-        Query query = em.createNamedQuery("getEventsImportant").setMaxResults(2);
+    public List<Evento> getEventsImportant() {
+        TypedQuery<Evento> query = em.createNamedQuery("Evento.getEventsImportant",Evento.class)
+                .setMaxResults(2);
         return query.getResultList();
     }
 
