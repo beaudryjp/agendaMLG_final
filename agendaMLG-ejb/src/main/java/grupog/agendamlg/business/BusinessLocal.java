@@ -25,7 +25,7 @@ public interface BusinessLocal {
     public void createEvent(Evento e);
     public void deleteEvent(Evento e);
     public Evento getEvent(int id);
-    public Usuario getUserByEmail(String email);
+    public List<Usuario> getUserByEmail(String email);
     public void createComment(Comentario c);
     public void assist(Evento e, Usuario u);
     public void like(Evento e, Usuario u);
@@ -47,4 +47,6 @@ public interface BusinessLocal {
     public void setNotifications(Notificacion n);
     public Destinatario getAudienceById(int audience);
     public Etiqueta getTagById(int tag);
+    
+    
 }

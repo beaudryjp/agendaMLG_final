@@ -56,7 +56,7 @@ public class Usuario implements Serializable, Comparable {
 
     @Column(name="email", nullable=false)
     private String email;
-    @Column(name="email_notifier", nullable=false)
+    @Column(name="email_notifier", nullable=false, columnDefinition="TINYINT", length = 1)  
     private boolean email_notifier;
     @Column(name="password_hash", nullable=false)
     private String password_hash;

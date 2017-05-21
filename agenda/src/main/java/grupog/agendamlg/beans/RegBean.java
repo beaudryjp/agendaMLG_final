@@ -116,7 +116,7 @@ public class RegBean implements Serializable {
 
             return "registration?faces-redirect=true";
         }
-
+        System.out.println("Llego aqui");
         if (business.validateRegister(pseudonimo, email)) {
             //Generate salt
             byte[] salt_bytes = Password.getNextSalt();
@@ -125,6 +125,7 @@ public class RegBean implements Serializable {
             //Generate hash
             byte[] hash_bytes = Password.hash(password, salt_bytes);
             Usuario u = new Usuario();
+            u.setRol_usuario(Usuario.Tipo_Rol.REGISTRADO);
             u.setApellidos(Apellidos);
             u.setEmail(email);
             u.setNombre(Nombre);
@@ -134,7 +135,7 @@ public class RegBean implements Serializable {
             u.setEmail_notifier(acepta);
             business.createUser(u);
         }
-
+        
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Registrado satisfactoriamente"));
 
         return "login?faces-redirect=true";

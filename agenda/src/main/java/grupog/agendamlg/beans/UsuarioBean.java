@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -129,7 +130,7 @@ public class UsuarioBean implements Serializable {
                 else{
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario o contraseña incorrecto."));
                 }
-                break;
+                
             }
         }
 
@@ -168,12 +169,12 @@ public class UsuarioBean implements Serializable {
     }
     public String validate() {
         if(ctrl.getUsuario() == null){
-            Usuario u = business.getUserByEmail(email);
-            if(u != null){
+            List<Usuario> u = business.getUserByEmail(email);
+            if(!u.isEmpty()){
                 FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correo enviado a:", email);
 
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
-                return resetPassword(u);
+                return resetPassword(u.get(0));
             }
             
         }
@@ -182,23 +183,26 @@ public class UsuarioBean implements Serializable {
     
     public void modificar (){
         boolean modificado = false;
-        if(!email.isEmpty()){
-            ctrl.getUsuario().setEmail(email);
+        if(!emailLogueado.isEmpty() ){
+            List<Usuario> us = business.getUserByEmail(emailLogueado);
+            if(us.isEmpty()){
+            ctrl.getUsuario().setEmail(emailLogueado);
             modificado = true;
+            }
         } 
         if (!nombreLogueado.isEmpty()){
             ctrl.getUsuario().setNombre(nombreLogueado);
             modificado = true;
         }
-        if(!contrasenia.isEmpty() && !contrasenia2Logueado.isEmpty() && contrasenia.equals(contrasenia2Logueado)){
+        if(!contraseniaLogueado.isEmpty() && !contrasenia2Logueado.isEmpty() && contraseniaLogueado.equals(contrasenia2Logueado)){
             //Generate salt
             byte[] salt_bytes = Password.getNextSalt();
             //Convert password to char[]
-            char[] password = contrasenia.toCharArray();
+            char[] password = contraseniaLogueado.toCharArray();
             //Generate hash
             byte[] hash_bytes = Password.hash(password, salt_bytes);
-            ctrl.getUsuario().setPassword_hash(Password.bytesToHex(salt_bytes));
-            ctrl.getUsuario().setSal(Password.bytesToHex(hash_bytes));
+            ctrl.getUsuario().setPassword_hash(Password.bytesToHex(hash_bytes));
+            ctrl.getUsuario().setSal(Password.bytesToHex(salt_bytes));
             modificado = true;
         }
         if(modificado){

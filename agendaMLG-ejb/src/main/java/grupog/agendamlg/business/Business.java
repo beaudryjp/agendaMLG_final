@@ -29,21 +29,21 @@ import javax.persistence.TypedQuery;
 public class Business implements BusinessLocal {
 
     @PersistenceContext(unitName = "AgendaMLG-PU")
-    private EntityManager em;
+    private EntityManager em ;
 
     @Override
     public boolean validateLogin(String email, String password) {
         TypedQuery<Usuario> query = em.createNamedQuery("checkEmail", Usuario.class)
-                .setParameter("email", email);
+                .setParameter("uemail", email);
         boolean validado = false;
-        Usuario u = query.getSingleResult();
-        if (u != null) {
-            byte[] salt_bytes = Password.hexStringToByteArray(u.getSal());
+        List<Usuario> u = query.getResultList();
+        if (u.isEmpty()) {
+            byte[] salt_bytes = Password.hexStringToByteArray(u.get(0).getSal());
             char[] pass = password.toCharArray();
             byte[] hash_bytes = Password.hash(pass, salt_bytes);
             String hash = Password.bytesToHex(hash_bytes);
 
-            if (hash.equals(u.getPassword_hash())) {
+            if (hash.equals(u.get(0).getPassword_hash())) {
                 validado = true;
             }
         }
@@ -53,14 +53,14 @@ public class Business implements BusinessLocal {
     @Override
     public boolean validateRegister(String pseudonimo, String email) {
         TypedQuery<Usuario> query = em.createNamedQuery("checkEmail", Usuario.class)
-                .setParameter("email", email);
+                .setParameter("uemail", email);
         TypedQuery<Usuario> query2 = em.createNamedQuery("checkUsername", Usuario.class)
                 .setParameter("upseudonimo", pseudonimo);
         boolean validado = false;
-        Usuario u = query.getSingleResult();
-        if (u == null) {
-            Usuario u2 = query2.getSingleResult();
-            if (u2 == null) {
+        List<Usuario> u = query.getResultList();
+        if (u.isEmpty()) {
+            List<Usuario> u2 = query2.getResultList();
+            if (u2.isEmpty()) {
                 validado = true;
             }
         }
@@ -70,17 +70,18 @@ public class Business implements BusinessLocal {
 
     @Override
     public void updateUser(Usuario u) {
-        em.getTransaction().begin();
+        
         em.merge(u);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void createUser(Usuario u) {
+       
         if (validateRegister(u.getPseudonimo(), u.getEmail())) {
-            em.getTransaction().begin();
+   //         
             em.persist(u);
-            em.getTransaction().commit();
+  //          
         }
     }
 
@@ -144,9 +145,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public Evento updateEvent(Evento e) {
-        em.getTransaction().begin();
+        
         em.merge(e);
-        em.getTransaction().commit();
+        
         //[Optional] RF-005 Mandar notificaciones al correo y notificaciones internas si un evento cambia
         //Get all users who are liking, assisting or following
         //Check if the users have the email notifier enabled
@@ -156,65 +157,65 @@ public class Business implements BusinessLocal {
 
     @Override
     public void createEvent(Evento e) {
-        em.getTransaction().begin();
+        
         em.persist(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void deleteEvent(Evento e) {
-        em.getTransaction().begin();
+        
         em.remove(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void createComment(Comentario c) {
-        em.getTransaction().begin();
+        
         em.persist(c);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void createTag(Etiqueta e) {
-        em.getTransaction().begin();
+        
         em.persist(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void updateTag(Etiqueta e) {
-        em.getTransaction().begin();
+        
         em.merge(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void deleteTag(Etiqueta e) {
-        em.getTransaction().begin();
+        
         em.remove(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void createAudience(Destinatario e) {
-        em.getTransaction().begin();
+        
         em.persist(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void updateAudience(Destinatario e) {
-        em.getTransaction().begin();
+        
         em.merge(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void deleteAudience(Destinatario e) {
-        em.getTransaction().begin();
+        
         em.remove(e);
-        em.getTransaction().commit();
+        
     }
 
     @Override
@@ -224,36 +225,36 @@ public class Business implements BusinessLocal {
 
     @Override
     public void assist(Evento e, Usuario u) {
-        em.getTransaction().begin();
+        
         u.getAsiste().add(e);
         em.persist(u);
         //em.merge(u);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void like(Evento e, Usuario u) {
-        em.getTransaction().begin();
+        
         u.getMegusta().add(e);
         em.persist(u);
         //em.merge(u);
-        em.getTransaction().commit();
+        
     }
 
     @Override
     public void follow(Evento e, Usuario u) {
-        em.getTransaction().begin();
+        
         u.getSigue().add(e);
         em.persist(u);
         //em.merge(u);
-        em.getTransaction().commit();
+        
     }
 
     @Override
-    public Usuario getUserByEmail(String email) {
+    public List<Usuario> getUserByEmail(String email) {
         TypedQuery<Usuario> query = em.createNamedQuery("checkEmail", Usuario.class)
                 .setParameter("uemail", email);
-        return query.getSingleResult();
+        return query.getResultList();
     }
 
     @Override
@@ -307,9 +308,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public void setNotifications(Notificacion n) {
-        em.getTransaction().begin();
+        
         em.persist(n);
-        em.getTransaction().commit();
+        
     }
 
     @Override
