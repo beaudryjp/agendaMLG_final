@@ -29,14 +29,18 @@ public class DestinatarioBean implements Serializable {
     }
 
     public List<Destinatario> getDestinatarios() {
-        destinatarios = business.getAudiences();
-        Collections.sort(destinatarios, new Comparator<Destinatario>() {
-            @Override
-            public int compare(Destinatario o1, Destinatario o2) {
-                return o1.getDescripcion().compareTo(o2.getDescripcion());
-            }
-        });
-        return destinatarios;
+        List<Destinatario> d = business.getAudiences();
+        if (!d.isEmpty()) {
+            Collections.sort(d, new Comparator<Destinatario>() {
+                @Override
+                public int compare(Destinatario o1, Destinatario o2) {
+                    return o1.getDescripcion().compareTo(o2.getDescripcion());
+                }
+            });
+            return d;
+        } else {
+            return null;
+        }
     }
 
     public String getDestinatario() {
@@ -46,7 +50,7 @@ public class DestinatarioBean implements Serializable {
     public void setDestinatario(String destinatario) {
         this.destinatario = destinatario;
     }
-    
+
     public Destinatario getSpecificDestinatario() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         try {

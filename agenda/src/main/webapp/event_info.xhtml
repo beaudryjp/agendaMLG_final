@@ -34,13 +34,13 @@
                         <c:choose>
                             <c:when test="#{!empty ControlLog.usuario}">
                                 <h5 class="icon">
-                                    <a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
+                                    <i><h:outputText value="#{eventoBean.numAssists}"/></i><a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
                                 </h5>
                                 <h5 class="icon">
-                                    <a data-toggle="tooltip" title="Assist"  data-placement="left" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
+                                    <i><h:outputText value="#{eventoBean.numAssists}"/></i><a data-toggle="tooltip" title="Assist"  data-placement="left" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
                                 </h5>
                                 <h5 class="icon">
-                                    <a data-toggle="tooltip" title="Follow"  data-placement="left" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
+                                    <i><h:outputText value="#{eventoBean.numFollows}"/></i><a data-toggle="tooltip" title="Follow"  data-placement="left" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
                                 </h5>
                             </c:when>
                         </c:choose>

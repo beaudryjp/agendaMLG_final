@@ -4,11 +4,9 @@ import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Etiqueta;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 
@@ -32,14 +30,18 @@ public class EtiquetaBean implements Serializable {
     }
 
     public List<Etiqueta> getEtiquetas() {
-        etiquetas = business.getTags();
-        Collections.sort(etiquetas, new Comparator<Etiqueta>() {
-            @Override
-            public int compare(Etiqueta o1, Etiqueta o2) {
-                return o1.getNombre().compareTo(o2.getNombre());
-            }
-        });
-        return etiquetas;
+        List<Etiqueta> e = business.getTags();
+        if (!e.isEmpty()) {
+            Collections.sort(e, new Comparator<Etiqueta>() {
+                @Override
+                public int compare(Etiqueta o1, Etiqueta o2) {
+                    return o1.getNombre().compareTo(o2.getNombre());
+                }
+            });
+            return e;
+        }
+        else
+            return null;
     }
 
     public String getEtiqueta() {

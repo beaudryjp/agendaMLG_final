@@ -79,6 +79,7 @@ public class ProvinciaBean implements Serializable {
     }
 
     public String getProvincia() {
+        provincias = business.getProvinces();
         Collections.sort(provincias, new Comparator<Provincia>() {
             @Override
             public int compare(Provincia o1, Provincia o2) {
@@ -99,4 +100,14 @@ public class ProvinciaBean implements Serializable {
     public void setLocalidad(String localidad) {
         this.localidad = localidad;
     }
+
+    public List<Localidad> getLocalidades() {
+        return localidades;
+    }
+
+    public void setLocalidades(List<Localidad> localidades) {
+        this.localidades = localidades;
+    }
+    
+    
 }

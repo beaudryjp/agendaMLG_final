@@ -33,7 +33,6 @@ import org.primefaces.model.tagcloud.TagCloudModel;
  *
  * @author Jean Paul Beaudry
  */
-
 @ManagedBean
 @SessionScoped
 public class EventoBean implements Serializable {
@@ -79,14 +78,18 @@ public class EventoBean implements Serializable {
     }
 
     public List<Evento> getEventosProximos() {
-        eventos = business.getEvents();
-        Collections.sort(eventos, new Comparator<Evento>() {
-            @Override
-            public int compare(Evento o1, Evento o2) {
-                return o1.getFecha_inicio().compareTo(o2.getFecha_inicio());
-            }
-        });
-        return eventos.subList(0, 2);
+        List<Evento> e = business.getEvents();
+        if (!e.isEmpty()) {
+            Collections.sort(e, new Comparator<Evento>() {
+                @Override
+                public int compare(Evento o1, Evento o2) {
+                    return o1.getFecha_inicio().compareTo(o2.getFecha_inicio());
+                }
+            });
+            return e.subList(0, 2);
+        } else {
+            return null;
+        }
     }
 
     public List<Evento> getEventos() {
@@ -247,6 +250,110 @@ public class EventoBean implements Serializable {
         this.eventId = eventId;
     }
 
+    public TagCloudModel getModel() {
+        return model;
+    }
+
+    public void setModel(TagCloudModel model) {
+        this.model = model;
+    }
+
+    public LocalDate getDateSelected() {
+        return dateSelected;
+    }
+
+    public void setDateSelected(LocalDate dateSelected) {
+        this.dateSelected = dateSelected;
+    }
+
+    public String getEvent_new_titulo() {
+        return event_new_titulo;
+    }
+
+    public void setEvent_new_titulo(String event_new_titulo) {
+        this.event_new_titulo = event_new_titulo;
+    }
+
+    public String getEvent_new_descripcion() {
+        return event_new_descripcion;
+    }
+
+    public void setEvent_new_descripcion(String event_new_descripcion) {
+        this.event_new_descripcion = event_new_descripcion;
+    }
+
+    public Date getEvent_new_fecha_inicio() {
+        return event_new_fecha_inicio;
+    }
+
+    public void setEvent_new_fecha_inicio(Date event_new_fecha_inicio) {
+        this.event_new_fecha_inicio = event_new_fecha_inicio;
+    }
+
+    public Date getEvent_new_fecha_fin() {
+        return event_new_fecha_fin;
+    }
+
+    public void setEvent_new_fecha_fin(Date event_new_fecha_fin) {
+        this.event_new_fecha_fin = event_new_fecha_fin;
+    }
+
+    public String getEvent_new_horario() {
+        return event_new_horario;
+    }
+
+    public void setEvent_new_horario(String event_new_horario) {
+        this.event_new_horario = event_new_horario;
+    }
+
+    public String getEvent_new_precio() {
+        return event_new_precio;
+    }
+
+    public void setEvent_new_precio(String event_new_precio) {
+        this.event_new_precio = event_new_precio;
+    }
+
+    public double getEvent_new_longitud() {
+        return event_new_longitud;
+    }
+
+    public void setEvent_new_longitud(double event_new_longitud) {
+        this.event_new_longitud = event_new_longitud;
+    }
+
+    public double getEvent_new_latitud() {
+        return event_new_latitud;
+    }
+
+    public void setEvent_new_latitud(double event_new_latitud) {
+        this.event_new_latitud = event_new_latitud;
+    }
+
+    public boolean isEvent_new_destacado() {
+        return event_new_destacado;
+    }
+
+    public void setEvent_new_destacado(boolean event_new_destacado) {
+        this.event_new_destacado = event_new_destacado;
+    }
+
+    public String getEvent_new_imagen_url() {
+        return event_new_imagen_url;
+    }
+
+    public void setEvent_new_imagen_url(String event_new_imagen_url) {
+        this.event_new_imagen_url = event_new_imagen_url;
+    }
+
+    public String getEvent_new_imagen_titulo() {
+        return event_new_imagen_titulo;
+    }
+
+    public void setEvent_new_imagen_titulo(String event_new_imagen_titulo) {
+        this.event_new_imagen_titulo = event_new_imagen_titulo;
+    }
+
     public void onload() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
@@ -273,13 +380,24 @@ public class EventoBean implements Serializable {
         business.createEvent(e);
     }
 
+    public int numAssists() {
+        System.out.println(business.getEventById(Integer.parseInt(eventId)).getAsiste().size());
+        return business.getEventById(Integer.parseInt(eventId)).getAsiste().size();
+    }
+
+    public int numLikes() {
+        return business.getEventById(Integer.parseInt(eventId)).getMegusta().size();
+    }
+
+    public int numFollows() {
+        return business.getEventById(Integer.parseInt(eventId)).getSigue().size();
+    }
+
     // verify if these are necessary
-    
     public List<Comentario> getComentarios() {
         return comentarios;
     }
-    
-    
+
     public List<Destinatario> getDestinatarios() {
         return destinatarios;
     }
@@ -303,8 +421,7 @@ public class EventoBean implements Serializable {
     public void setEvento_etiquetas(List<Evento> evento_etiquetas) {
         this.evento_etiquetas = evento_etiquetas;
     }
-    
-    
+
     public List<Evento> getEvento_asiste() {
         return evento_asiste;
     }

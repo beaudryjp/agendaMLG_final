@@ -16,6 +16,7 @@ import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -32,7 +33,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public boolean validateLogin(String email, String password) {
-        TypedQuery<Usuario> query = em.createNamedQuery("Usuario.checkEmail", Usuario.class)
+        TypedQuery<Usuario> query = em.createNamedQuery("checkEmail", Usuario.class)
                 .setParameter("email", email);
         boolean validado = false;
         Usuario u = query.getSingleResult();
@@ -51,9 +52,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public boolean validateRegister(String pseudonimo, String email) {
-        TypedQuery<Usuario> query = em.createNamedQuery("Usuario.checkEmail", Usuario.class)
+        TypedQuery<Usuario> query = em.createNamedQuery("checkEmail", Usuario.class)
                 .setParameter("email", email);
-        TypedQuery<Usuario> query2 = em.createNamedQuery("Usuario.checkUsername", Usuario.class)
+        TypedQuery<Usuario> query2 = em.createNamedQuery("checkUsername", Usuario.class)
                 .setParameter("upseudonimo", pseudonimo);
         boolean validado = false;
         Usuario u = query.getSingleResult();
@@ -85,7 +86,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Notificacion> getNotifications(Usuario u) {
-        TypedQuery<Notificacion> query = em.createNamedQuery("Notificacion.getNotifications", Notificacion.class)
+        TypedQuery<Notificacion> query = em.createNamedQuery("getNotifications", Notificacion.class)
                 .setParameter("id_usuario", u.getId_usuario());
         //Query query = em.createNamedQuery("getNotifications").setParameter("id_usuario", u.getId_usuario());
         return query.getResultList();
@@ -93,21 +94,21 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Tarea> getTasks(Usuario u) {
-        TypedQuery<Tarea> query = em.createNamedQuery("Tarea.getTasks", Tarea.class)
+        TypedQuery<Tarea> query = em.createNamedQuery("getTasks", Tarea.class)
                 .setParameter("id_usuario", u.getId_usuario());
         return query.getResultList();
     }
 
     @Override
     public List<Evento> getEventsImportant() {
-        TypedQuery<Evento> query = em.createNamedQuery("Evento.getEventsImportant", Evento.class)
+        TypedQuery<Evento> query = em.createNamedQuery("getEventsImportant", Evento.class)
                 .setMaxResults(2);
         return query.getResultList();
     }
 
     @Override
     public List<Evento> getEventsBySearch(String text, String prov, String loca, String etiq, String dest) {
-        TypedQuery<Evento> query = em.createNamedQuery("Evento.getEventsBySearch", Evento.class)
+        TypedQuery<Evento> query = em.createNamedQuery("getEventsBySearch", Evento.class)
                 .setParameter("localidad", loca)
                 .setParameter("provincia", prov)
                 .setParameter("etiqueta", etiq)
@@ -136,7 +137,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Evento> getEventsByDate(LocalDate fecha) {
-        TypedQuery<Evento> query = em.createNamedQuery("Evento.getEventsByDate", Evento.class)
+        TypedQuery<Evento> query = em.createNamedQuery("getEventsByDate", Evento.class)
                 .setParameter("fecha", fecha);
         return query.getResultList();
     }
@@ -250,14 +251,14 @@ public class Business implements BusinessLocal {
 
     @Override
     public Usuario getUserByEmail(String email) {
-        TypedQuery<Usuario> query = em.createNamedQuery("Usuario.checkEmail", Usuario.class)
+        TypedQuery<Usuario> query = em.createNamedQuery("checkEmail", Usuario.class)
                 .setParameter("uemail", email);
         return query.getSingleResult();
     }
 
     @Override
     public List<Provincia> getProvinces() {
-        TypedQuery<Provincia> query = em.createNamedQuery("Provincia.getAllProvinces", Provincia.class);
+        TypedQuery<Provincia> query = em.createNamedQuery("getAllProvinces", Provincia.class);
         return query.getResultList();
     }
 
@@ -273,40 +274,34 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Etiqueta> getTags() {
-        TypedQuery<Etiqueta> query = em.createNamedQuery("Etiqueta.getAllTags", Etiqueta.class);
-        return query.getResultList();
-    }
-
-    @Override
     public List<Destinatario> getAudiences() {
-        TypedQuery<Destinatario> query = em.createNamedQuery("Destinatario.getAllAudience", Destinatario.class);
+        TypedQuery<Destinatario> query = em.createNamedQuery("getAllAudience", Destinatario.class);
         return query.getResultList();
     }
 
     @Override
     public List<Comentario> getComentarios(Evento e) {
-        TypedQuery<Comentario> query = em.createNamedQuery("Comentario.getAllCommentsFromEvent", Comentario.class)
+        TypedQuery<Comentario> query = em.createNamedQuery("getAllCommentsFromEvent", Comentario.class)
                 .setParameter("evento", e.getId_evento());
         return query.getResultList();
     }
 
     @Override
     public List<Usuario> getUsers() {
-        TypedQuery<Usuario> query = em.createNamedQuery("Usuario.getAllUsers", Usuario.class);
+        TypedQuery<Usuario> query = em.createNamedQuery("getAllUsers", Usuario.class);
         return query.getResultList();
     }
 
     @Override
     public Evento getEventById(int event) {
-        TypedQuery<Evento> query = em.createNamedQuery("Evento.getEventById", Evento.class)
+        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", event);
         return query.getSingleResult();
     }
 
     @Override
     public List<Evento> getEvents() {
-        TypedQuery<Evento> query = em.createNamedQuery("Evento.getAllEvents", Evento.class);
+        TypedQuery<Evento> query = em.createNamedQuery("getAllEvents", Evento.class);
         return query.getResultList();
     }
 
@@ -319,15 +314,26 @@ public class Business implements BusinessLocal {
 
     @Override
     public Destinatario getAudienceById(int audience) {
-        TypedQuery<Destinatario> query = em.createNamedQuery("Destinatario.getEventById", Destinatario.class)
+        TypedQuery<Destinatario> query = em.createNamedQuery("getEventById", Destinatario.class)
                 .setParameter("destinatario", audience);
         return query.getSingleResult();
     }
 
     @Override
     public Etiqueta getTagById(int tag) {
-        TypedQuery<Etiqueta> query = em.createNamedQuery("Etiqueta.getEventById", Etiqueta.class)
+        TypedQuery<Etiqueta> query = em.createNamedQuery("getEventById", Etiqueta.class)
                 .setParameter("etiqueta", tag);
         return query.getSingleResult();
     }
+    
+    @Override
+    public List<Etiqueta> getTags(){
+        TypedQuery<Etiqueta> query = em.createNamedQuery("getAllTags", Etiqueta.class);
+        return query.getResultList();
+    }
+    
+    public void init(){
+        
+    }
+
 }
