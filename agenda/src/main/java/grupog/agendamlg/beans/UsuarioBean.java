@@ -14,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
@@ -33,12 +34,12 @@ public class UsuarioBean implements Serializable {
     private String email;
     private String email2;
     private String contrasenia;
-    
+   
     private String emailLogueado;
-    private String nombreLogueado;
     private String contraseniaLogueado;
     private String contrasenia2Logueado;
-
+    private boolean emailNotifier= true;
+    
     @Inject
     private ControlLog ctrl;
     @EJB
@@ -75,15 +76,7 @@ public class UsuarioBean implements Serializable {
     public void setEmailLogueado(String emailLogueado) {
         this.emailLogueado = emailLogueado;
     }
-
-    public String getNombreLogueado() {
-        return nombreLogueado;
-    }
-
-    public void setNombreLogueado(String nombreLogueado) {
-        this.nombreLogueado = nombreLogueado;
-    }
-
+    
     public String getContraseniaLogueado() {
         return contraseniaLogueado;
     }
@@ -103,6 +96,18 @@ public class UsuarioBean implements Serializable {
     public void setControl(ControlLog con){
         ctrl = con;
     }
+    @PostConstruct
+    public void init(){
+        emailNotifier=ctrl.getUsuario().isEmail_notifier();
+    }
+    public boolean isEmailNotifier() {
+        return emailNotifier;
+    }
+
+    public void setEmailNotifier(boolean emailNotifier) {
+        this.emailNotifier = emailNotifier;
+    }
+
     
 
     public String autenticar() {
@@ -190,8 +195,8 @@ public class UsuarioBean implements Serializable {
             modificado = true;
             }
         } 
-        if (!nombreLogueado.isEmpty()){
-            ctrl.getUsuario().setNombre(nombreLogueado);
+        if (emailNotifier!=ctrl.getUsuario().isEmail_notifier() ){
+            ctrl.getUsuario().setEmail_notifier(emailNotifier);
             modificado = true;
         }
         if(!contraseniaLogueado.isEmpty() && !contrasenia2Logueado.isEmpty() && contraseniaLogueado.equals(contrasenia2Logueado)){
@@ -208,5 +213,6 @@ public class UsuarioBean implements Serializable {
         if(modificado){
             business.updateUser(ctrl.getUsuario());
         }
+        
     } 
 }

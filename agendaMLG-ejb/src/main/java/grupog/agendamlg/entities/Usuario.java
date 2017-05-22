@@ -78,6 +78,11 @@ public class Usuario implements Serializable, Comparable {
     @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="jn_asiste_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> asiste;
+    @ManyToMany
+    @JoinTable(name = "jn_tareas_id", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_tarea"))
+    private List<Tarea> tareas;
+    @OneToMany(mappedBy="creador_peticion",cascade=CascadeType.ALL)
+    private List<Tarea> peticion;
 
     public Usuario(String nombre, String apellidos, String email) {
         this.nombre = nombre;
@@ -200,6 +205,24 @@ public class Usuario implements Serializable, Comparable {
         this.rol = rol;
     }
 
+    public List<Tarea> getTareas() {
+        return tareas;
+    }
+
+    public void setTareas(List<Tarea> tareas) {
+        this.tareas = tareas;
+    }
+
+    public List<Tarea> getPeticion() {
+        return peticion;
+    }
+
+    public void setPeticion(List<Tarea> peticion) {
+        this.peticion = peticion;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 3;

@@ -38,7 +38,7 @@
                                     Título
                                 </p:column>
                                 <p:column colspan="2">
-                                    <p:inputText id="eventTitle" value="Kafka, la verdad oculta" placeholder="Título" disabled="true"/>
+                                    <p:inputText id="eventTitle" value="Kafka, la verdad oculta" placeholder="Título" />
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -46,7 +46,7 @@
                                     Descripcion
                                 </p:column>
                                 <p:column>
-                                    <p:inputTextarea id="eventDescripcion" placeholder="Descripción"  disabled="true" rows="10" cols="50" value="A las 20:30 h comienza Kafka, la verdad oculta. Coordinado por Paco Casado. Como en cada sesión se presentará la obra pictórica de José María Llobel, perteneciente al proyecto Cine pintado y cerraremos con nuestro habitual coloquio."/>
+                                    <p:inputTextarea id="eventDescripcion" placeholder="Descripción"   rows="10" cols="50" value="A las 20:30 h comienza Kafka, la verdad oculta. Coordinado por Paco Casado. Como en cada sesión se presentará la obra pictórica de José María Llobel, perteneciente al proyecto Cine pintado y cerraremos con nuestro habitual coloquio."/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -54,7 +54,7 @@
                                     Publico
                                 </p:column>
                                 <p:column>
-                                    <h:selectManyListbox id="eventDestinatario" value="Todos" disabled="true">
+                                    <h:selectManyListbox id="eventDestinatario" value="Todos" >
                                         <f:selectItems value="#{destinatarioBean.destinatarios}"  var="d" itemLabel="#{d.descripcion}" itemValue="#{d.descripcion}" />
                                     </h:selectManyListbox>
                                 </p:column>
@@ -64,7 +64,7 @@
                                     Etiquetas
                                 </p:column>
                                 <p:column>
-                                    <h:selectManyListbox id="eventEtiqueta" value="Cineclub" disabled="true">
+                                    <h:selectManyListbox id="eventEtiqueta" value="Cineclub" >
                                         <f:selectItems value="#{etiquetaBean.etiquetas}"  var="e" itemLabel="#{e.nombre}" itemValue="#{e.nombre}" />
                                     </h:selectManyListbox>
                                 </p:column>
@@ -74,7 +74,7 @@
                                     Fecha inicio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaIni" value="05/05/2017" disabled="true" placeholder="Fecha Inicio"/>
+                                    <p:inputText id="eventFechaIni" value="05/05/2017"  placeholder="Fecha Inicio"/>
 
                                 </p:column>
                             </p:row>
@@ -83,7 +83,7 @@
                                     Fecha fin
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaFin" value="05/05/2017" disabled="true" placeholder="Fecha Fin"/>
+                                    <p:inputText id="eventFechaFin" value="05/05/2017"  placeholder="Fecha Fin"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -91,7 +91,7 @@
                                     Horario
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventHorario" value="20:30" disabled="true" placeholder="Horario"/>
+                                    <p:inputText id="eventHorario" value="20:30"  placeholder="Horario"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -99,7 +99,7 @@
                                     Precio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventPrecio" value="Entrada libre hasta completar aforo." disabled="true" placeholder="Precio"/>
+                                    <p:inputText id="eventPrecio" value="Entrada libre hasta completar aforo."  placeholder="Precio"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -107,7 +107,7 @@
                                     Imagen
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventImage" value="img/eventos/556084_1.jpg" disabled="true" placeholder="URL de la Imagen"/>
+                                    <p:fileUpload id="eventImage" value="#{eventoBean.event_new_imagen_url}"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -115,7 +115,7 @@
                                     Provincia
                                 </p:column>
                                 <p:column colspan="2">
-                                    <h:selectOneMenu id="provincia" class="form-control"  value="#{provinciaBean.provincia}" disabled="true">
+                                    <h:selectOneMenu id="provincia" class="form-control"  value="#{provinciaBean.provincia}" >
                                         <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
                                         <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
                                     </h:selectOneMenu>
@@ -125,11 +125,12 @@
                                     Localidad
                                 </p:column>
                                 <p:column>
-                                    <h:selectOneMenu id="localidad"  class="form-control" value="Torremolinos" disabled="true">
+                                    <h:selectOneMenu id="localidad"  class="form-control" value="Torremolinos" >
                                         <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                     </h:selectOneMenu>
                                 </p:column>
-                            </p:row>
+                            </p:row>  
+                            <c:if test="#{ControlLog.isUserAdmin()}">
                             <p:row>
                                 <p:column>
                                     Destacado
@@ -138,6 +139,7 @@
                                     <p:selectBooleanCheckbox id="destacado" />
                                 </p:column>
                             </p:row>
+                            </c:if> 
                             <p:row>
                                 <p:column colspan="2">
                                     <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>

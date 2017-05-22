@@ -8,7 +8,13 @@ import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.general.Sendmail;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,6 +31,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.io.FilenameUtils;
+import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
 import org.primefaces.model.tagcloud.TagCloudModel;
@@ -71,11 +79,8 @@ public class EventoBean implements Serializable {
     private double event_new_longitud;
     private double event_new_latitud;
     private boolean event_new_destacado;
-    private String event_new_imagen_url;
+    private UploadedFile event_new_imagen_url;
     private String event_new_imagen_titulo;
-
-    public EventoBean() {
-    }
 
     public List<Evento> getEventosProximos() {
         List<Evento> e = business.getEvents();
@@ -338,11 +343,11 @@ public class EventoBean implements Serializable {
         this.event_new_destacado = event_new_destacado;
     }
 
-    public String getEvent_new_imagen_url() {
+    public UploadedFile getEvent_new_imagen_url() {
         return event_new_imagen_url;
     }
 
-    public void setEvent_new_imagen_url(String event_new_imagen_url) {
+    public void setEvent_new_imagen_url(UploadedFile event_new_imagen_url) {
         this.event_new_imagen_url = event_new_imagen_url;
     }
 
@@ -364,7 +369,17 @@ public class EventoBean implements Serializable {
         this.setTag(hsr.getParameter("tag"));
     }
 
-    public void createEvent() {
+    public void createEvent() throws IOException{
+        
+        Path folder = Paths.get("/path/to/uploads");
+        String filename = FilenameUtils.getBaseName(event_new_imagen_url.getFileName());
+        String extension = FilenameUtils.getExtension(event_new_imagen_url.getFileName());
+        Path file = Files.createTempFile(folder, filename + "-", "." + extension);
+        try (InputStream input = event_new_imagen_url.getInputstream()) {
+            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
+        }
+     
+        
         Evento e = new Evento();
         e.setTitulo(event_new_titulo);
         e.setDescripcion(event_new_descripcion);
@@ -375,7 +390,7 @@ public class EventoBean implements Serializable {
         e.setLongitud(event_new_longitud);
         e.setLatitud(event_new_latitud);
         e.setDestacado(event_new_destacado);
-        e.setImagen_url(event_new_imagen_url);
+        e.setImagen_url(event_new_imagen_url.getFileName());
         e.setImagen_titulo(event_new_imagen_titulo);
         business.createEvent(e);
     }

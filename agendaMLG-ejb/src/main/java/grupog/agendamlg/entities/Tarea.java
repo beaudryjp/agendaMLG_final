@@ -3,14 +3,18 @@ package grupog.agendamlg.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+
 
 /**
 * Notificacion.java
@@ -19,9 +23,7 @@ import javax.persistence.NamedQuery;
 * @author Jean Paul Beaudry
 */
 @Entity
-@NamedQueries({
-    @NamedQuery(name="getTasks", query="SELECT t from Tarea t WHERE t.dador.id_usuario = :id_usuario"),
-})
+
 public class Tarea implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,10 +34,11 @@ public class Tarea implements Serializable {
     private String mensaje;
     private boolean aceptado;
     private LocalDateTime fecha_hora;
+    @ManyToMany
+    private List <Usuario> redactores;
     @ManyToOne(optional=true)
-    private Usuario dador;
-    @ManyToOne(optional=true)
-    private Usuario beneficiario;
+    @JoinTable(name = "jn_etiqueta_id", joinColumns = @JoinColumn(name = "id_tarea"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
+    private Usuario creador_peticion;
 
     public Long getId_tarea() {
         return id_tarea;
@@ -77,20 +80,20 @@ public class Tarea implements Serializable {
         this.fecha_hora = fecha_hora;
     }
 
-    public Usuario getDador() {
-        return dador;
+    public List<Usuario> getRedactores() {
+        return redactores;
     }
 
-    public void setDador(Usuario dador) {
-        this.dador = dador;
+    public void setRedactores(List <Usuario> redactores) {
+        this.redactores = redactores;
     }
 
-    public Usuario getBeneficiario() {
-        return beneficiario;
+    public Usuario getCreador_peticion() {
+        return creador_peticion;
     }
 
-    public void setBeneficiario(Usuario beneficiario) {
-        this.beneficiario = beneficiario;
+    public void setCreador_peticion(Usuario creador_peticion) {
+        this.creador_peticion = creador_peticion;
     }
 
     @Override
@@ -120,7 +123,7 @@ public class Tarea implements Serializable {
 
     @Override
     public String toString() {
-        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", aceptado=" + aceptado + ", fecha_hora=" + fecha_hora + ", dador=" + dador + ", beneficiario=" + beneficiario + '}';
+        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", aceptado=" + aceptado + ", fecha_hora=" + fecha_hora + ", dador=" + redactores + ", beneficiario=" + creador_peticion + '}';
     }
     
     

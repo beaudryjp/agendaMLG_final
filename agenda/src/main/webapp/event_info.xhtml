@@ -91,7 +91,8 @@
                             </h:form>
                         </p>
                     </div>
-                    <div>
+                    <p:panel id="panel_comentarios">
+                        <div>
                         <h5 class="h5bold">Comentarios</h5>
                         <ul class="comments">
                             <ui:repeat value="#{evento.comentarios}" var="comen">
@@ -105,6 +106,7 @@
                             </ui:repeat>
                         </ul>
                     </div>
+                    </p:panel>
                     <div>
                         <f:view contentType="text/html">
                             <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
@@ -115,7 +117,7 @@
                     <h:form id="formComentario">
                         <p:dialog header="Añadir comentario" widgetVar="dlg_comen" minHeight="40">
                             <p:inputText id="eventComentario" placeholder="Comentario"/>
-                            <p:commandButton value="Enviar" id="submitComen" actionListener="#{buttonView.buttonAction}"  ajax="false" icon="ui-icon-disk" />
+                            <p:commandButton value="Enviar" id="submitComen" actionListener="#{buttonView.buttonAction}"  ajax="true" update="panel_comentarios" icon="ui-icon-disk" />
                         </p:dialog>
                     </h:form>
                     <h:form id="formDelete">
