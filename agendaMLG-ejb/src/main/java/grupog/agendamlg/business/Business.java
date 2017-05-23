@@ -18,10 +18,8 @@ import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.UserTransaction;
 
 /**
  *
@@ -81,9 +79,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public void createUser(Usuario u) {
-       
+       System.out.println("hola");
         if (validateRegister(u.getPseudonimo(), u.getEmail())) {
-   //         
+            System.out.println("adios");
             em.persist(u);
   //          
         }

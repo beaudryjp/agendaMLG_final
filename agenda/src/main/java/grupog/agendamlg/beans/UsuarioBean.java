@@ -174,10 +174,16 @@ public class UsuarioBean implements Serializable {
         usuario.setPassword_hash(Password.bytesToHex(hash_bytes));
     }
     public String validate() {
+        //System.out.println("validate - 1");
         if(ctrl.getUsuario() == null){
-            List<Usuario> u = business.getUserByEmail(email);
+            //System.out.println("validate - 2");
+            //System.out.println(email2);
+            List<Usuario> u = business.getUserByEmail(email2);
+            //System.out.println(u.toString());
+            //System.out.println(u.size());
             if(!u.isEmpty()){
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correo enviado a:", email);
+                //System.out.println("validate - 3");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correo enviado a:", email2);
 
                 RequestContext.getCurrentInstance().showMessageInDialog(message);
                 return resetPassword(u.get(0));
