@@ -26,6 +26,7 @@ import javax.persistence.UniqueConstraint;
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"nombre"}))
 @NamedQueries({
     @NamedQuery(name="getAllProvinces", query="SELECT p from Provincia p"),
+    @NamedQuery(name = "getProvinciaByName", query = "SELECT p from Provincia p where nombre = :nombre"),
 })
 public class Provincia implements Serializable {
 

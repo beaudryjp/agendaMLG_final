@@ -47,6 +47,8 @@ public interface BusinessLocal {
     public void setNotifications(Notificacion n);
     public Destinatario getAudienceById(int audience);
     public Etiqueta getTagById(int tag);
+    public Provincia getProvinciaByName(String name);
+    public Localidad getLocalidadByName(String name);
     
     
 }

@@ -347,4 +347,18 @@ public class Business implements BusinessLocal {
         
     }
 
+    @Override
+    public Provincia getProvinciaByName(String name) {
+        TypedQuery<Provincia> query = em.createNamedQuery("getProvinciaByName", Provincia.class)
+                .setParameter("nombre", name);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Localidad getLocalidadByName(String name) {
+        TypedQuery<Localidad> query = em.createNamedQuery("getLocalidadByName", Localidad.class)
+                .setParameter("nombre", name);
+        return query.getSingleResult();
+    }
+
 }

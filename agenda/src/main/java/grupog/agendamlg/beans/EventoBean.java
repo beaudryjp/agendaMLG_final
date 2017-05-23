@@ -7,14 +7,9 @@ import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
+import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.general.Sendmail;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,9 +24,9 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.io.FilenameUtils;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
@@ -369,7 +364,7 @@ public class EventoBean implements Serializable {
         this.setTag(hsr.getParameter("tag"));
     }
 
-    public void createEvent() throws IOException{
+    public String createEvent(){
         
 //        Path folder = Paths.get("/path/to/uploads");
 //        String filename = FilenameUtils.getBaseName(event_new_imagen_url.getFileName());
@@ -379,7 +374,7 @@ public class EventoBean implements Serializable {
 //            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
 //        }
      
-        
+        System.out.println("Estoy intentando crear un evento");
         Evento e = new Evento();
         e.setTitulo(event_new_titulo);
         e.setDescripcion(event_new_descripcion);
@@ -390,9 +385,14 @@ public class EventoBean implements Serializable {
         e.setLongitud(event_new_longitud);
         e.setLatitud(event_new_latitud);
         e.setDestacado(event_new_destacado);
+        e.setDestinatario(destinatarios);
+        e.setEtiqueta(etiquetas);
+        Localidad l = business.getLocalidadByName(searchLocalidad);
+        e.setLocalidad(l);
        // e.setImagen_url(event_new_imagen_url.getFileName());
        // e.setImagen_titulo(event_new_imagen_titulo);
         business.createEvent(e);
+        return "index";
     }
 
     public int numAssists() {
@@ -459,6 +459,11 @@ public class EventoBean implements Serializable {
 
     public void setEvento_sigue(List<Evento> evento_sigue) {
         this.evento_sigue = evento_sigue;
+    }
+    
+    public void assignNewValue(ValueChangeEvent e)
+    {
+        searchProvincia = e.getNewValue().toString();
     }
 
 }
