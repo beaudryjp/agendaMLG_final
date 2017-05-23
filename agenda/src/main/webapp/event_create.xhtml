@@ -13,7 +13,7 @@
             </f:metadata>
 
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
-                    <h:form>
+                    <h:form id="createEvent">
                         <p:panelGrid class="eventCreate">
                             <p:row>
                                 <p:column colspan="2">
@@ -137,7 +137,7 @@
                                     Destacado
                                 </p:column>
                                 <p:column>
-                                    <p:selectBooleanCheckbox id="#{eventoBean.event_new_destacado}" />
+                                    <p:selectBooleanCheckbox value="#{eventoBean.event_new_destacado}" />
                                 </p:column>
                             </p:row>
                             </c:if> 
@@ -145,7 +145,7 @@
                             <p:row>
                                 <p:column colspan="2">
                                     <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
-                                    <h:commandButton  action="#{eventoBean.createEvent}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons" />
+                                    <p:commandButton  action="#{eventoBean.createEvent()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons" />
                                 </p:column>
                             </p:row>
                     </h:form>

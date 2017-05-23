@@ -10,12 +10,15 @@ import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +29,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
+import javax.mail.internet.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
@@ -67,8 +71,8 @@ public class EventoBean implements Serializable {
     private LocalDate dateSelected;
     private String event_new_titulo;
     private String event_new_descripcion;
-    private Date event_new_fecha_inicio;
-    private Date event_new_fecha_fin;
+    private String event_new_fecha_inicio;
+    private String event_new_fecha_fin;
     private String event_new_horario;
     private String event_new_precio;
     private double event_new_longitud;
@@ -86,7 +90,7 @@ public class EventoBean implements Serializable {
                     return o1.getFecha_inicio().compareTo(o2.getFecha_inicio());
                 }
             });
-            return e.subList(0, 2);
+            return e;
         } else {
             return null;
         }
@@ -282,19 +286,19 @@ public class EventoBean implements Serializable {
         this.event_new_descripcion = event_new_descripcion;
     }
 
-    public Date getEvent_new_fecha_inicio() {
+    public String getEvent_new_fecha_inicio() {
         return event_new_fecha_inicio;
     }
 
-    public void setEvent_new_fecha_inicio(Date event_new_fecha_inicio) {
+    public void setEvent_new_fecha_inicio(String event_new_fecha_inicio) {
         this.event_new_fecha_inicio = event_new_fecha_inicio;
     }
 
-    public Date getEvent_new_fecha_fin() {
+    public String getEvent_new_fecha_fin() {
         return event_new_fecha_fin;
     }
 
-    public void setEvent_new_fecha_fin(Date event_new_fecha_fin) {
+    public void setEvent_new_fecha_fin(String event_new_fecha_fin) {
         this.event_new_fecha_fin = event_new_fecha_fin;
     }
 
@@ -364,8 +368,8 @@ public class EventoBean implements Serializable {
         this.setTag(hsr.getParameter("tag"));
     }
 
-    public String createEvent(){
-        
+    public String createEvent() throws java.text.ParseException {
+
 //        Path folder = Paths.get("/path/to/uploads");
 //        String filename = FilenameUtils.getBaseName(event_new_imagen_url.getFileName());
 //        String extension = FilenameUtils.getExtension(event_new_imagen_url.getFileName());
@@ -373,13 +377,15 @@ public class EventoBean implements Serializable {
 //        try (InputStream input = event_new_imagen_url.getInputstream()) {
 //            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
 //        }
-     
         System.out.println("Estoy intentando crear un evento");
         Evento e = new Evento();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy"); 
+        Date endDate = df.parse(event_new_fecha_fin);
+        Date startDate = df.parse(event_new_fecha_inicio);
         e.setTitulo(event_new_titulo);
         e.setDescripcion(event_new_descripcion);
-        e.setFecha_inicio(event_new_fecha_inicio);
-        e.setFecha_fin(event_new_fecha_fin);
+        e.setFecha_inicio(startDate);
+        e.setFecha_fin(endDate);
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
         e.setLongitud(event_new_longitud);
@@ -389,8 +395,8 @@ public class EventoBean implements Serializable {
         e.setEtiqueta(etiquetas);
         Localidad l = business.getLocalidadByName(searchLocalidad);
         e.setLocalidad(l);
-       // e.setImagen_url(event_new_imagen_url.getFileName());
-       // e.setImagen_titulo(event_new_imagen_titulo);
+        // e.setImagen_url(event_new_imagen_url.getFileName());
+        // e.setImagen_titulo(event_new_imagen_titulo);
         business.createEvent(e);
         return "index";
     }
@@ -415,6 +421,10 @@ public class EventoBean implements Serializable {
 
     public List<Destinatario> getDestinatarios() {
         return destinatarios;
+    }
+
+    public void setDestinatarios(List<Destinatario> d) {
+        this.destinatarios = d;
     }
 
     public void setComentarios(List<Comentario> comentarios) {
@@ -460,9 +470,8 @@ public class EventoBean implements Serializable {
     public void setEvento_sigue(List<Evento> evento_sigue) {
         this.evento_sigue = evento_sigue;
     }
-    
-    public void assignNewValue(ValueChangeEvent e)
-    {
+
+    public void assignNewValue(ValueChangeEvent e) {
         searchProvincia = e.getNewValue().toString();
     }
 

@@ -25,7 +25,7 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"nombre"}))
 @NamedQueries({
-    @NamedQuery(name = "getLocalidadByName", query = "Select l from Localidad l where nombre = :nombre")
+    @NamedQuery(name = "getLocalidadByName", query = "Select l from Localidad l where l.nombre = :nombre")
 })
 public class Localidad implements Serializable, Comparable<Localidad> {
 
