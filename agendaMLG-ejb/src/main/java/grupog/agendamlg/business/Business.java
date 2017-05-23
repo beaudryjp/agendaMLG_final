@@ -13,12 +13,15 @@ import grupog.agendamlg.general.Password;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Resource;
 import javax.ejb.LocalBean;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.NamedQuery;
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.UserTransaction;
 
 /**
  *
@@ -27,7 +30,8 @@ import javax.persistence.TypedQuery;
 @Stateless
 @LocalBean
 public class Business implements BusinessLocal {
-
+    @Resource
+    private SessionContext cx;
     @PersistenceContext(unitName = "AgendaMLG-PU")
     private EntityManager em ;
 
@@ -265,12 +269,18 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Localidad> getTowns(String prov) {
+        //UserTransaction tx = cx.getUserTransaction();
+        
+        //try{tx.begin();}catch(Exception e){};
+        
         List<Localidad> l = new ArrayList<>();
         for (Provincia p : getProvinces()) {
             if (p.getNombre().equals(prov)) {
+                System.out.println(p.getLocalidades().get(0).getNombre());
                 l = p.getLocalidades();
             }
         }
+        //try{tx.commit();}catch(Exception e){};
         return l;
     }
 

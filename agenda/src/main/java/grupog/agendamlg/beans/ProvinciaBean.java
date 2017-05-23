@@ -55,12 +55,14 @@ public class ProvinciaBean implements Serializable {
 //        System.out.println("Provincia: " + provincia);
 //        System.out.println("Localidad: " + localidad);
 //        System.out.println();
-        localidad = provincia;
+//        localidad = provincia;
         if (provincia != null && !provincia.equals("")) {
             //localidades = provincias.get(provincias.indexOf(provincia)).getLocalidades();
             localidades = provinciaGetLocalidades(provincia);
+           // System.out.println("Lista llena de Localidades");
         } else {
             localidades = new ArrayList<>();
+           // System.out.println("Lista Vacia de Localidades");
         }
     }
 
@@ -79,6 +81,7 @@ public class ProvinciaBean implements Serializable {
     }
 
     public String getProvincia() {
+        
         provincias = business.getProvinces();
         Collections.sort(provincias, new Comparator<Provincia>() {
             @Override
@@ -102,7 +105,7 @@ public class ProvinciaBean implements Serializable {
     }
 
     public List<Localidad> getLocalidades() {
-        return localidades;
+        return business.getTowns(provincia);
     }
 
     public void setLocalidades(List<Localidad> localidades) {

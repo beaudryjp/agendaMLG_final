@@ -371,13 +371,13 @@ public class EventoBean implements Serializable {
 
     public void createEvent() throws IOException{
         
-        Path folder = Paths.get("/path/to/uploads");
-        String filename = FilenameUtils.getBaseName(event_new_imagen_url.getFileName());
-        String extension = FilenameUtils.getExtension(event_new_imagen_url.getFileName());
-        Path file = Files.createTempFile(folder, filename + "-", "." + extension);
-        try (InputStream input = event_new_imagen_url.getInputstream()) {
-            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
-        }
+//        Path folder = Paths.get("/path/to/uploads");
+//        String filename = FilenameUtils.getBaseName(event_new_imagen_url.getFileName());
+//        String extension = FilenameUtils.getExtension(event_new_imagen_url.getFileName());
+//        Path file = Files.createTempFile(folder, filename + "-", "." + extension);
+//        try (InputStream input = event_new_imagen_url.getInputstream()) {
+//            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
+//        }
      
         
         Evento e = new Evento();
@@ -390,8 +390,8 @@ public class EventoBean implements Serializable {
         e.setLongitud(event_new_longitud);
         e.setLatitud(event_new_latitud);
         e.setDestacado(event_new_destacado);
-        e.setImagen_url(event_new_imagen_url.getFileName());
-        e.setImagen_titulo(event_new_imagen_titulo);
+       // e.setImagen_url(event_new_imagen_url.getFileName());
+       // e.setImagen_titulo(event_new_imagen_titulo);
         business.createEvent(e);
     }
 
