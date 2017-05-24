@@ -17,11 +17,11 @@
                     <p:tabView orientation="right" dynamic="true" cache="true" styleClass="panelusuario" >
                         <p:tab title="Mis Eventos" >
                             <h2>Eventos al que vas a asistir</h2>
-                            <c:forEach var="item" items="#{eventoBean.evento_asiste}">
+                            <c:forEach var="item" items="#{usuario.asiste}">
                                 <p:panelGrid styleClass="mis_eventos eventLists">
                                     <p:row>
                                         <p:column rowspan="2">
-                                            <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>
+                                           <!-- <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/> -->
                                         </p:column>
                                         <p:column>
 
@@ -36,11 +36,11 @@
                                 </p:panelGrid>
                             </c:forEach>
                             <br/><h2>Eventos que estas siguiendo</h2>
-                            <c:forEach var="item" items="#{eventoBean.evento_sigue}">
+                            <c:forEach var="item" items="#{usuario.sigue}">
                                 <p:panelGrid styleClass="mis_eventos" >
                                     <p:row>
                                         <p:column rowspan="2">
-                                            <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>
+                                           <!-- <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/> -->
                                         </p:column>
                                         <p:column>
 
@@ -55,11 +55,11 @@
                                 </p:panelGrid>
                             </c:forEach>
                             <br/><h2>Eventos que te gustan</h2>
-                            <c:forEach var="item" items="#{eventoBean.evento_gusta}">
+                            <c:forEach var="item" items="#{usuario.gusta}">
                                 <p:panelGrid styleClass="mis_eventos" >
                                     <p:row>
                                         <p:column rowspan="2">
-                                            <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/>
+                                           <!-- <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/> -->
                                         </p:column>
                                         <p:column>
 

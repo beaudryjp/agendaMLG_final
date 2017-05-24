@@ -21,6 +21,9 @@ public interface BusinessLocal {
     public List<Evento> getEventsBySearch(String text, String loca, String etiq, String dest);
     public List<Evento> getEventsByTag(String etiq); 
     public List<Evento> getEventsByDate(LocalDate fecha); 
+    public List<Evento> getLike(Usuario u);
+    public List<Evento> getFollow(Usuario u);
+    public List<Evento> getAssist(Usuario u);
     public Evento updateEvent(Evento e);
     public void createEvent(Evento e);
     public void deleteEvent(Evento e);
@@ -51,6 +54,8 @@ public interface BusinessLocal {
     public Localidad getLocalidadByName(String name);
     public Destinatario getDestinatarioByDescripcion(String desc);
     public Etiqueta getEtiquetaByName(String name);
+    public void initialize(Usuario u);
+    
     
     
 }

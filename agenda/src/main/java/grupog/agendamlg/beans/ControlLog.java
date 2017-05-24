@@ -26,6 +26,7 @@ public class ControlLog implements Serializable {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+        business.initialize(usuario);
     }
 
     public Usuario getUsuario() {

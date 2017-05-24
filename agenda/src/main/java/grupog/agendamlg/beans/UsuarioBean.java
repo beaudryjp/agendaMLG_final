@@ -6,6 +6,7 @@
 package grupog.agendamlg.beans;
 
 import grupog.agendamlg.business.Business;
+import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
 import grupog.agendamlg.general.Sendmail;
@@ -45,6 +46,22 @@ public class UsuarioBean implements Serializable {
     @EJB
     private Business business;
 
+
+    public List<Evento> getGusta() {
+        return business.getLike(ctrl.getUsuario());
+    }
+
+    public List<Evento> getSigue() {
+        return business.getFollow(ctrl.getUsuario());
+    }
+
+    public List<Evento> getAsiste() {
+        return business.getAssist(ctrl.getUsuario());
+    }
+    
+    
+    
+    
     public String getEmail() {
         return email;
     }

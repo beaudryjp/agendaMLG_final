@@ -93,10 +93,11 @@ public class EventoBean implements Serializable {
                     return o1.getFecha_inicio().compareTo(o2.getFecha_inicio());
                 }
             });
-            if(e.size()>2)
+            if (e.size() > 2) {
                 return e.subList(0, 2);
-            else
+            } else {
                 return e;
+            }
         } else {
             return null;
         }
@@ -120,16 +121,16 @@ public class EventoBean implements Serializable {
     public List<Evento> getEventosByFecha() {
         return business.getEventsByDate(dateSelected);
     }
-    
-    public void searchEvents(){
+
+    public void searchEvents() {
 //        System.out.println("searchEvents()");
 //        System.out.println("searchText " + searchText);
 //        System.out.println("searchLocalidad " + searchLocalidad);
 //        System.out.println("searchEtiqueta " + searchEtiqueta);
 //        System.out.println("searchDestinatario " + searchDestinatario);
-        eventoSearch = business.getEventsBySearch(searchText,  searchLocalidad, searchEtiqueta, searchDestinatario);
+        eventoSearch = business.getEventsBySearch(searchText, searchLocalidad, searchEtiqueta, searchDestinatario);
 //        System.out.println("se ha actualizado eventoSearch");
-        for(Evento x : eventoSearch){
+        for (Evento x : eventoSearch) {
             System.out.println(x.getTitulo());
         }
         //return "events_search?faces-redirect=true";
@@ -200,15 +201,27 @@ public class EventoBean implements Serializable {
     }
 
     public void sendNotificationLike(ActionEvent e) {
-        sendMailSocial("Has pinchado like en el evento");
+        if (current_user.getUsuario().isEmail_notifier()) {
+            sendMailSocial("Has pinchado like en el evento");
+        }
+        Evento evento = business.getEventById(eventId);
+        business.like(evento, current_user.getUsuario());
     }
 
     public void sendNotificationAssist(ActionEvent e) {
-        sendMailSocial("Has indicado que vas a asistir al evento");
+        if (current_user.getUsuario().isEmail_notifier()) {
+            sendMailSocial("Has indicado que vas a asistir al evento");
+        }
+        Evento evento = business.getEventById(eventId);
+        business.assist(evento, current_user.getUsuario());
     }
 
     public void sendNotificationFollow(ActionEvent e) {
-        sendMailSocial("Has indicado que quieres seguir el evento");
+        if (current_user.getUsuario().isEmail_notifier()) {
+            sendMailSocial("Has indicado que quieres seguir el evento");
+        }
+        Evento evento = business.getEventById(eventId);
+        business.follow(evento, current_user.getUsuario());
     }
 
     private void sendMailSocial(String msg) {
@@ -382,7 +395,7 @@ public class EventoBean implements Serializable {
 //        }
         System.out.println("Estoy intentando crear un evento 1");
         Evento e = new Evento();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy"); 
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         Date endDate = df.parse(event_new_fecha_fin);
         Date startDate = df.parse(event_new_fecha_inicio);
         e.setTitulo(event_new_titulo);
@@ -396,24 +409,21 @@ public class EventoBean implements Serializable {
         e.setDestacado(event_new_destacado);
         List<Destinatario> s = new ArrayList<>();
         System.out.println("Estoy intentando crear un evento 2");
-        for(String str : destinatarios)
-        {
+        for (String str : destinatarios) {
             s.add(business.getDestinatarioByDescripcion(str));
         }
         System.out.println("Estoy intentando crear un evento 3");
-        
+
         e.setDestinatario(s);
         System.out.println("Estoy intentando crear un evento 4");
         List<Etiqueta> etq = new ArrayList<>();
-        for(String etiqueta : etiquetas)
-        {
+        for (String etiqueta : etiquetas) {
             etq.add(business.getEtiquetaByName(etiqueta));
         }
         System.out.println("Estoy intentando crear un evento 5");
-        
+
         e.setEtiqueta(etq);
         System.out.println("Estoy intentando crear un evento 6");
-        searchLocalidad = "Granada";
         Localidad l = business.getLocalidadByName(searchLocalidad);
         System.out.println("Estoy intentando crear un evento 7");
         e.setLocalidad(l);
@@ -511,7 +521,6 @@ public class EventoBean implements Serializable {
         this.numFollows = n;
     }
 
-    
     public ProvinciaBean getProv() {
         return prov;
     }
@@ -527,7 +536,5 @@ public class EventoBean implements Serializable {
     public void setEventoSearch(List<Evento> eventoSearch) {
         this.eventoSearch = eventoSearch;
     }
-    
-    
 
 }
