@@ -115,6 +115,9 @@ public class Business implements BusinessLocal {
                 .setParameter("localidad", loca)                
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
+        for(Evento x : query.getResultList()){
+            System.out.println(x.getTitulo());
+        }
         List<Evento> ev = new ArrayList<>();
         for (Evento e : query.getResultList()) {
             if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {

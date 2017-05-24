@@ -51,14 +51,6 @@ public class EventoBean implements Serializable {
     @Inject
     private ProvinciaBean prov;
 
-    public ProvinciaBean getProv() {
-        return prov;
-    }
-
-    public void setProv(ProvinciaBean prov) {
-        this.prov = prov;
-    }
-    
     private TagCloudModel model;
     private List<Evento> eventos;
     private List<Evento> evento_asiste;
@@ -129,6 +121,10 @@ public class EventoBean implements Serializable {
     }
 
     public List<Evento> getSearchEventos() {
+        System.out.println("searchText " + searchText);
+        System.out.println("searchLocalidad " + searchLocalidad);
+        System.out.println("searchEtiqueta " + searchEtiqueta);
+        System.out.println("searchDestinatario " + searchDestinatario);
         return business.getEventsBySearch(searchText,  searchLocalidad, searchEtiqueta, searchDestinatario);
     }
 
@@ -509,6 +505,14 @@ public class EventoBean implements Serializable {
         this.numFollows = n;
     }
 
+    
+    public ProvinciaBean getProv() {
+        return prov;
+    }
+
+    public void setProv(ProvinciaBean prov) {
+        this.prov = prov;
+    }
     
 
 }
