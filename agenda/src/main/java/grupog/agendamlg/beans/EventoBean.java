@@ -48,6 +48,17 @@ public class EventoBean implements Serializable {
     private Business business;
     @Inject
     private ControlLog current_user;
+    @Inject
+    private ProvinciaBean prov;
+
+    public ProvinciaBean getProv() {
+        return prov;
+    }
+
+    public void setProv(ProvinciaBean prov) {
+        this.prov = prov;
+    }
+    
     private TagCloudModel model;
     private List<Evento> eventos;
     private List<Evento> evento_asiste;
@@ -61,7 +72,6 @@ public class EventoBean implements Serializable {
     private List<Destinatario> publico_evento3;
     private List<Destinatario> publico_evento4;
     private List<Comentario> comentarios;
-    private String searchProvincia;
     private String searchLocalidad;
     private String searchDestinatario;
     private String searchEtiqueta;
@@ -116,7 +126,7 @@ public class EventoBean implements Serializable {
     }
 
     public List<Evento> getSearchEventos() {
-        return business.getEventsBySearch(searchText, searchProvincia, searchLocalidad, searchEtiqueta, searchDestinatario);
+        return business.getEventsBySearch(searchText,  searchLocalidad, searchEtiqueta, searchDestinatario);
     }
 
     public List<Evento> getSearchEventosEtiquetas() {
@@ -133,14 +143,6 @@ public class EventoBean implements Serializable {
         } catch (NumberFormatException n) {
             return null;
         }
-    }
-
-    public String getSearchProvincia() {
-        return searchProvincia;
-    }
-
-    public void setSearchProvincia(String searchProvincia) {
-        this.searchProvincia = searchProvincia;
     }
 
     public String getSearchLocalidad() {

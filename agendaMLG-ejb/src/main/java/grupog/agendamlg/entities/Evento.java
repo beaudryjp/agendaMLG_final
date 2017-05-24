@@ -36,7 +36,7 @@ import javax.persistence.TemporalType;
     //revisar que funcione
     @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e, Etiqueta et, Destinatario d "
             + "WHERE e.localidad.nombre = :localidad and "
-            + "e.localidad.provincia.nombre = :provincia and et.nombre = :etiqueta and d.descripcion = :destinatario"),
+            + " et.nombre = :etiqueta and d.descripcion = :destinatario"),
     //Event by tag
     //@NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
 })

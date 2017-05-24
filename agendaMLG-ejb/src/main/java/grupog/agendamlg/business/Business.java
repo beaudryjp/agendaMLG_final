@@ -110,10 +110,9 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Evento> getEventsBySearch(String text, String prov, String loca, String etiq, String dest) {
+    public List<Evento> getEventsBySearch(String text, String loca, String etiq, String dest) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventsBySearch", Evento.class)
-                .setParameter("localidad", loca)
-                .setParameter("provincia", prov)
+                .setParameter("localidad", loca)                
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
         List<Evento> ev = new ArrayList<>();
@@ -159,21 +158,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public void createEvent(Evento e) {
-        System.out.println(e.getDescripcion());
-        System.out.println(e.getLatitud());
-        System.out.println(e.getLongitud());
-        System.out.println(e.getHorario());
-        System.out.println(e.getFecha_inicio());
-        System.out.println(e.getFecha_fin());
-        for(Etiqueta etq : e.getEtiqueta())
-        {
-            System.out.println(etq.getNombre());
-        }
-        for(Destinatario etq : e.getDestinatario())
-        {
-            System.out.println(etq.getDescripcion());
-        }
-        System.out.println(e.getLocalidad().getNombre());
+
         em.persist(e);
         
     }
@@ -284,11 +269,11 @@ public class Business implements BusinessLocal {
         //UserTransaction tx = cx.getUserTransaction();
         
         //try{tx.begin();}catch(Exception e){};
-        
+        String a;
         List<Localidad> l = new ArrayList<>();
         for (Provincia p : getProvinces()) {
             if (p.getNombre().equals(prov)) {
-                System.out.println(p.getLocalidades().get(0).getNombre());
+                a= p.getLocalidades().get(0).getNombre();
                 l = p.getLocalidades();
             }
         }

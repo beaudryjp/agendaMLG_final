@@ -18,7 +18,7 @@ public interface BusinessLocal {
     public List<Notificacion> getNotifications(Usuario u);
     public List<Tarea> getTasks(Usuario u);
     public List<Evento> getEventsImportant(); 
-    public List<Evento> getEventsBySearch(String text, String prov, String loca, String etiq, String dest);
+    public List<Evento> getEventsBySearch(String text, String loca, String etiq, String dest);
     public List<Evento> getEventsByTag(String etiq); 
     public List<Evento> getEventsByDate(LocalDate fecha); 
     public Evento updateEvent(Evento e);

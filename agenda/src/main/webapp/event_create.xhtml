@@ -115,10 +115,10 @@
                                     Provincia
                                 </p:column>
                                 <p:column colspan="2">
-                                    <h:selectOneMenu id="provincia" class="form-control" value="#{provinciaBean.provincia}">
+                                    <h:selectOneMenu id="provincia" class="form-control" value="#{eventoBean.prov.provincia}">
                                         
-                                        <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
-                                        <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
+                                        <p:ajax listener="#{eventoBean.prov.onCambioProvincia()}" update="localidad" />
+                                        <f:selectItems value="#{eventoBean.prov.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
                                     </h:selectOneMenu>
                                 </p:column></p:row>
                             <p:row>
@@ -127,7 +127,7 @@
                                 </p:column>
                                 <p:column>
                                     <h:selectOneMenu id="localidad" class="form-control" value="#{eventoBean.searchLocalidad}" >
-                                        <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
+                                        <f:selectItems value="#{eventoBean.prov.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                     </h:selectOneMenu>
                                 </p:column>
                             </p:row>  
