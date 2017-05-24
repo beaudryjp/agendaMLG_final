@@ -40,11 +40,4 @@ $(document).ready(function () {
         $("#search_form_calendar").hide('slow');
         $("#tab1-main").show('slow');
     });
-    $('.eventLists table').DataTable({
-        'sPaginationType': 'full_numbers',
-        'aLengthMenu': [[3, 6], [3, 6]],
-        'iDisplayLength': 3,
-        "bAutoWidth": true
-
-    });
 });

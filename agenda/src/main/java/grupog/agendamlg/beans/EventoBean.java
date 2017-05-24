@@ -8,10 +8,9 @@ import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
+import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,9 +26,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
-import javax.mail.internet.ParseException;
 import javax.servlet.http.HttpServletRequest;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
@@ -57,6 +54,7 @@ public class EventoBean implements Serializable {
     private List<Evento> evento_gusta;
     private List<Evento> evento_sigue;
     private List<Evento> evento_etiquetas;
+    private List<Evento> eventoSearch;
     private List<String> etiquetas;
     private List<String> destinatarios;
     private List<Destinatario> publico_evento;
@@ -95,7 +93,10 @@ public class EventoBean implements Serializable {
                     return o1.getFecha_inicio().compareTo(o2.getFecha_inicio());
                 }
             });
-            return e;
+            if(e.size()>2)
+                return e.subList(0, 2);
+            else
+                return e;
         } else {
             return null;
         }
@@ -119,19 +120,24 @@ public class EventoBean implements Serializable {
     public List<Evento> getEventosByFecha() {
         return business.getEventsByDate(dateSelected);
     }
-
-    public List<Evento> getSearchEventos() {
-        System.out.println("searchText " + searchText);
-        System.out.println("searchLocalidad " + searchLocalidad);
-        System.out.println("searchEtiqueta " + searchEtiqueta);
-        System.out.println("searchDestinatario " + searchDestinatario);
-        return business.getEventsBySearch(searchText,  searchLocalidad, searchEtiqueta, searchDestinatario);
+    
+    public void searchEvents(){
+//        System.out.println("searchEvents()");
+//        System.out.println("searchText " + searchText);
+//        System.out.println("searchLocalidad " + searchLocalidad);
+//        System.out.println("searchEtiqueta " + searchEtiqueta);
+//        System.out.println("searchDestinatario " + searchDestinatario);
+        eventoSearch = business.getEventsBySearch(searchText,  searchLocalidad, searchEtiqueta, searchDestinatario);
+//        System.out.println("se ha actualizado eventoSearch");
+        for(Evento x : eventoSearch){
+            System.out.println(x.getTitulo());
+        }
+        //return "events_search?faces-redirect=true";
+        Redirect.redirectTo("events_search");
     }
 
     public List<Evento> getSearchEventosEtiquetas() {
-        List<Evento> s = new ArrayList<>();
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
         return business.getEventsByTag(hsr.getParameter("tag"));
     }
 
@@ -513,6 +519,15 @@ public class EventoBean implements Serializable {
     public void setProv(ProvinciaBean prov) {
         this.prov = prov;
     }
+
+    public List<Evento> getEventoSearch() {
+        return eventoSearch;
+    }
+
+    public void setEventoSearch(List<Evento> eventoSearch) {
+        this.eventoSearch = eventoSearch;
+    }
+    
     
 
 }

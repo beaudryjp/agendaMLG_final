@@ -13,15 +13,11 @@ import grupog.agendamlg.general.Password;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
 import javax.ejb.LocalBean;
-import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.UserTransaction;
 
 /**
  *
@@ -30,8 +26,9 @@ import javax.transaction.UserTransaction;
 @Stateless
 @LocalBean
 public class Business implements BusinessLocal {
+
     @PersistenceContext(unitName = "AgendaMLG-PU")
-    private EntityManager em ;
+    private EntityManager em;
 
     @Override
     public boolean validateLogin(String email, String password) {
@@ -72,18 +69,18 @@ public class Business implements BusinessLocal {
 
     @Override
     public void updateUser(Usuario u) {
-        
+
         em.merge(u);
-        
+
     }
 
     @Override
     public void createUser(Usuario u) {
-       
+
         if (validateRegister(u.getPseudonimo(), u.getEmail())) {
-   //         
+            //         
             em.persist(u);
-  //          
+            //          
         }
     }
 
@@ -112,18 +109,28 @@ public class Business implements BusinessLocal {
     @Override
     public List<Evento> getEventsBySearch(String text, String loca, String etiq, String dest) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventsBySearch", Evento.class)
-                .setParameter("localidad", loca)                
+                .setParameter("localidad", loca)
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
-        for(Evento x : query.getResultList()){
-            System.out.println(x.getTitulo());
-        }
         List<Evento> ev = new ArrayList<>();
-        for (Evento e : query.getResultList()) {
-            if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {
-                ev.add(e);
+//        System.out.println("text: " + text);
+//        System.out.println("localidad: " + loca);
+//        System.out.println("etiqueta: " + etiq);
+//        System.out.println("destinatario: " + dest);
+//        for (Evento x : query.getResultList()) {
+//            System.out.println(x.getTitulo());
+//        }
+
+        if (!text.isEmpty() && !text.equals("")) {
+            for (Evento e : query.getResultList()) {
+                if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {
+                    ev.add(e);
+                }
             }
         }
+        else
+            ev = query.getResultList();
+
         return ev;
     }
 
@@ -149,9 +156,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public Evento updateEvent(Evento e) {
-        
+
         em.merge(e);
-        
+
         //[Optional] RF-005 Mandar notificaciones al correo y notificaciones internas si un evento cambia
         //Get all users who are liking, assisting or following
         //Check if the users have the email notifier enabled
@@ -163,96 +170,96 @@ public class Business implements BusinessLocal {
     public void createEvent(Evento e) {
 
         em.persist(e);
-        
+
     }
 
     @Override
     public void deleteEvent(Evento e) {
-        
+
         em.remove(e);
-        
+
     }
 
     @Override
     public void createComment(Comentario c) {
-        
+
         em.persist(c);
-        
+
     }
 
     @Override
     public void createTag(Etiqueta e) {
-        
+
         em.persist(e);
-        
+
     }
 
     @Override
     public void updateTag(Etiqueta e) {
-        
+
         em.merge(e);
-        
+
     }
 
     @Override
     public void deleteTag(Etiqueta e) {
-        
+
         em.remove(e);
-        
+
     }
 
     @Override
     public void createAudience(Destinatario e) {
-        
+
         em.persist(e);
-        
+
     }
 
     @Override
     public void updateAudience(Destinatario e) {
-        
+
         em.merge(e);
-        
+
     }
 
     @Override
     public void deleteAudience(Destinatario e) {
-        
+
         em.remove(e);
-        
+
     }
 
     @Override
     public Evento getEvent(String id) {
-        return em.createNamedQuery("getEventsById", Evento.class)
-                .setParameter("id_evento", id).getSingleResult();
+        return em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", Long.parseLong(id)).getSingleResult();
     }
 
     @Override
     public void assist(Evento e, Usuario u) {
-        
+
         u.getAsiste().add(e);
         em.persist(u);
         //em.merge(u);
-        
+
     }
 
     @Override
     public void like(Evento e, Usuario u) {
-        
+
         u.getMegusta().add(e);
         em.persist(u);
         //em.merge(u);
-        
+
     }
 
     @Override
     public void follow(Evento e, Usuario u) {
-        
+
         u.getSigue().add(e);
         em.persist(u);
         //em.merge(u);
-        
+
     }
 
     @Override
@@ -271,13 +278,13 @@ public class Business implements BusinessLocal {
     @Override
     public List<Localidad> getTowns(String prov) {
         //UserTransaction tx = cx.getUserTransaction();
-        
+
         //try{tx.begin();}catch(Exception e){};
         String a;
         List<Localidad> l = new ArrayList<>();
         for (Provincia p : getProvinces()) {
             if (p.getNombre().equals(prov)) {
-                a= p.getLocalidades().get(0).getNombre();
+                a = p.getLocalidades().get(0).getNombre();
                 l = p.getLocalidades();
             }
         }
@@ -307,7 +314,7 @@ public class Business implements BusinessLocal {
     @Override
     public Evento getEventById(String event) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", event);
+                .setParameter("evento", Long.parseLong(event));
         return query.getSingleResult();
     }
 
@@ -319,9 +326,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public void setNotifications(Notificacion n) {
-        
+
         em.persist(n);
-        
+
     }
 
     @Override
@@ -337,15 +344,11 @@ public class Business implements BusinessLocal {
                 .setParameter("etiqueta", tag);
         return query.getSingleResult();
     }
-    
+
     @Override
-    public List<Etiqueta> getTags(){
+    public List<Etiqueta> getTags() {
         TypedQuery<Etiqueta> query = em.createNamedQuery("getAllTags", Etiqueta.class);
         return query.getResultList();
-    }
-    
-    public void init(){
-        
     }
 
     @Override
