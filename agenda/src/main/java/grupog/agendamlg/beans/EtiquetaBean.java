@@ -21,7 +21,8 @@ public class EtiquetaBean implements Serializable {
     /**
      * Creates a new instance of EtiquetaBean
      */
-    private List<Etiqueta> etiquetas;
+    private List<String> etiquetas;
+
     private String etiqueta;
     @EJB
     private Business business;
@@ -44,6 +45,10 @@ public class EtiquetaBean implements Serializable {
             return null;
     }
 
+    
+  
+  
+    
     public String getEtiqueta() {
         return etiqueta;
     }
@@ -52,4 +57,37 @@ public class EtiquetaBean implements Serializable {
         this.etiqueta = etiqueta;
     }
 
+    public String createTag() throws java.text.ParseException {
+        System.out.println("Estoy intentando crear Tags");
+        Etiqueta e = new Etiqueta();
+        e.setNombre(etiqueta);
+        business.createTag(e);
+        return "index?faces-redirect=true";
+    }
+    
+    public String updateTag() throws java.text.ParseException {
+        System.out.println("Estoy intentando update Tags");
+        List<Etiqueta> search = business.getTags();
+        for(Etiqueta e:search){
+            if(e.getNombre()==etiqueta){
+                
+            }
+        }
+        
+        Etiqueta e = new Etiqueta();
+        e.setNombre(etiqueta);
+        business.updateTag(e);
+        return "index?faces-redirect=true";
+    }
+   
+    public String deleteTag() throws java.text.ParseException {
+        System.out.println("Estoy intentando delete Tags");
+        
+         for(String str : etiquetas)
+        {
+            business.deleteTag(business.getEtiquetaByName(str));
+ 
+        }
+        return "index?faces-redirect=true";
+    }
 }

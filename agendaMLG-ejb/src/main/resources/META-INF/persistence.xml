@@ -15,7 +15,17 @@
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-      <property name="hibernate.hbm2dll.auto" value="create"/>
+      <!--<property name="hibernate.show_sql" value="true" />-->
+      <!--<property name="hibernate.hbm2ddl.auto" value="update" />-->
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.hbm2ddl.auto" value="none"/>
+      <property name="javax.persistence.schema-generation.scripts.create-target" value="./create.sql"/>
+      <property name="javax.persistence.schema-generation.scripts.drop-target" value="./drop.sql"/>
+      <!--
+            <property name="javax.persistence.schema-generation.scripts.create-target" value="./create.sql"/>
+            <property name="javax.persistence.schema-generation.scripts.drop-target" value="./drop.sql"/>
+            <property name="javax.persistence.sql-load-script-source" value="./data.sql"/>
+            -->
     </properties>
   </persistence-unit>
 </persistence>

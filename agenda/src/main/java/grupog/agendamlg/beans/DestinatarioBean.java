@@ -20,7 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 @SessionScoped
 public class DestinatarioBean implements Serializable {
 
-    private List<Destinatario> destinatarios;
+    private List<String> destinatarios;
+    
     private String destinatario;
     @EJB
     private Business business;
@@ -43,6 +44,7 @@ public class DestinatarioBean implements Serializable {
         }
     }
 
+   
     public String getDestinatario() {
         return destinatario;
     }
@@ -51,12 +53,41 @@ public class DestinatarioBean implements Serializable {
         this.destinatario = destinatario;
     }
 
-    public Destinatario getSpecificDestinatario() {
-        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        try {
-            return destinatarios.get(Integer.parseInt(hsr.getParameter("id")));
-        } catch (NumberFormatException n) {
-            return null;
+//    public Destinatario getSpecificDestinatario() {
+//        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+//        try {
+//            return destinatarios.get(Integer.parseInt(hsr.getParameter("id")));
+//        } catch (NumberFormatException n) {
+//            return null;
+//        }
+//    }
+    
+     public String createAudience() throws java.text.ParseException {
+        System.out.println("Estoy intentando crear una audiencia");
+        Destinatario d = new Destinatario();
+        d.setDescripcion(destinatario);
+        business.createAudience(d);
+        return "index?faces-redirect=true";
+    }
+     
+    public String updateAudience() throws java.text.ParseException {
+        System.out.println("Estoy intentando update Audience");
+        
+        Destinatario d = new Destinatario();
+        d.setDescripcion(destinatario);
+        business.updateAudience(d);
+        return "index?faces-redirect=true";
+    }
+   
+    public String deleteAudience() throws java.text.ParseException {
+        System.out.println("Estoy intentando delete Audience");
+ 
+        for(String str : destinatarios)
+        {
+            business.deleteAudience(business.getDestinatarioByDescripcion(str));
+ 
         }
+    
+        return "index?faces-redirect=true";
     }
 }
