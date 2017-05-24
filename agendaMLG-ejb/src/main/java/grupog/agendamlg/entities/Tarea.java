@@ -37,7 +37,7 @@ public class Tarea implements Serializable {
     @ManyToMany
     private List <Usuario> redactores;
     @ManyToOne(optional=true)
-    @JoinTable(name = "jn_etiqueta_id", joinColumns = @JoinColumn(name = "id_tarea"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
+    @JoinTable(name = "jn_tarea_peticion_id", joinColumns = @JoinColumn(name = "id_tarea"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
     private Usuario creador_peticion;
 
     public Long getId_tarea() {
