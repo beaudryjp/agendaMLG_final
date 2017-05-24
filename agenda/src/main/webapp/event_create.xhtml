@@ -13,7 +13,7 @@
             </f:metadata>
 
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
-                    <h:form id="createEvent">
+                    <h:form id="createEvento">
                         <p:panelGrid class="eventCreate">
                             <p:row>
                                 <p:column colspan="2">
@@ -141,13 +141,14 @@
                                 </p:column>
                             </p:row>
                             </c:if> 
-                        </p:panelGrid>
-                            <p:row>
+                            <p:row>  
                                 <p:column colspan="2">
                                     <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
                                     <p:commandButton  action="#{eventoBean.createEvent()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons" />
                                 </p:column>
                             </p:row>
+                        </p:panelGrid>
+                            
                     </h:form>
                 </div>
             </div>

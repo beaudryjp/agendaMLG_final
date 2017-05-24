@@ -49,6 +49,8 @@ public interface BusinessLocal {
     public Etiqueta getTagById(int tag);
     public Provincia getProvinciaByName(String name);
     public Localidad getLocalidadByName(String name);
+    public Destinatario getDestinatarioByDescripcion(String desc);
+    public Etiqueta getEtiquetaByName(String name);
     
     
 }

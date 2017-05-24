@@ -54,8 +54,8 @@ public class EventoBean implements Serializable {
     private List<Evento> evento_gusta;
     private List<Evento> evento_sigue;
     private List<Evento> evento_etiquetas;
-    private List<Etiqueta> etiquetas;
-    private List<Destinatario> destinatarios;
+    private List<String> etiquetas;
+    private List<String> destinatarios;
     private List<Destinatario> publico_evento;
     private List<Destinatario> publico_evento2;
     private List<Destinatario> publico_evento3;
@@ -377,7 +377,7 @@ public class EventoBean implements Serializable {
 //        try (InputStream input = event_new_imagen_url.getInputstream()) {
 //            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
 //        }
-        System.out.println("Estoy intentando crear un evento");
+        System.out.println("Estoy intentando crear un evento 1");
         Evento e = new Evento();
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy"); 
         Date endDate = df.parse(event_new_fecha_fin);
@@ -388,15 +388,35 @@ public class EventoBean implements Serializable {
         e.setFecha_fin(endDate);
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
-        e.setLongitud(event_new_longitud);
-        e.setLatitud(event_new_latitud);
+        e.setLongitud(1.25);
+        e.setLatitud(2.40);
         e.setDestacado(event_new_destacado);
-        e.setDestinatario(destinatarios);
-        e.setEtiqueta(etiquetas);
+        List<Destinatario> s = new ArrayList<>();
+        System.out.println("Estoy intentando crear un evento 2");
+        for(String str : destinatarios)
+        {
+            s.add(business.getDestinatarioByDescripcion(str));
+        }
+        System.out.println("Estoy intentando crear un evento 3");
+        
+        e.setDestinatario(s);
+        System.out.println("Estoy intentando crear un evento 4");
+        List<Etiqueta> etq = new ArrayList<>();
+        for(String etiqueta : etiquetas)
+        {
+            etq.add(business.getEtiquetaByName(etiqueta));
+        }
+        System.out.println("Estoy intentando crear un evento 5");
+        
+        e.setEtiqueta(etq);
+        System.out.println("Estoy intentando crear un evento 6");
+        searchLocalidad = "Granada";
         Localidad l = business.getLocalidadByName(searchLocalidad);
+        System.out.println("Estoy intentando crear un evento 7");
         e.setLocalidad(l);
         // e.setImagen_url(event_new_imagen_url.getFileName());
         // e.setImagen_titulo(event_new_imagen_titulo);
+        System.out.println("Estoy intentando crear un evento 8");
         business.createEvent(e);
         return "index";
     }
@@ -419,11 +439,11 @@ public class EventoBean implements Serializable {
         return comentarios;
     }
 
-    public List<Destinatario> getDestinatarios() {
+    public List<String> getDestinatarios() {
         return destinatarios;
     }
 
-    public void setDestinatarios(List<Destinatario> d) {
+    public void setDestinatarios(List<String> d) {
         this.destinatarios = d;
     }
 
@@ -431,11 +451,11 @@ public class EventoBean implements Serializable {
         this.comentarios = comentarios;
     }
 
-    public List<Etiqueta> getEtiquetas() {
+    public List<String> getEtiquetas() {
         return etiquetas;
     }
 
-    public void setEtiquetas(List<Etiqueta> etiquetas) {
+    public void setEtiquetas(List<String> etiquetas) {
         this.etiquetas = etiquetas;
     }
 
@@ -471,8 +491,6 @@ public class EventoBean implements Serializable {
         this.evento_sigue = evento_sigue;
     }
 
-    public void assignNewValue(ValueChangeEvent e) {
-        searchProvincia = e.getNewValue().toString();
-    }
+    
 
 }

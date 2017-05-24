@@ -30,8 +30,6 @@ import javax.transaction.UserTransaction;
 @Stateless
 @LocalBean
 public class Business implements BusinessLocal {
-    @Resource
-    private SessionContext cx;
     @PersistenceContext(unitName = "AgendaMLG-PU")
     private EntityManager em ;
 
@@ -161,7 +159,21 @@ public class Business implements BusinessLocal {
 
     @Override
     public void createEvent(Evento e) {
-        
+        System.out.println(e.getDescripcion());
+        System.out.println(e.getLatitud());
+        System.out.println(e.getLongitud());
+        System.out.println(e.getHorario());
+        System.out.println(e.getFecha_inicio());
+        System.out.println(e.getFecha_fin());
+        for(Etiqueta etq : e.getEtiqueta())
+        {
+            System.out.println(etq.getNombre());
+        }
+        for(Destinatario etq : e.getDestinatario())
+        {
+            System.out.println(etq.getDescripcion());
+        }
+        System.out.println(e.getLocalidad().getNombre());
         em.persist(e);
         
     }
@@ -357,6 +369,20 @@ public class Business implements BusinessLocal {
     @Override
     public Localidad getLocalidadByName(String name) {
         TypedQuery<Localidad> query = em.createNamedQuery("getLocalidadByName", Localidad.class)
+                .setParameter("nombre", name);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Destinatario getDestinatarioByDescripcion(String desc) {
+        TypedQuery<Destinatario> query = em.createNamedQuery("getAudienceByDescription", Destinatario.class)
+                .setParameter("descripcion", desc);
+        return query.getSingleResult();
+    }
+
+    @Override
+    public Etiqueta getEtiquetaByName(String name) {
+        TypedQuery<Etiqueta> query = em.createNamedQuery("getTagByName", Etiqueta.class)
                 .setParameter("nombre", name);
         return query.getSingleResult();
     }
