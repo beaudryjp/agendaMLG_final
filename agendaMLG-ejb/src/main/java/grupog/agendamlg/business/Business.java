@@ -220,8 +220,9 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public Evento getEvent(int id) {
-        return em.find(Evento.class, id);
+    public Evento getEvent(String id) {
+        return em.createNamedQuery("getEventsById", Evento.class)
+                .setParameter("id_evento", id).getSingleResult();
     }
 
     @Override
@@ -301,7 +302,7 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public Evento getEventById(int event) {
+    public Evento getEventById(String event) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", event);
         return query.getSingleResult();

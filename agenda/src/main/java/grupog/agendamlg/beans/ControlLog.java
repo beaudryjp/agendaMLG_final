@@ -82,7 +82,7 @@ public class ControlLog implements Serializable {
         if (hsr.getParameterMap().containsKey("id")) {
             eventId = hsr.getParameter("id");
             if (eventId != null && !eventId.isEmpty()) {
-                if(business.getEventById(Integer.parseInt(eventId)) != null){
+                if(business.getEventById(eventId) != null){
                     
                 }
                 else{

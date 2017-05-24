@@ -33,6 +33,12 @@ public class ProvinciaBean implements Serializable {
 
     public ProvinciaBean() {
     }
+    
+    @PostConstruct
+    public void init(){
+        provincia = business.getProvinces().get(0).getNombre();
+        localidades = provinciaGetLocalidades(provincia);
+    }
 
 
     public List<Provincia> getProvincias() {

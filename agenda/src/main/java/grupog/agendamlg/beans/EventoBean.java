@@ -90,6 +90,9 @@ public class EventoBean implements Serializable {
     private boolean event_new_destacado;
     private UploadedFile event_new_imagen_url;
     private String event_new_imagen_titulo;
+    private int numAssists;
+    private int numLikes;
+    private int numFollows;
 
     public List<Evento> getEventosProximos() {
         List<Evento> e = business.getEvents();
@@ -138,11 +141,7 @@ public class EventoBean implements Serializable {
 
     public Evento getEvento() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        try {
-            return business.getEvent(Integer.parseInt(hsr.getParameter("id")));
-        } catch (NumberFormatException n) {
-            return null;
-        }
+        return business.getEvent(hsr.getParameter("id"));
     }
 
     public String getSearchLocalidad() {
@@ -211,7 +210,7 @@ public class EventoBean implements Serializable {
     }
 
     private void sendMailSocial(String msg) {
-        Evento ev = business.getEvent(Integer.parseInt(eventId));
+        Evento ev = business.getEvent(eventId);
         final Usuario u = current_user.getUsuario();
         final StringBuilder m = new StringBuilder();
         String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
@@ -423,19 +422,6 @@ public class EventoBean implements Serializable {
         return "index";
     }
 
-    public int numAssists() {
-        System.out.println(business.getEventById(Integer.parseInt(eventId)).getAsiste().size());
-        return business.getEventById(Integer.parseInt(eventId)).getAsiste().size();
-    }
-
-    public int numLikes() {
-        return business.getEventById(Integer.parseInt(eventId)).getMegusta().size();
-    }
-
-    public int numFollows() {
-        return business.getEventById(Integer.parseInt(eventId)).getSigue().size();
-    }
-
     // verify if these are necessary
     public List<Comentario> getComentarios() {
         return comentarios;
@@ -491,6 +477,36 @@ public class EventoBean implements Serializable {
 
     public void setEvento_sigue(List<Evento> evento_sigue) {
         this.evento_sigue = evento_sigue;
+    }
+
+    public int getNumAssists() {
+        return numAssists;
+    }
+
+    public int getNumLikes() {
+        return numLikes;
+    }
+
+    public int getNumFollows() {
+        return numFollows;
+    }
+
+    public void setNumAssists(int numAssists) {
+        int n = business.getEventById(eventId).getAsiste().size();
+        System.out.println(n);
+        this.numAssists = n;
+    }
+
+    public void setNumLikes(int numLikes) {
+        int n = business.getEventById(eventId).getMegusta().size();
+        System.out.println(n);
+        this.numLikes = n;
+    }
+
+    public void setNumFollows(int numFollows) {
+        int n = business.getEventById(eventId).getSigue().size();
+        System.out.println(n);
+        this.numFollows = n;
     }
 
     

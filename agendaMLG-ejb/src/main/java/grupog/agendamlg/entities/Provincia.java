@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +37,7 @@ public class Provincia implements Serializable {
     private Long id_provincia;
     @Column(name="nombre", nullable=false)
     private String nombre;
-    @OneToMany(cascade=CascadeType.ALL,mappedBy="provincia")
+    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL,mappedBy="provincia")
     private List<Localidad> localidades;
 
     public Long getId_provincia() {
