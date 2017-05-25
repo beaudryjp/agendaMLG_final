@@ -126,7 +126,7 @@
                                     Localidad
                                 </p:column>
                                 <p:column>
-                                    <h:selectOneMenu id="localidad" class="form-control" value="#{eventoBean.searchLocalidad}" >
+                                    <h:selectOneMenu id="localidad" class="form-control" value="#{eventoBean.prov.localidad}" >
                                         <f:selectItems value="#{eventoBean.prov.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                     </h:selectOneMenu>
                                 </p:column>

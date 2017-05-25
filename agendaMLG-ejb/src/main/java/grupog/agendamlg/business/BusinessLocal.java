@@ -1,7 +1,7 @@
 package grupog.agendamlg.business;
 
 import grupog.agendamlg.entities.*;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local; 
 
@@ -20,7 +20,8 @@ public interface BusinessLocal {
     public List<Evento> getEventsImportant(); 
     public List<Evento> getEventsBySearch(String text, String loca, String etiq, String dest);
     public List<Evento> getEventsByTag(String etiq); 
-    public List<Evento> getEventsByDate(LocalDate fecha); 
+    public List<Evento> getEventsByDate(Date fecha); 
+    public List<Evento> getEventsNearestByCurrentDate();
     public List<Evento> getLike(Usuario u);
     public List<Evento> getFollow(Usuario u);
     public List<Evento> getAssist(Usuario u);

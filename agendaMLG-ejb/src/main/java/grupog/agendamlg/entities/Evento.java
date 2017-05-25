@@ -32,7 +32,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name="getAllEvents", query="SELECT e from Evento e"),
     @NamedQuery(name="getEventById", query="SELECT e from Evento e WHERE e.id_evento = :evento"),
     @NamedQuery(name="getEventsImportant", query="SELECT e from Evento e WHERE e.destacado = true"),
-    @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha"),
+    @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha ORDER BY e.fecha_inicio ASC"),
+    @NamedQuery(name="getEventsNearestByDate", query="SELECT e from Evento e WHERE e.fecha_inicio >= current_date() ORDER BY e.fecha_inicio ASC"),
     //revisar que funcione
     @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e inner join e.etiqueta et inner join e.destinatario d "
             + "WHERE e.localidad.nombre = :localidad and "

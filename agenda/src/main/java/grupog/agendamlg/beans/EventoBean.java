@@ -8,9 +8,11 @@ import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
+import grupog.agendamlg.general.DateUtils;
 import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -66,7 +68,7 @@ public class EventoBean implements Serializable {
     private String searchText;
     private String tag;
     private String eventId;
-    private LocalDate dateSelected;
+    private Date dateSelected;
     private String event_new_titulo;
     private String event_new_descripcion;
     private String event_new_fecha_inicio;
@@ -90,21 +92,15 @@ public class EventoBean implements Serializable {
     }
 
     public List<Evento> getEventosProximos() {
-        List<Evento> e = business.getEvents();
+        List<Evento> e = business.getEventsNearestByCurrentDate();
         if (!e.isEmpty()) {
-            Collections.sort(e, new Comparator<Evento>() {
-                @Override
-                public int compare(Evento o1, Evento o2) {
-                    return o1.getFecha_inicio().compareTo(o2.getFecha_inicio());
-                }
-            });
             if (e.size() > 2) {
                 return e.subList(0, 2);
             } else {
                 return e;
             }
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -193,11 +189,11 @@ public class EventoBean implements Serializable {
         }
         return s;
     }
-    
-    public TagCloudModel getModel(){
+
+    public TagCloudModel getModel() {
         return model;
     }
-    
+
     public void sendNotificationLike(ActionEvent e) {
         if (current_user.getUsuario().isEmail_notifier()) {
             sendMailSocial("Has pinchado like en el evento");
@@ -272,11 +268,11 @@ public class EventoBean implements Serializable {
         this.model = model;
     }
 
-    public LocalDate getDateSelected() {
+    public Date getDateSelected() {
         return dateSelected;
     }
 
-    public void setDateSelected(LocalDate dateSelected) {
+    public void setDateSelected(Date dateSelected) {
         this.dateSelected = dateSelected;
     }
 
@@ -375,7 +371,6 @@ public class EventoBean implements Serializable {
     public void setEventDestinatarios(List<Destinatario> eventDestinatarios) {
         this.eventDestinatarios = eventDestinatarios;
     }
-    
 
     public void onload() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();

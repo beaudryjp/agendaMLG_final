@@ -1,4 +1,3 @@
-
 package grupog.agendamlg.business;
 
 import grupog.agendamlg.entities.Comentario;
@@ -11,8 +10,8 @@ import grupog.agendamlg.entities.Provincia;
 import grupog.agendamlg.entities.Tarea;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -164,7 +163,7 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Evento> getEventsByDate(LocalDate fecha) {
+    public List<Evento> getEventsByDate(Date fecha) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventsByDate", Evento.class)
                 .setParameter("fecha", fecha);
         return query.getResultList();
@@ -182,13 +181,12 @@ public class Business implements BusinessLocal {
         return e;
     }
 
-        @Override
+    @Override
     public void createEvent(Evento e) {
 
         em.persist(e);
 
     }
-
 
     @Override
     public void createComment(Comentario c) {
@@ -211,9 +209,9 @@ public class Business implements BusinessLocal {
 
     }
 
-        @Override
+    @Override
     public void deleteTag(Etiqueta e) {
-        
+
         em.remove(em.merge(e));
 
     }
@@ -402,10 +400,15 @@ public class Business implements BusinessLocal {
                 .setParameter("evento", Long.parseLong(event));
         return query.getResultList();
     }
-
+    
+    
     @Override
     public void deleteEvent(Evento e) {
         em.remove(em.merge(e));
     }
+    
+    @Override
+    public List<Evento> getEventsNearestByCurrentDate(){
+        return em.createNamedQuery("getEventsNearestByDate", Evento.class).getResultList();
+    }
 }
-
