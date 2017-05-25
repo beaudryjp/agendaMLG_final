@@ -44,37 +44,15 @@ import javax.persistence.TemporalType;
     //Event by tag
     //@NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
 })
-/*
 
-StringBuilder queryAsiste = new StringBuilder(); 
-        sb.append("SELECT * FROM jn_asiste_id WHERE id_usuario = ");
-        sb.append(usuario.id_usuario);
-        sb.append(" AND id_evento = ");
-        sb.append(evento.id_evento);
-
-StringBuilder queryGusta = new StringBuilder(); 
-        sb.append("SELECT * FROM jn_megusta_id WHERE id_usuario = ");
-        sb.append(usuario.id_usuario);
-        sb.append(" AND id_evento = ");
-        sb.append(evento.id_evento);
-
-StringBuilder querySigue = new StringBuilder(); 
-        sb.append("SELECT * FROM jn_sigue_id WHERE id_usuario = ");
-        sb.append(usuario.id_usuario);
-        sb.append(" AND id_evento = ");
-        sb.append(evento.id_evento);
-
-    Query query = em.createNativeQuery(queryString);
-    List<Hospital> result = query.getResultList();
-*/
 public class Evento implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_evento;
     private String titulo;
-    @Column(name = "descripcion", nullable = false)
+    @Column(columnDefinition = "TEXT", name = "descripcion", nullable = false)
     private String descripcion;
     @Column(name = "fecha_inicio", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -89,7 +67,7 @@ public class Evento implements Serializable, Comparable {
     private String imagen_url;
     private String imagen_titulo;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinTable(name = "jn_comentarios_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_comentario"))
     private List<Comentario> comentarios;
 //    @OneToMany(cascade = CascadeType.ALL)
@@ -99,35 +77,18 @@ public class Evento implements Serializable, Comparable {
     private List<Etiqueta> etiqueta;
     @ManyToOne
     private Localidad localidad;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinTable(name = "jn_notificaciones_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_notificacion"))
     private List<Notificacion> notificaciones;
-    @ManyToMany(mappedBy = "megusta", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "megusta")
     private List<Usuario> megusta;
-    @ManyToMany(mappedBy = "sigue", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "sigue")
     private List<Usuario> sigue;
-    @ManyToMany(mappedBy = "asiste", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "asiste")
     private List<Usuario> asiste;
     @ManyToMany
     @JoinTable(name = "jn_destinatario_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_destinatario"))
     private List<Destinatario> destinatario;
-
-//    @OneToMany
-    public Evento() {
-    }
-
-    public Evento(String titulo, String descripcion, Date fecha_inicio, Date fecha_fin, String horario, String precio, double longitud, double latitud, boolean destacado, Localidad localidad) {
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.fecha_inicio = fecha_inicio;
-        this.fecha_fin = fecha_fin;
-        this.horario = horario;
-        this.precio = precio;
-        this.longitud = longitud;
-        this.latitud = latitud;
-        this.destacado = destacado;
-        this.localidad = localidad;
-    }
 
     public String getImagen_url() {
         return imagen_url;

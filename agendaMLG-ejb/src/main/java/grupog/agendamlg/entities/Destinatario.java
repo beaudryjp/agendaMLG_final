@@ -32,20 +32,12 @@ public class Destinatario implements Serializable, Comparable<Destinatario> {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_destinatario;
     @Column(name="descripcion", nullable=false)
     private String descripcion;
     @ManyToMany(mappedBy="destinatario")
     private List<Evento> evento;
-    
-    public Destinatario(){
-    }
-    
-    public Destinatario(String descripcion) {
-        this.descripcion = descripcion;
-    }
-    
 
     public List<Evento> getEvento() {
         return evento;

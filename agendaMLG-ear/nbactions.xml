@@ -4,6 +4,8 @@
             <actionName>CUSTOM-Deploy</actionName>
             <displayName>Deploy</displayName>
             <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
                 <goal>wildfly:deploy</goal>
                 
             </goals>

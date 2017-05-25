@@ -47,7 +47,7 @@
                                     </p:column>
 
                                     <p:column>
-                                        <h:selectOneMenu id="localidad"  class="form-control" value="#{eventoBean.searchLocalidad}" >
+                                        <h:selectOneMenu id="localidad"  class="form-control" value="#{eventoBean.prov.localidad}" >
                                             <!--<f:selectItem itemLabel="Localidad" itemValue="" noSelectionOption="true" />-->
                                             <f:selectItems value="#{eventoBean.prov.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                         </h:selectOneMenu>
@@ -74,7 +74,7 @@
                                             Enviar
                                         </pretty:link>
                                         -->
-                                        <h:commandButton action="#{eventoBean.searchEvents()}" value="Enviar" id="search_submit"  styleClass="btn btn-default btn-lg"/>
+                                        <h:commandButton action="#{eventoBean.searchEvents()}" value="Buscar" id="search_submit"  styleClass="btn btn-default btn-lg submitButtons"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>

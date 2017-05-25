@@ -33,18 +33,24 @@ public class ProvinciaBean implements Serializable {
 
     public ProvinciaBean() {
     }
-    
-    @PostConstruct
-    public void init(){
-        provincia = business.getProvinces().get(0).getNombre();
-        localidades = provinciaGetLocalidades(provincia);
-    }
 
+    @PostConstruct
+    public void init() {
+        provincia = "Málaga";
+        localidad = "Málaga";
+        List<Provincia> p = business.getProvinces();
+        if (!p.isEmpty()) {
+            //provincia = p.get(0).getNombre();
+            localidades = provinciaGetLocalidades(provincia);
+        }
+
+    }
 
     public List<Provincia> getProvincias() {
         provincias = business.getProvinces();
         return provincias;
     }
+
     /*
     public List<Localidad> getLocalidades() {
         Collections.sort(localidades, new Comparator<Localidad>() {
@@ -55,20 +61,20 @@ public class ProvinciaBean implements Serializable {
         });
         return localidades;
     }
-*/
+     */
 
     public void onCambioProvincia() {
 //        System.out.println("Provincia: " + provincia);
 //        System.out.println("Localidad: " + localidad);
 //        System.out.println();
-//        localidad = provincia;
+        localidad = provincia;
         if (provincia != null && !provincia.equals("")) {
             //localidades = provincias.get(provincias.indexOf(provincia)).getLocalidades();
             localidades = provinciaGetLocalidades(provincia);
-           // System.out.println("Lista llena de Localidades");
+            // System.out.println("Lista llena de Localidades");
         } else {
             localidades = new ArrayList<>();
-           // System.out.println("Lista Vacia de Localidades");
+            // System.out.println("Lista Vacia de Localidades");
         }
     }
 
@@ -87,7 +93,7 @@ public class ProvinciaBean implements Serializable {
     }
 
     public String getProvincia() {
-        
+
         provincias = business.getProvinces();
         Collections.sort(provincias, new Comparator<Provincia>() {
             @Override
@@ -117,6 +123,5 @@ public class ProvinciaBean implements Serializable {
     public void setLocalidades(List<Localidad> localidades) {
         this.localidades = localidades;
     }
-    
-    
+
 }

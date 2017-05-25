@@ -25,7 +25,7 @@ public class Notificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_notificacion;
     private String mensaje;
     private LocalDateTime fecha_hora;

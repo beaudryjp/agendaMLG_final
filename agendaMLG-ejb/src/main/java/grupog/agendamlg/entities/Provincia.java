@@ -4,7 +4,6 @@ package grupog.agendamlg.entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,11 +32,11 @@ public class Provincia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_provincia;
     @Column(name="nombre", nullable=false)
     private String nombre;
-    @OneToMany(fetch = FetchType.EAGER, cascade=CascadeType.ALL,mappedBy="provincia")
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval=true, mappedBy="provincia")
     private List<Localidad> localidades;
 
     public Long getId_provincia() {

@@ -17,7 +17,6 @@ import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 /**
@@ -135,13 +134,13 @@ public class Business implements BusinessLocal {
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
         List<Evento> ev = new ArrayList<>();
-//        System.out.println("text: " + text);
-//        System.out.println("localidad: " + loca);
-//        System.out.println("etiqueta: " + etiq);
-//        System.out.println("destinatario: " + dest);
-//        for (Evento x : query.getResultList()) {
-//            System.out.println(x.getTitulo());
-//        }
+        System.out.println("text: " + text);
+        System.out.println("localidad: " + loca);
+        System.out.println("etiqueta: " + etiq);
+        System.out.println("destinatario: " + dest);
+        for (Evento x : query.getResultList()) {
+            System.out.println(x.getTitulo());
+        }
 
         if (!text.isEmpty() && !text.equals("")) {
             for (Evento e : query.getResultList()) {

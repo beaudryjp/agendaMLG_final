@@ -32,19 +32,12 @@ public class Etiqueta implements Serializable, Comparable<Etiqueta>  {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_etiqueta;
     @Column(name="nombre", nullable=false)
     private String nombre;
     @ManyToMany(mappedBy="etiqueta")
     private List<Evento> evento;
-
-    public Etiqueta(){
-    }
-    
-    public Etiqueta(String nombre){
-        this.nombre = nombre;
-    }
     
     public List<Evento> getEvento() {
         return evento;

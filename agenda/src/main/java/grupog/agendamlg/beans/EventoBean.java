@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
@@ -83,6 +84,13 @@ public class EventoBean implements Serializable {
     private int numAssists;
     private int numLikes;
     private int numFollows;
+    
+    @PostConstruct
+    public void init(){
+        searchLocalidad = "Málaga";
+        searchDestinatario = "Todos";
+        searchEtiqueta = "Todos";
+    }
 
     public List<Evento> getEventosProximos() {
         List<Evento> e = business.getEvents();
@@ -123,17 +131,7 @@ public class EventoBean implements Serializable {
     }
 
     public void searchEvents() {
-//        System.out.println("searchEvents()");
-//        System.out.println("searchText " + searchText);
-//        System.out.println("searchLocalidad " + searchLocalidad);
-//        System.out.println("searchEtiqueta " + searchEtiqueta);
-//        System.out.println("searchDestinatario " + searchDestinatario);
-        eventoSearch = business.getEventsBySearch(searchText, searchLocalidad, searchEtiqueta, searchDestinatario);
-//        System.out.println("se ha actualizado eventoSearch");
-//        for (Evento x : eventoSearch) {
-//            System.out.println(x.getTitulo());
-//        }
-        //return "events_search?faces-redirect=true";
+        eventoSearch = business.getEventsBySearch(searchText, prov.getLocalidad(), searchEtiqueta, searchDestinatario);
         Redirect.redirectTo("events_search");
     }
 
@@ -424,7 +422,7 @@ public class EventoBean implements Serializable {
 
         e.setEtiqueta(etq);
         System.out.println("Estoy intentando crear un evento 6");
-        Localidad l = business.getLocalidadByName(searchLocalidad);
+        Localidad l = business.getLocalidadByName(prov.getLocalidad());
         System.out.println("Estoy intentando crear un evento 7");
         e.setLocalidad(l);
         // e.setImagen_url(event_new_imagen_url.getFileName());

@@ -1,6 +1,21 @@
 # agendaMLG
 La aplicación Java EE (JPA + JSF) de la aplicación agendaMLG para el Diario Sur - SII
 
+# Importar datos
+Para importar datos hay que ejecutar el siguiente comando:
+
+mysql -u root -p agenda < data.sql 
+
+# Usuarios
+
+jeanpaul.beaudry@gmail.com - redactor
+
+Poppo@gmail.com - registrado
+
+Pepe@patata.com - validado
+
+todos tienen la misma contraseña (123456)
+
 # Base de datos
 ### En esta practica hay que añadir una base de datos externa(mysql) ya que no se puede utiliza JavaDB.
 

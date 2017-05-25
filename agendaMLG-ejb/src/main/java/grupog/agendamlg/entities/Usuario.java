@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,7 +19,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -47,7 +45,7 @@ public class Usuario implements Serializable, Comparable {
     }
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_usuario;
     @Column(name="nombre", nullable=false)
     private String nombre;
@@ -67,30 +65,25 @@ public class Usuario implements Serializable, Comparable {
     @Enumerated(EnumType.STRING)
     private Tipo_Rol rol;
     
-    @OneToMany(cascade=CascadeType.ALL)
+    //(orphanRemoval=true)
+    @OneToMany
     private List<Comentario> comentarios;
     @OneToMany(cascade=CascadeType.ALL)
     private List <Notificacion> notificaciones;
-    @ManyToMany( cascade=CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(name="jn_megusta_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> megusta;
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name="jn_sigue_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> sigue;
-    @ManyToMany( cascade=CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name="jn_asiste_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> asiste;
     @ManyToMany
     @JoinTable(name = "jn_tareas_id", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_tarea"))
     private List<Tarea> tareas;
-    @OneToMany(mappedBy="creador_peticion",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="creador_peticion",orphanRemoval=true)
     private List<Tarea> peticion;
-
-    public Usuario(String nombre, String apellidos, String email) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.email = email;
-    }
     
     public Usuario(){
     }

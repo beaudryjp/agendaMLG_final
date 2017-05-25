@@ -31,7 +31,7 @@ public class Localidad implements Serializable, Comparable<Localidad> {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id_localidad")
     private Long id_localidad;
     @Column(name="nombre", nullable=false)
@@ -40,14 +40,6 @@ public class Localidad implements Serializable, Comparable<Localidad> {
     private Provincia provincia;
     @OneToMany(mappedBy="localidad")
     private List<Evento> evento;
-
-    public Localidad(String nombre, Provincia provincia) {
-        this.nombre = nombre;
-        this.provincia = provincia;
-    }
-    
-    public Localidad(){
-    }
     
     public List<Evento> getEvento() {
         return evento;

@@ -6,7 +6,7 @@
       xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition>
         <ul id="headerTags">
-            <ui:repeat value="#{etiquetaBean.etiquetas}" var="tag">
+            <ui:repeat value="#{etiquetaBean.etiquetasCabecera}" var="tag">
                 <li>
                     <pretty:link mappingId="tag">
                         #{tag.nombre}
