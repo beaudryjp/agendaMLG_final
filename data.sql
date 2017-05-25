@@ -1,8 +1,8 @@
 insert into usuario(nombre, apellidos, pseudonimo, email, email_notifier, rol, password_hash, sal) values('Jean Paul','Beaudry', 'beaudry', 'jeanpaul.beaudry@gmail.com', 1,'REDACTOR', '2975460E963F2E04C8A5E859415987C0EEC274497EE45C27EE43221750A801A2', '5A5F8F77AA8E795580CC74673B68F37F');
 
-insert into usuario(nombre, apellidos, pseudonimo, email, email_notifier, rol, password_hash, sal) values('Marie','Poppo', 'marie', 'Poppo@gmail.com', 1,'REGISTRADO', '6D9F8C92E6052F4F01BDB61A2CC52473AE570B065A517C8FCEEE5F58EA5CC526', '8B4DF33FC18FD555816846076AC616F1');
+insert into usuario(nombre, apellidos, pseudonimo, email, email_notifier, rol, password_hash, sal) values('Marie','Poppo', 'marie', 'Poppo@gmail.com', 0,'REGISTRADO', '6D9F8C92E6052F4F01BDB61A2CC52473AE570B065A517C8FCEEE5F58EA5CC526', '8B4DF33FC18FD555816846076AC616F1');
 
-insert into usuario(nombre, apellidos, pseudonimo, email, email_notifier, rol, password_hash, sal) values('Pepe','Patata', 'pepe', 'Pepe@patata.com', 1,'VALIDADO', 'C9ED69FC2EE947476C4F88342598BD29D1410B0BE683FBEDD5AD034F73A770D3', 'C07BC7907A67518CDB77FBA111077D9F');
+insert into usuario(nombre, apellidos, pseudonimo, email, email_notifier, rol, password_hash, sal) values('Pepe','Patata', 'pepe', 'Pepe@patata.com', 0,'VALIDADO', 'C9ED69FC2EE947476C4F88342598BD29D1410B0BE683FBEDD5AD034F73A770D3', 'C07BC7907A67518CDB77FBA111077D9F');
 
 insert into etiqueta(nombre) values("Todos");
 

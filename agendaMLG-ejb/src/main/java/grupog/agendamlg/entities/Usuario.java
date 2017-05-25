@@ -85,6 +85,10 @@ public class Usuario implements Serializable, Comparable {
     @OneToMany(mappedBy="creador_peticion",orphanRemoval=true)
     private List<Tarea> peticion;
     
+    @OneToMany
+    @JoinColumn(name="propietario")
+    private List<Evento> misEventos;
+    
     public Usuario(){
     }
     
@@ -214,6 +218,14 @@ public class Usuario implements Serializable, Comparable {
 
     public void setPeticion(List<Tarea> peticion) {
         this.peticion = peticion;
+    }
+
+    public List<Evento> getMisEventos() {
+        return misEventos;
+    }
+
+    public void setMisEventos(List<Evento> misEventos) {
+        this.misEventos = misEventos;
     }
 
     

@@ -4,7 +4,6 @@ import com.google.common.collect.ComparisonChain;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -90,6 +89,9 @@ public class Evento implements Serializable, Comparable {
     @ManyToMany
     @JoinTable(name = "jn_destinatario_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_destinatario"))
     private List<Destinatario> destinatario;
+    @ManyToOne
+    @JoinColumn(name="propietario", insertable=false, updatable=false)
+    private Usuario propietario;
 
     public String getImagen_url() {
         return imagen_url;
@@ -251,6 +253,16 @@ public class Evento implements Serializable, Comparable {
     public void setAsiste(List<Usuario> asiste) {
         this.asiste = asiste;
     }
+
+    public Usuario getPropietario() {
+        return propietario;
+    }
+
+    public void setPropietario(Usuario propietario) {
+        this.propietario = propietario;
+    }
+    
+    
 
     @Override
     public int hashCode() {
