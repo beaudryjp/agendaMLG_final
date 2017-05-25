@@ -245,29 +245,29 @@ public class Business implements BusinessLocal {
 
     @Override
     public void assist(Evento e, Usuario u) {
-        
-        u.getAsiste().add(e);
-        em.persist(u);
-        //em.merge(u);
-
+        TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
+                .setParameter("id_usuario", u.getId_usuario());
+        Usuario u2 = query.getSingleResult();
+        u2.getAsiste().add(e);
+        em.merge(u2);
     }
 
     @Override
     public void like(Evento e, Usuario u) {
-
-        u.getMegusta().add(e);
-        em.merge(u);
-        //em.merge(u);
-
+        TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
+                .setParameter("id_usuario", u.getId_usuario());
+        Usuario u2 = query.getSingleResult();
+        u2.getAsiste().add(e);
+        em.merge(u2);
     }
 
     @Override
     public void follow(Evento e, Usuario u) {
-
-        u.getSigue().add(e);
-        em.merge(u);
-        //em.merge(u);
-
+        TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
+                .setParameter("id_usuario", u.getId_usuario());
+        Usuario u2 = query.getSingleResult();
+        u2.getAsiste().add(e);
+        em.merge(u2);
     }
 
     @Override

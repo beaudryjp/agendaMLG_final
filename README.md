@@ -10,11 +10,17 @@ Es posible que no salgan los acentos y caracteres especiales, en este caso en la
 ALTER DATABASE agenda CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 Si sigue saliendo hay que modificar el fichero my.cnf que se encontrará en bin:
+
 [mysqld]
+
 ...
+
 skip-character-set-client-handshake
+
 collation-server=utf8_unicode_ci
+
 character-set-server=utf8
+
 ...
 
 # Usuarios
