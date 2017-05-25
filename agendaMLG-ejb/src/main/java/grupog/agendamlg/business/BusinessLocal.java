@@ -57,4 +57,5 @@ public interface BusinessLocal {
     public Etiqueta getEtiquetaByName(String name);
     public List<Etiqueta> getAllTagsByEvent(String event);
     public List<Destinatario> getAllAudiencesByEvent(String event);
+    public List<Evento> getEventsByAudience(String audience);
 }

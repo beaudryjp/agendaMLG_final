@@ -163,6 +163,13 @@ public class Business implements BusinessLocal {
     }
 
     @Override
+    public List<Evento> getEventsByAudience(String audience) {
+        TypedQuery<Evento> query = em.createNamedQuery("getEventsByAudience", Evento.class)
+                .setParameter("descripcion", audience);
+        return query.getResultList();
+    }
+    
+    @Override
     public List<Evento> getEventsByDate(Date fecha) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventsByDate", Evento.class)
                 .setParameter("fecha", fecha);
@@ -212,13 +219,16 @@ public class Business implements BusinessLocal {
     @Override
     public void deleteTag(Etiqueta e) {
 
+        List <Evento> event = getEventsByTag(e.getNombre());
+        for(Evento eti:event){
+            eti.getEtiqueta().remove(e);
+        } 
         em.remove(em.merge(e));
-
     }
 
     @Override
     public void createAudience(Destinatario e) {
-
+        System.out.println(e.getDescripcion());
         em.persist(e);
 
     }
@@ -233,8 +243,11 @@ public class Business implements BusinessLocal {
     @Override
     public void deleteAudience(Destinatario e) {
 
+        List <Evento> event = getEventsByAudience(e.getDescripcion());
+        for(Evento doradita:event){
+            doradita.getDestinatario().remove(e);
+        }
         em.remove(em.merge(e));
-
     }
 
     @Override
@@ -257,7 +270,7 @@ public class Business implements BusinessLocal {
         TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
                 .setParameter("id_usuario", u.getId_usuario());
         Usuario u2 = query.getSingleResult();
-        u2.getAsiste().add(e);
+        u2.getMegusta().add(e);
         em.merge(u2);
     }
 
@@ -266,7 +279,7 @@ public class Business implements BusinessLocal {
         TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
                 .setParameter("id_usuario", u.getId_usuario());
         Usuario u2 = query.getSingleResult();
-        u2.getAsiste().add(e);
+        u2.getSigue().add(e);
         em.merge(u2);
     }
 

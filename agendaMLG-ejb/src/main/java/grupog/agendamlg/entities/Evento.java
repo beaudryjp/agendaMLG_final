@@ -42,7 +42,8 @@ import javax.persistence.TemporalType;
     @NamedQuery(name="getUserLikes", query="select e from Evento e join fetch e.megusta a where a.id_usuario = :id"),
     @NamedQuery(name="getUserFollows", query="select e from Evento e join fetch e.sigue a where a.id_usuario = :id"),
     //Event by tag
-    @NamedQuery(name="getEventsByTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre")
+    @NamedQuery(name="getEventsByTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre"),
+    @NamedQuery(name="getEventsByAudience", query="SELECT e from Evento e INNER JOIN e.destinatario de WHERE de.descripcion = :descripcion")
 })
 
 public class Evento implements Serializable, Comparable {
@@ -86,7 +87,7 @@ public class Evento implements Serializable, Comparable {
     private List<Usuario> sigue;
     @ManyToMany(mappedBy = "asiste")
     private List<Usuario> asiste;
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "jn_destinatario_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_destinatario"))
     private List<Destinatario> destinatario;
     @ManyToOne

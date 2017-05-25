@@ -94,15 +94,15 @@ public class DestinatarioBean implements Serializable {
 //        }
 //    }
     
-     public String createAudience() throws java.text.ParseException {
+     public String createAudience(){
         System.out.println("Estoy intentando crear una audiencia");
         Destinatario d = new Destinatario();
-        d.setDescripcion(destinatario);
+        d.setDescripcion(destinatarionew);
         business.createAudience(d);
         return "index?faces-redirect=true";
     }
      
-    public String updateAudience() throws java.text.ParseException {
+    public String updateAudience(){
         System.out.println("Estoy intentando update Audience");
         Destinatario a = business.getDestinatarioByDescripcion(destinatario);
         a.setDescripcion(destinatarioup);
@@ -110,7 +110,7 @@ public class DestinatarioBean implements Serializable {
         return "index?faces-redirect=true";
     }
    
-    public String deleteAudience() throws java.text.ParseException {
+    public String deleteAudience() {
         System.out.println("Estoy intentando delete Audience");
  
         for(String str : destinatariodel)
