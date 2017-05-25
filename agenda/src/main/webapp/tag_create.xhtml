@@ -47,7 +47,7 @@
                             </p:row>
                              <p:row>
                                 <p:column>
-                                    <p:selectOneMenu id="search_tags" class="form-control">
+                                    <p:selectOneMenu id="search_tags" class="form-control" value = "#{etiquetaBean.etiquetaAnt}">
                                             
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
                                    </p:selectOneMenu>
@@ -63,7 +63,7 @@
                             </p:row>
                             <p:row>
                                 <p:column colspan="2">
-                                    <h2 class="eventTitle">Eliminar un público</h2>
+                                    <h2 class="eventTitle">Eliminar una etiqueta</h2>
                                 </p:column>
                             </p:row>
                             <p:row>

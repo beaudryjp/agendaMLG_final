@@ -23,6 +23,20 @@ public class DestinatarioBean implements Serializable {
     private List<String> destinatarios;
     
     private String destinatario;
+    private String destinatarionew;
+    private List<String> destinatariodel;
+
+    public List<String> getDestinatariodel() {
+        return destinatariodel;
+    }
+
+    public void setDestinatariodel(List<String> destinatariodel) {
+        this.destinatariodel = destinatariodel;
+    }
+    
+    
+    private String destinatarioup;
+    
     @EJB
     private Business business;
 
@@ -53,6 +67,24 @@ public class DestinatarioBean implements Serializable {
         this.destinatario = destinatario;
     }
 
+    public String getDestinatarionew() {
+        return destinatarionew;
+    }
+
+    public void setDestinatarionew(String destinatarionew) {
+        this.destinatarionew = destinatarionew;
+    }
+
+
+    public String getDestinatarioup() {
+        return destinatarioup;
+    }
+
+    public void setDestinatarioup(String destinatarioup) {
+        this.destinatarioup = destinatarioup;
+    }
+    
+
 //    public Destinatario getSpecificDestinatario() {
 //        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 //        try {
@@ -72,21 +104,21 @@ public class DestinatarioBean implements Serializable {
      
     public String updateAudience() throws java.text.ParseException {
         System.out.println("Estoy intentando update Audience");
-        
-        Destinatario d = new Destinatario();
-        d.setDescripcion(destinatario);
-        business.updateAudience(d);
+        Destinatario a = business.getDestinatarioByDescripcion(destinatario);
+        a.setDescripcion(destinatarioup);
+        business.updateAudience(a);
         return "index?faces-redirect=true";
     }
    
     public String deleteAudience() throws java.text.ParseException {
         System.out.println("Estoy intentando delete Audience");
  
-        for(String str : destinatarios)
+        for(String str : destinatariodel)
         {
             business.deleteAudience(business.getDestinatarioByDescripcion(str));
  
         }
+
     
         return "index?faces-redirect=true";
     }

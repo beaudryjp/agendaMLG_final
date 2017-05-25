@@ -28,7 +28,7 @@
                                     Nombre
                                 </p:column>
                                 <p:column colspan="2">
-                                    <p:inputText id="publicName" value="#{destinatarioBean.destinatario}" placeholder="Nombre" />
+                                    <p:inputText id="publicName" value="#{destinatarioBean.destinatarionew}" placeholder="Nombre" />
                                 </p:column>
                             </p:row>
 
@@ -46,13 +46,13 @@
                             </p:row>
                             <p:row>
                                 <p:column>
-                                    <p:selectOneMenu id="search_public" class="form-control" value="#{eventoBean.destinatarios}">
-                                        <f:selectItems value="#{destinatarioBean.destinatario}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
+                                    <p:selectOneMenu id="search_public" class="form-control" value = "#{destinatarioBean.destinatario}">
+                                        <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
                                         </p:selectOneMenu>
                                     
                                 </p:column>  
                                 <p:column colspan="2">
-                                    <p:inputText id="publicNameUpdate" value="#{destinatarioBean.destinatario}" placeholder="Nuevo nombre" />
+                                    <p:inputText id="publicNameUpdate" value="#{destinatarioBean.destinatarioup}" placeholder="Nuevo nombre" />
                                 </p:column>
                                 
                             </p:row>
@@ -69,7 +69,7 @@
                             <p:row>
                                
                                 <p:column>
-                                    <p:selectManyMenu id="search_public2" class="form-control" value="#{eventoBean.destinatarios}">
+                                    <p:selectManyMenu id="search_public2" class="form-control" value="#{destinatarioBean.destinatariodel}">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
                                     </p:selectManyMenu>
             

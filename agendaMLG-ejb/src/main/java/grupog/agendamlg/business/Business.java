@@ -1,3 +1,4 @@
+
 package grupog.agendamlg.business;
 
 import grupog.agendamlg.entities.Comentario;
@@ -181,19 +182,13 @@ public class Business implements BusinessLocal {
         return e;
     }
 
-    @Override
+        @Override
     public void createEvent(Evento e) {
 
         em.persist(e);
 
     }
 
-    @Override
-    public void deleteEvent(Evento e) {
-
-        em.remove(e);
-
-    }
 
     @Override
     public void createComment(Comentario c) {
@@ -216,10 +211,10 @@ public class Business implements BusinessLocal {
 
     }
 
-    @Override
+        @Override
     public void deleteTag(Etiqueta e) {
-
-        em.remove(e);
+        
+        em.remove(em.merge(e));
 
     }
 
@@ -240,7 +235,7 @@ public class Business implements BusinessLocal {
     @Override
     public void deleteAudience(Destinatario e) {
 
-        em.remove(e);
+        em.remove(em.merge(e));
 
     }
 
@@ -407,4 +402,10 @@ public class Business implements BusinessLocal {
                 .setParameter("evento", Long.parseLong(event));
         return query.getResultList();
     }
+
+    @Override
+    public void deleteEvent(Evento e) {
+        em.remove(em.merge(e));
+    }
 }
+

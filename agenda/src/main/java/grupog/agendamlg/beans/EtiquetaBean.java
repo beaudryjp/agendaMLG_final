@@ -26,6 +26,7 @@ public class EtiquetaBean implements Serializable {
 
     private String etiquetaCreate;
     private String etiquetaUpdate;
+    private String etiquetaAnt;
     private List<String> etiquetaDelete;        
     @EJB
     private Business business;
@@ -58,7 +59,7 @@ public class EtiquetaBean implements Serializable {
             else
                 return e;
         } else {
-            return new ArrayList<Etiqueta>();
+            return new ArrayList<>();
         }
     }
 
@@ -72,17 +73,9 @@ public class EtiquetaBean implements Serializable {
     }
 
     public String updateTag(){
-        System.out.println("Estoy intentando update Tags");
-        List<Etiqueta> search = business.getTags();
-        for (Etiqueta e : search) {
-            if (e.getNombre() == etiquetaUpdate) {
-
-            }
-        }
-
-        Etiqueta e = new Etiqueta();
-        e.setNombre(etiquetaUpdate);
-        business.updateTag(e);
+        Etiqueta a = business.getEtiquetaByName(etiquetaAnt);
+        a.setNombre(etiquetaUpdate);
+        business.updateTag(a);
         return "index?faces-redirect=true";
     }
 
@@ -96,6 +89,15 @@ public class EtiquetaBean implements Serializable {
         return "index?faces-redirect=true";
     }
 
+    public String getEtiquetaAnt() {
+        return etiquetaAnt;
+    }
+
+    public void setEtiquetaAnt(String etiquetaAnt) {
+        this.etiquetaAnt = etiquetaAnt;
+    }
+    
+    
     public String getEtiquetaCreate() {
         return etiquetaCreate;
     }
