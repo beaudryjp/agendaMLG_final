@@ -55,6 +55,8 @@ public class EtiquetaBean implements Serializable {
                 e.remove(0);
                 return e.subList(0, 9);
             }
+            else
+                return e;
         } else {
             return new ArrayList<Etiqueta>();
         }
