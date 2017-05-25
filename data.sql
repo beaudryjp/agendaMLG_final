@@ -544,6 +544,8 @@ insert into localidad(nombre, provincia_id_provincia) values("Totalan", 2);
 
 insert into localidad(nombre, provincia_id_provincia) values("Valle de Abdalajis", 2);
 
+insert into localidad(nombre, provincia_id_provincia) values("Villanueva de Algaidas", 2);
+
 insert into localidad(nombre, provincia_id_provincia) values("Villanueva de Tapia", 2);
 
 insert into localidad(nombre, provincia_id_provincia) values("Villanueva del Rosario", 2);

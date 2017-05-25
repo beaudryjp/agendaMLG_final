@@ -168,7 +168,7 @@ public class Business implements BusinessLocal {
                 .setParameter("descripcion", audience);
         return query.getResultList();
     }
-    
+
     @Override
     public List<Evento> getEventsByDate(Date fecha) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventsByDate", Evento.class)
@@ -219,10 +219,10 @@ public class Business implements BusinessLocal {
     @Override
     public void deleteTag(Etiqueta e) {
 
-        List <Evento> event = getEventsByTag(e.getNombre());
-        for(Evento eti:event){
+        List<Evento> event = getEventsByTag(e.getNombre());
+        for (Evento eti : event) {
             eti.getEtiqueta().remove(e);
-        } 
+        }
         em.remove(em.merge(e));
     }
 
@@ -243,8 +243,8 @@ public class Business implements BusinessLocal {
     @Override
     public void deleteAudience(Destinatario e) {
 
-        List <Evento> event = getEventsByAudience(e.getDescripcion());
-        for(Evento doradita:event){
+        List<Evento> event = getEventsByAudience(e.getDescripcion());
+        for (Evento doradita : event) {
             doradita.getDestinatario().remove(e);
         }
         em.remove(em.merge(e));
@@ -253,34 +253,42 @@ public class Business implements BusinessLocal {
     @Override
     public Evento getEvent(String id) {
         return em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", Long.parseLong(id)).getSingleResult();
+                .setParameter("evento", Long.parseLong(id)).getResultList().get(0);
     }
 
     @Override
     public void assist(Evento e, Usuario u) {
         TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
                 .setParameter("id_usuario", u.getId_usuario());
-        Usuario u2 = query.getSingleResult();
-        u2.getAsiste().add(e);
-        em.merge(u2);
+
+        if (!checkAssist(e, u)) {
+            Usuario u2 = query.getResultList().get(0);
+            u2.getAsiste().add(e);
+            em.merge(u2);
+        }
+
     }
 
     @Override
     public void like(Evento e, Usuario u) {
         TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
                 .setParameter("id_usuario", u.getId_usuario());
-        Usuario u2 = query.getSingleResult();
-        u2.getMegusta().add(e);
-        em.merge(u2);
+        if (!checkLike(e, u)) {
+            Usuario u2 = query.getResultList().get(0);
+            u2.getMegusta().add(e);
+            em.merge(u2);
+        }
     }
 
     @Override
     public void follow(Evento e, Usuario u) {
         TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
                 .setParameter("id_usuario", u.getId_usuario());
-        Usuario u2 = query.getSingleResult();
-        u2.getSigue().add(e);
-        em.merge(u2);
+        if (!checkFollow(e, u)) {
+            Usuario u2 = query.getResultList().get(0);
+            u2.getSigue().add(e);
+            em.merge(u2);
+        }
     }
 
     @Override
@@ -336,7 +344,7 @@ public class Business implements BusinessLocal {
     public Evento getEventById(String event) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", Long.parseLong(event));
-        return query.getSingleResult();
+        return query.getResultList().get(0);
     }
 
     @Override
@@ -356,14 +364,14 @@ public class Business implements BusinessLocal {
     public Destinatario getAudienceById(int audience) {
         TypedQuery<Destinatario> query = em.createNamedQuery("getEventById", Destinatario.class)
                 .setParameter("destinatario", audience);
-        return query.getSingleResult();
+        return query.getResultList().get(0);
     }
 
     @Override
     public Etiqueta getTagById(int tag) {
         TypedQuery<Etiqueta> query = em.createNamedQuery("getEventById", Etiqueta.class)
                 .setParameter("etiqueta", tag);
-        return query.getSingleResult();
+        return query.getResultList().get(0);
     }
 
     @Override
@@ -376,52 +384,94 @@ public class Business implements BusinessLocal {
     public Provincia getProvinciaByName(String name) {
         TypedQuery<Provincia> query = em.createNamedQuery("getProvinciaByName", Provincia.class)
                 .setParameter("nombre", name);
-        return query.getSingleResult();
+        return query.getResultList().get(0);
     }
 
     @Override
     public Localidad getLocalidadByName(String name) {
         TypedQuery<Localidad> query = em.createNamedQuery("getLocalidadByName", Localidad.class)
                 .setParameter("nombre", name);
-        return query.getSingleResult();
+        return query.getResultList().get(0);
     }
 
     @Override
     public Destinatario getDestinatarioByDescripcion(String desc) {
         TypedQuery<Destinatario> query = em.createNamedQuery("getAudienceByDescription", Destinatario.class)
                 .setParameter("descripcion", desc);
-        return query.getSingleResult();
+        return query.getResultList().get(0);
     }
 
     @Override
     public Etiqueta getEtiquetaByName(String name) {
         TypedQuery<Etiqueta> query = em.createNamedQuery("getTagByName", Etiqueta.class)
                 .setParameter("nombre", name);
-        return query.getSingleResult();
+        return query.getResultList().get(0);
     }
 
     @Override
-    public List<Etiqueta> getAllTagsByEvent(String event){
+    public List<Etiqueta> getAllTagsByEvent(String event) {
         TypedQuery<Etiqueta> query = em.createNamedQuery("getAllTagsByEventId", Etiqueta.class)
                 .setParameter("evento", Long.parseLong(event));
         return query.getResultList();
     }
-    
+
     @Override
-    public List<Destinatario> getAllAudiencesByEvent(String event){
+    public List<Destinatario> getAllAudiencesByEvent(String event) {
         TypedQuery<Destinatario> query = em.createNamedQuery("getAllAudiencesByEventId", Destinatario.class)
                 .setParameter("evento", Long.parseLong(event));
         return query.getResultList();
     }
-    
-    
+
     @Override
     public void deleteEvent(Evento e) {
         em.remove(em.merge(e));
     }
-    
+
     @Override
-    public List<Evento> getEventsNearestByCurrentDate(){
+    public List<Evento> getEventsNearestByCurrentDate() {
         return em.createNamedQuery("getEventsNearestByDate", Evento.class).getResultList();
     }
+
+    @Override
+    public int numAssist(Evento e) {
+        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", e.getId_evento());
+        return query.getResultList().get(0).getAsiste().size();
+    }
+
+    @Override
+    public int numLike(Evento e) {
+        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", e.getId_evento());
+        return query.getResultList().get(0).getMegusta().size();
+    }
+
+    @Override
+    public int numFollow(Evento e) {
+        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", e.getId_evento());
+        return query.getResultList().get(0).getSigue().size();
+    }
+
+    @Override
+    public boolean checkAssist(Evento e, Usuario u) {
+        TypedQuery<Evento> query2 = em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", e.getId_evento());
+        return query2.getResultList().get(0).getAsiste().contains(u);
+    }
+
+    @Override
+    public boolean checkLike(Evento e, Usuario u) {
+        TypedQuery<Evento> query2 = em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", e.getId_evento());
+        return query2.getResultList().get(0).getMegusta().contains(u);
+    }
+
+    @Override
+    public boolean checkFollow(Evento e, Usuario u) {
+        TypedQuery<Evento> query2 = em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", e.getId_evento());
+        return query2.getResultList().get(0).getSigue().contains(u);
+    }
+
 }

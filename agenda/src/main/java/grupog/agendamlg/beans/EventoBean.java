@@ -8,15 +8,13 @@ import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
-import grupog.agendamlg.general.DateUtils;
 import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
+import java.io.IOException;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.text.SimpleDateFormat;
@@ -27,6 +25,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
@@ -194,28 +193,31 @@ public class EventoBean implements Serializable {
         return model;
     }
 
-    public void sendNotificationLike(ActionEvent e) {
-        if (current_user.getUsuario().isEmail_notifier()) {
+    public void sendNotificationLike(ActionEvent e) throws IOException {
+        Evento evento = business.getEventById(eventId);
+        if (!business.checkLike(evento, current_user.getUsuario())) {
             sendMailSocial("Has pinchado like en el evento");
+            business.like(evento, current_user.getUsuario());
         }
-        Evento evento = business.getEventById(eventId);
-        business.like(evento, current_user.getUsuario());
+        redirectEventInfo();
     }
 
-    public void sendNotificationAssist(ActionEvent e) {
-        if (current_user.getUsuario().isEmail_notifier()) {
+    public void sendNotificationAssist(ActionEvent e)  throws IOException {
+        Evento evento = business.getEventById(eventId);
+        if (!business.checkAssist(evento, current_user.getUsuario())) {
             sendMailSocial("Has indicado que vas a asistir al evento");
+            business.assist(evento, current_user.getUsuario());
         }
-        Evento evento = business.getEventById(eventId);
-        business.assist(evento, current_user.getUsuario());
+        redirectEventInfo();
     }
 
-    public void sendNotificationFollow(ActionEvent e) {
-        if (current_user.getUsuario().isEmail_notifier()) {
-            sendMailSocial("Has indicado que quieres seguir el evento");
-        }
+    public void sendNotificationFollow(ActionEvent e)  throws IOException {
         Evento evento = business.getEventById(eventId);
-        business.follow(evento, current_user.getUsuario());
+        if (!business.checkFollow(evento, current_user.getUsuario())) {
+            sendMailSocial("Has indicado que quieres seguir el evento");
+            business.follow(evento, current_user.getUsuario());
+        }
+        redirectEventInfo();
     }
 
     private void sendMailSocial(String msg) {
@@ -243,6 +245,7 @@ public class EventoBean implements Serializable {
         n.setUsuario(u);
         n.setMensaje(msg);
         business.setNotifications(n);
+        Redirect.redirectTo("event_info.xhtml?id=" + eventId);
     }
 
     private String changeHtmlChars(String m) {
@@ -376,7 +379,15 @@ public class EventoBean implements Serializable {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
         model = getModelTags();
+        Evento e = business.getEventById(eventId);
         eventDestinatarios = business.getAllAudiencesByEvent(eventId);
+        numAssists = business.numAssist(e);
+        numLikes = business.numLike(e);
+        numFollows = business.numFollow(e);
+        /*
+        numAssists = business.getEventById(eventId).getAsiste().size();
+        System.out.println("numAssists: " + numAssists);
+         */
     }
 
     public void tag_onLoad() {
@@ -504,9 +515,7 @@ public class EventoBean implements Serializable {
     }
 
     public void setNumAssists(int numAssists) {
-        int n = business.getEventById(eventId).getAsiste().size();
-        System.out.println(n);
-        this.numAssists = n;
+        this.numAssists = numAssists;
     }
 
     public void setNumLikes(int numLikes) {
@@ -537,4 +546,10 @@ public class EventoBean implements Serializable {
         this.eventoSearch = eventoSearch;
     }
 
+    private void redirectEventInfo() throws IOException{
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
+        String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
+        ec.redirect(full_url);
+    }
 }

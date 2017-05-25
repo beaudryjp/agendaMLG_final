@@ -58,4 +58,10 @@ public interface BusinessLocal {
     public List<Etiqueta> getAllTagsByEvent(String event);
     public List<Destinatario> getAllAudiencesByEvent(String event);
     public List<Evento> getEventsByAudience(String audience);
+    public int numAssist(Evento e);
+    public int numLike(Evento e);
+    public int numFollow(Evento e);
+    public boolean checkAssist(Evento e, Usuario u);
+    public boolean checkLike(Evento e, Usuario u);
+    public boolean checkFollow(Evento e, Usuario u);
 }

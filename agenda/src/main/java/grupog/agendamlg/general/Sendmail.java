@@ -39,15 +39,16 @@ public class Sendmail {
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
-         */
+        */
         
         //ZOHO
+        
         props.put("mail.smtp.host", "smtp.zoho.eu");
         props.put("mail.smtp.socketFactory.port", "465");
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
-
+        
         //OUTLOOK
         /*
         props.put("mail.smtp.auth", "true");
