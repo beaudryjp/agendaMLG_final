@@ -19,7 +19,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import org.hibernate.Hibernate;
 
 /**
  *
@@ -101,46 +100,25 @@ public class Business implements BusinessLocal {
         return query.getResultList();
     }
 
-    public void initialize(Usuario u)
-    {
-    }
-    
+    @Override
     public List<Evento> getLike(Usuario u) {
-
-        Hibernate.initialize(u);
-        List<Evento> l = new ArrayList<>();
-
-        for (Evento e : u.getMegusta())
-        {
-            l.add(e);
-        }        
-        return l;
+        TypedQuery<Evento> query = em.createNamedQuery("getUserLikes", Evento.class)
+                .setParameter("id", u.getId_usuario());
+        return query.getResultList();
     }
 
-    public List<Evento> getFollow(Usuario u) {       
-        
-        Hibernate.initialize(u);
-        List<Evento> l = new ArrayList<>();
-        
-        for (Evento e : u.getSigue())
-        {
-            l.add(e);
-        } 
-        
-        
-        return l;
+    @Override
+    public List<Evento> getFollow(Usuario u) {
+        TypedQuery<Evento> query = em.createNamedQuery("getUserFollows", Evento.class)
+                .setParameter("id", u.getId_usuario());
+        return query.getResultList();
     }
 
+    @Override
     public List<Evento> getAssist(Usuario u) {
-    
-        Hibernate.initialize(u);
-        
-        List<Evento> l = new ArrayList<>();
-        for (Evento e : u.getAsiste())
-        {
-            l.add(e);
-        } 
-        return l;
+        TypedQuery<Evento> query = em.createNamedQuery("getUserAssists", Evento.class)
+                .setParameter("id", u.getId_usuario());
+        return query.getResultList();
     }
 
     @Override
@@ -281,9 +259,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public void assist(Evento e, Usuario u) {
-
+        
         u.getAsiste().add(e);
-        em.merge(u);
+        em.persist(u);
         //em.merge(u);
 
     }

@@ -19,13 +19,14 @@
       <!--<property name="hibernate.hbm2ddl.auto" value="update" />-->
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.hbm2ddl.auto" value="none"/>
-      <property name="javax.persistence.schema-generation.scripts.create-target" value="./create.sql"/>
-      <property name="javax.persistence.schema-generation.scripts.drop-target" value="./drop.sql"/>
       <!--
             <property name="javax.persistence.schema-generation.scripts.create-target" value="./create.sql"/>
             <property name="javax.persistence.schema-generation.scripts.drop-target" value="./drop.sql"/>
             <property name="javax.persistence.sql-load-script-source" value="./data.sql"/>
             -->
+      <!-- Profile funciona pero no es recomendadble 
+      <property name="hibernate.enable_lazy_load_no_trans" value="true" />
+      -->
     </properties>
   </persistence-unit>
 </persistence>

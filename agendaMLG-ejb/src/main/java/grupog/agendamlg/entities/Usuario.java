@@ -20,6 +20,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -35,7 +36,7 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name="checkEmail", query="SELECT u from Usuario u WHERE u.email = :uemail"),
     @NamedQuery(name="checkUsername", query="SELECT u from Usuario u WHERE u.pseudonimo = :upseudonimo"),
     @NamedQuery(name="getAllUsers", query="SELECT u from Usuario u"),
-    @NamedQuery(name="getUser", query="SELECT u from Usuario u WHERE u.id_usuario = :id_usuario")
+    @NamedQuery(name="getUser", query="SELECT u from Usuario u WHERE u.id_usuario = :id_usuario"),
 })
 public class Usuario implements Serializable, Comparable {
     
@@ -70,13 +71,13 @@ public class Usuario implements Serializable, Comparable {
     private List<Comentario> comentarios;
     @OneToMany(cascade=CascadeType.ALL)
     private List <Notificacion> notificaciones;
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany( cascade=CascadeType.ALL)
     @JoinTable(name="jn_megusta_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> megusta;
     @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="jn_sigue_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> sigue;
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany( cascade=CascadeType.ALL)
     @JoinTable(name="jn_asiste_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> asiste;
     @ManyToMany

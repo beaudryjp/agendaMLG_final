@@ -130,9 +130,9 @@ public class EventoBean implements Serializable {
 //        System.out.println("searchDestinatario " + searchDestinatario);
         eventoSearch = business.getEventsBySearch(searchText, searchLocalidad, searchEtiqueta, searchDestinatario);
 //        System.out.println("se ha actualizado eventoSearch");
-        for (Evento x : eventoSearch) {
-            System.out.println(x.getTitulo());
-        }
+//        for (Evento x : eventoSearch) {
+//            System.out.println(x.getTitulo());
+//        }
         //return "events_search?faces-redirect=true";
         Redirect.redirectTo("events_search");
     }

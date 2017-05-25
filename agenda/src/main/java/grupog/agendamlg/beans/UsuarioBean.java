@@ -13,6 +13,7 @@ import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -46,17 +47,36 @@ public class UsuarioBean implements Serializable {
     @EJB
     private Business business;
 
-
+    
+    @PostConstruct
+    public void init(){
+        if(ctrl.getUsuario()!=null){
+            emailNotifier=ctrl.getUsuario().isEmail_notifier();
+        }
+    }
+    
     public List<Evento> getGusta() {
-        return business.getLike(ctrl.getUsuario());
+        List<Evento> e = business.getLike(ctrl.getUsuario());
+        if(!e.isEmpty() && e != null)
+            return e;
+        else
+            return new ArrayList<>();
     }
 
     public List<Evento> getSigue() {
-        return business.getFollow(ctrl.getUsuario());
+        List<Evento> e = business.getFollow(ctrl.getUsuario());
+        if(!e.isEmpty() && e != null)
+            return e;
+        else
+            return new ArrayList<>();
     }
 
     public List<Evento> getAsiste() {
-        return business.getAssist(ctrl.getUsuario());
+        List<Evento> e = business.getAssist(ctrl.getUsuario());
+        if(!e.isEmpty() && e != null)
+            return e;
+        else
+            return new ArrayList<>();
     }
     
     
@@ -113,11 +133,7 @@ public class UsuarioBean implements Serializable {
     public void setControl(ControlLog con){
         ctrl = con;
     }
-    @PostConstruct
-    public void init(){
-        if(ctrl.getUsuario()!=null)
-            emailNotifier=ctrl.getUsuario().isEmail_notifier();
-    }
+   
     public boolean isEmailNotifier() {
         return emailNotifier;
     }

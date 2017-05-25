@@ -34,9 +34,13 @@ import javax.persistence.TemporalType;
     @NamedQuery(name="getEventsImportant", query="SELECT e from Evento e WHERE e.destacado = true"),
     @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha"),
     //revisar que funcione
-    @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e inner join e.etiqueta etiqueta inner join e.destinatario destinatario "
+    @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e inner join e.etiqueta et inner join e.destinatario d "
             + "WHERE e.localidad.nombre = :localidad and "
-            + " etiqueta.nombre = :etiqueta and destinatario.descripcion = :destinatario"),
+            + " et.nombre = :etiqueta and d.descripcion = :destinatario"),
+    
+    @NamedQuery(name="getUserAssists", query="select e from Evento e join fetch e.asiste a where a.id_usuario = :id"),
+    @NamedQuery(name="getUserLikes", query="select e from Evento e join fetch e.megusta a where a.id_usuario = :id"),
+    @NamedQuery(name="getUserFollows", query="select e from Evento e join fetch e.sigue a where a.id_usuario = :id"),
     //Event by tag
     //@NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
 })

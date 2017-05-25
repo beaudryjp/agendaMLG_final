@@ -54,8 +54,6 @@ public interface BusinessLocal {
     public Localidad getLocalidadByName(String name);
     public Destinatario getDestinatarioByDescripcion(String desc);
     public Etiqueta getEtiquetaByName(String name);
-    public void initialize(Usuario u);
-    
-    
+
     
 }
