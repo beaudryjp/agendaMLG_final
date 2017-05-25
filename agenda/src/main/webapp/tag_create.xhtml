@@ -28,7 +28,7 @@
                                     Nombre
                                 </p:column>
                                 <p:column colspan="2">
-                                    <p:inputText id="tagName" value="#{etiquetaBean.etiqueta}" placeholder="Nombre"/>
+                                    <p:inputText id="tagName" value="#{etiquetaBean.etiquetaCreate}" placeholder="Nombre"/>
                                 </p:column>
                             </p:row>
                         
@@ -47,12 +47,12 @@
                             </p:row>
                              <p:row>
                                 <p:column>
-                                    <p:selectOneMenu id="search_tags" class="form-control" value="#{etiquetaBean.etiqueta}">
+                                    <p:selectOneMenu id="search_tags" class="form-control">
                                             
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
                                    </p:selectOneMenu>
                                     <p:column colspan="2">
-                                        <p:inputText id="tagNameUpdate" value="#{etiquetaBean.etiqueta}" placeholder="Nuevo nombre" />
+                                        <p:inputText id="tagNameUpdate" value="#{etiquetaBean.etiquetaUpdate}" placeholder="Nuevo nombre" />
                                      </p:column>
                                 </p:column>  
                             </p:row>
@@ -69,7 +69,7 @@
                             <p:row>
                                 
                                 <p:column>
-                                    <p:selectManyMenu id="search_tags2" class="form-control" value="#{eventoBean.etiquetas}">
+                                    <p:selectManyMenu id="search_tags2" class="form-control" value="#{etiquetaBean.etiquetaDelete}">
                                             
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
                                    </p:selectManyMenu>

@@ -157,15 +157,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Evento> getEventsByTag(String etiq) {
-        List<Evento> ev = new ArrayList<>();
-        for (Evento x : getEvents()) {
-            for (Etiqueta et : x.getEtiqueta()) {
-                if (et.getNombre().equals(etiq)) {
-                    ev.add(x);
-                }
-            }
-        }
-        return ev;
+        TypedQuery<Evento> query = em.createNamedQuery("getEventsByTag", Evento.class)
+                .setParameter("nombre", etiq);
+        return query.getResultList();
     }
 
     @Override
