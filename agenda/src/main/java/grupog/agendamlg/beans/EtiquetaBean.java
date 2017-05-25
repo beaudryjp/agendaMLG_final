@@ -60,7 +60,6 @@ public class EtiquetaBean implements Serializable {
         } else {
             return new ArrayList<Etiqueta>();
         }
-        return new ArrayList<Etiqueta>();
     }
 
     public String createTag(){

@@ -54,6 +54,6 @@ public interface BusinessLocal {
     public Localidad getLocalidadByName(String name);
     public Destinatario getDestinatarioByDescripcion(String desc);
     public Etiqueta getEtiquetaByName(String name);
-
-    
+    public List<Etiqueta> getAllTagsByEvent(String event);
+    public List<Destinatario> getAllAudiencesByEvent(String event);
 }

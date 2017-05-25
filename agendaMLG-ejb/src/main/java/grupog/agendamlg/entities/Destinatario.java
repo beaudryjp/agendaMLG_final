@@ -25,7 +25,8 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
     @NamedQuery(name="getAllAudience", query="SELECT d from Destinatario d"),
     @NamedQuery(name="getAudienceById", query="SELECT d from Destinatario d WHERE d.id_destinatario = :destinatario"),
-    @NamedQuery(name="getAudienceByDescription", query="SELECT d from Destinatario d WHERE d.descripcion = :descripcion")    
+    @NamedQuery(name="getAudienceByDescription", query="SELECT d from Destinatario d WHERE d.descripcion = :descripcion"),
+    @NamedQuery(name="getAllAudiencesByEventId", query="SELECT d from Destinatario d inner join d.evento e WHERE e.id_evento = :evento"),    
 })
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"descripcion"}))
 public class Destinatario implements Serializable, Comparable<Destinatario> {

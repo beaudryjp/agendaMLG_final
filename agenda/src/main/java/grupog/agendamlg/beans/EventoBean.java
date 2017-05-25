@@ -58,10 +58,7 @@ public class EventoBean implements Serializable {
     private List<Evento> eventoSearch;
     private List<String> etiquetas;
     private List<String> destinatarios;
-    private List<Destinatario> publico_evento;
-    private List<Destinatario> publico_evento2;
-    private List<Destinatario> publico_evento3;
-    private List<Destinatario> publico_evento4;
+    private List<Destinatario> eventDestinatarios;
     private List<Comentario> comentarios;
     private String searchLocalidad;
     private String searchDestinatario;
@@ -84,9 +81,9 @@ public class EventoBean implements Serializable {
     private int numAssists;
     private int numLikes;
     private int numFollows;
-    
+
     @PostConstruct
-    public void init(){
+    public void init() {
         searchLocalidad = "Málaga";
         searchDestinatario = "Todos";
         searchEtiqueta = "Todos";
@@ -185,19 +182,22 @@ public class EventoBean implements Serializable {
         this.tag = tag;
     }
 
-    public TagCloudModel getModel(String e) {
-        Random r = new Random(0);
+    public TagCloudModel getModelTags() {
         TagCloudModel s = new DefaultTagCloudModel();
-        for (Evento x : business.getEvents()) {
-            if (x.getId_evento() == Integer.parseInt(e)) {
-                for (Etiqueta et : x.getEtiqueta()) {
-                    s.addTag(new DefaultTagCloudItem(et.getNombre(), "/event/tag/" + et.getNombre(), r.nextInt(4) + 1));
-                }
+        Random r = new Random(0);
+        Evento x = business.getEventById(eventId);
+        if (x != null) {
+            for (Etiqueta et : business.getAllTagsByEvent(eventId)) {
+                s.addTag(new DefaultTagCloudItem(et.getNombre(), "/event/tag/" + et.getNombre(), r.nextInt(4) + 1));
             }
         }
         return s;
     }
-
+    
+    public TagCloudModel getModel(){
+        return model;
+    }
+    
     public void sendNotificationLike(ActionEvent e) {
         if (current_user.getUsuario().isEmail_notifier()) {
             sendMailSocial("Has pinchado like en el evento");
@@ -266,10 +266,6 @@ public class EventoBean implements Serializable {
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
-    }
-
-    public TagCloudModel getModel() {
-        return model;
     }
 
     public void setModel(TagCloudModel model) {
@@ -372,9 +368,20 @@ public class EventoBean implements Serializable {
         this.event_new_imagen_titulo = event_new_imagen_titulo;
     }
 
+    public List<Destinatario> getEventDestinatarios() {
+        return eventDestinatarios;
+    }
+
+    public void setEventDestinatarios(List<Destinatario> eventDestinatarios) {
+        this.eventDestinatarios = eventDestinatarios;
+    }
+    
+
     public void onload() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
+        model = getModelTags();
+        eventDestinatarios = business.getAllAudiencesByEvent(eventId);
     }
 
     public void tag_onLoad() {

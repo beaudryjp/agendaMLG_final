@@ -394,4 +394,17 @@ public class Business implements BusinessLocal {
         return query.getSingleResult();
     }
 
+    @Override
+    public List<Etiqueta> getAllTagsByEvent(String event){
+        TypedQuery<Etiqueta> query = em.createNamedQuery("getAllTagsByEventId", Etiqueta.class)
+                .setParameter("evento", Long.parseLong(event));
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<Destinatario> getAllAudiencesByEvent(String event){
+        TypedQuery<Destinatario> query = em.createNamedQuery("getAllAudiencesByEventId", Destinatario.class)
+                .setParameter("evento", Long.parseLong(event));
+        return query.getResultList();
+    }
 }

@@ -77,10 +77,10 @@
                         <hr/>
                         <p><h5 class="h5bold"><h:outputText value="#{evento.localidad.nombre}&nbsp;&nbsp;&nbsp;#{evento.horario}&nbsp;&nbsp;&nbsp;#{evento.precio} "  /></h5></p>
                         <hr/>
-                        <c:if test="#{!empty evento.destinatario}">
+                        <c:if test="#{!empty eventoBean.eventDestinatarios}">
                             <p>
                                 <ul class="publico">
-                                    <ui:repeat value="#{evento.destinatario}" var="dest">
+                                    <ui:repeat value="#{eventoBean.eventDestinatarios}" var="dest">
                                         <li><h:outputText value="#{dest.descripcion}"/></li>
                                     </ui:repeat>
                                 </ul>
@@ -88,10 +88,10 @@
 
                             <hr/>
                         </c:if>
-                        <c:if test="#{!empty evento.etiqueta}">
+                        <c:if test="#{!empty eventoBean.model}">
                             <p>
                                 <h:form>
-                                    <p:tagCloud model="#{eventoBean.getModel(evento.id_evento)}"></p:tagCloud>
+                                    <p:tagCloud model="#{eventoBean.model}"></p:tagCloud>
                                 </h:form>
                             </p>
                         </c:if>
