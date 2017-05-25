@@ -43,7 +43,7 @@ import javax.persistence.TemporalType;
     @NamedQuery(name="getUserLikes", query="select e from Evento e join fetch e.megusta a where a.id_usuario = :id"),
     @NamedQuery(name="getUserFollows", query="select e from Evento e join fetch e.sigue a where a.id_usuario = :id"),
     //Event by tag
-    //@NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
+    @NamedQuery(name="getEventsByTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre")
 })
 
 public class Evento implements Serializable, Comparable {
