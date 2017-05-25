@@ -30,7 +30,9 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import org.primefaces.event.map.PointSelectEvent;
 import org.primefaces.model.UploadedFile;
+import org.primefaces.model.map.LatLng;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
 import org.primefaces.model.tagcloud.TagCloudModel;
@@ -406,7 +408,7 @@ public class EventoBean implements Serializable {
 //        }
         System.out.println("Estoy intentando crear un evento 1");
         Evento e = new Evento();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
         Date endDate = df.parse(event_new_fecha_fin);
         Date startDate = df.parse(event_new_fecha_inicio);
         e.setTitulo(event_new_titulo);
@@ -415,8 +417,8 @@ public class EventoBean implements Serializable {
         e.setFecha_fin(endDate);
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
-        e.setLongitud(1.25);
-        e.setLatitud(2.40);
+        e.setLongitud(event_new_longitud);
+        e.setLatitud(event_new_latitud);
         e.setDestacado(event_new_destacado);
         List<Destinatario> s = new ArrayList<>();
         System.out.println("Estoy intentando crear un evento 2");
@@ -551,5 +553,12 @@ public class EventoBean implements Serializable {
         ExternalContext ec = fc.getExternalContext();
         String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
         ec.redirect(full_url);
+    }
+    
+    public void onPointSelect(PointSelectEvent event) {
+        LatLng latlng = event.getLatLng();
+          
+        event_new_latitud=latlng.getLat();
+        event_new_longitud=latlng.getLng();
     }
 }

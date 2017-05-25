@@ -54,9 +54,9 @@
                                     Publico
                                 </p:column>
                                 <p:column>
-                                    <h:selectManyListbox id="eventDestinatario" value="#{eventoBean.destinatarios}" >
+                                    <p:selectManyMenu id="eventDestinatario" value="#{eventoBean.destinatarios}" showCheckbox="true">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}"  var="d" itemLabel="#{d.descripcion}" itemValue="#{d.descripcion}" />
-                                    </h:selectManyListbox>
+                                    </p:selectManyMenu>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -64,9 +64,9 @@
                                     Etiquetas
                                 </p:column>
                                 <p:column>
-                                    <h:selectManyListbox id="eventEtiqueta" value="#{eventoBean.etiquetas}" >
+                                    <p:selectManyMenu id="eventEtiqueta" value="#{eventoBean.etiquetas}" showCheckbox="true">
                                         <f:selectItems value="#{etiquetaBean.etiquetas}"  var="e" itemLabel="#{e.nombre}" itemValue="#{e.nombre}" />
-                                    </h:selectManyListbox>
+                                    </p:selectManyMenu>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -74,7 +74,7 @@
                                     Fecha inicio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaIni" value="#{eventoBean.event_new_fecha_inicio}"  placeholder="Fecha Inicio"/>
+                                    <p:inputText id="eventFechaIni" value="#{eventoBean.event_new_fecha_inicio}"  placeholder="dd-mm-yyyy"/>
 
                                 </p:column>
                             </p:row>
@@ -83,7 +83,7 @@
                                     Fecha fin
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaFin" value="#{eventoBean.event_new_fecha_fin}"  placeholder="Fecha Fin"/>
+                                    <p:inputText id="eventFechaFin" value="#{eventoBean.event_new_fecha_fin}"  placeholder="dd-mm-yyyy"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -108,6 +108,21 @@
                                 </p:column>
                                 <p:column>
                                     <p:fileUpload id="eventImage" value="#{eventoBean.event_new_imagen_url}"/>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Coordenadas
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton id="btnMap" type="button" icon="ui-icon-pin-s" value="Elige tus coordenadas" onclick="PF('dlg').show();"/>
+             
+                                    <p:dialog id="gmapDialog" widgetVar="dlg" width="625" height="400" modal="true">
+                                        <p:gmap id="gmap" center="41.381542, 2.122893" zoom="15" type="HYBRID" style="width:100%;height:400px" >
+                                            <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}"/>
+                                        </p:gmap>
+                                    </p:dialog>
+                                
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -152,6 +167,7 @@
                     </h:form>
                 </div>
             </div>
+            <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>
         </ui:define>
     </ui:composition>
 </html>

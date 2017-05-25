@@ -69,7 +69,7 @@
                             <p:row>
                                 
                                 <p:column>
-                                    <p:selectManyMenu id="search_tags2" class="form-control" value="#{etiquetaBean.etiquetaDelete}">
+                                    <p:selectManyMenu id="search_tags2" class="form-control" value="#{etiquetaBean.etiquetaDelete}" showCheckbox="true">
                                             
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
                                    </p:selectManyMenu>
