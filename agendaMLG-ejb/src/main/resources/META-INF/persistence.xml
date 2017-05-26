@@ -15,8 +15,8 @@
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
             <!-- Cuando se quiera crear las tablas se cambia el value a create -->
             <property name="hibernate.hbm2ddl.auto" value="validate"/>
         </properties>

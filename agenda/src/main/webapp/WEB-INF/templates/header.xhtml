@@ -26,7 +26,11 @@
         <div class="topnav" id="myTopnav">
             <h:form>
                 <h2>MENU</h2>
-                <h3><h:link value="Eventos" outcome="events_tags.xhtml?tag=Todos" /></h3>
+                <h3>
+                    <li>
+                        <pretty:link mappingId="allEvents"> Eventos </pretty:link>
+                    </li>
+                </h3>
                 <c:choose>
                     <c:when test="#{empty ControlLog.usuario}">
                         <h3><h:link value="Iniciar sesión" outcome="login"/></h3>
@@ -44,12 +48,10 @@
         <section id="header-option-icons">
             <ul class="icons">
                 <li>
-                    <pretty:link mappingId="tag" class="icon fa-calendar">
-                        Eventos
-                        <f:param value="Todos" />
-                    </pretty:link></li>
+                    <pretty:link mappingId="allEvents" class="icon fa-calendar"> Eventos </pretty:link>
+                </li>
                 <c:choose>
-                    <c:when test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR' || ControlLog.usuario.getRol_usuario() == 'VALIDADO'  || ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
+                    <c:when test="#{ControlLog.userLoggedIn}">
                         <li><h:link value="Perfil" outcome="profile"  class="icon fa-user-circle"/></li>               
                         <li><h:form><h:commandLink id="closeSession" value="Cerrar Sesión" action="#{ControlLog.logout}"  class="icon fa-user-circle"  /></h:form></li>  
                     </c:when>

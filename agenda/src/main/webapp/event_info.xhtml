@@ -100,8 +100,8 @@
                             <h5 class="h5bold">Comentarios</h5>
                             <ul class="comments">
                                 <c:choose>
-                                    <c:when test="#{!empty evento.comentarios}">
-                                        <ui:repeat value="#{evento.comentarios}" var="comen">
+                                    <c:when test="#{!empty eventoBean.eventComentarios}">
+                                        <ui:repeat value="#{eventoBean.eventComentarios}" var="comen">
                                             <li>
                                                 <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote>
                                                 <i>
@@ -127,8 +127,8 @@
 
                     <h:form id="formComentario">
                         <p:dialog header="Añadir comentario" widgetVar="dlg_comen" minHeight="40">
-                            <p:inputText id="eventComentario" placeholder="Comentario"/>
-                            <p:commandButton value="Enviar" id="submitComen" actionListener="#{buttonView.buttonAction}"  ajax="false" icon="ui-icon-disk" />
+                            <p:inputText id="eventComentario" placeholder="Comentario" value="#{eventoBean.eventNewComment}"/>
+                            <p:commandButton value="Enviar" id="submitComen" action="#{eventoBean.createComment()}"  ajax="false" icon="ui-icon-disk" />
                         </p:dialog>
                     </h:form>
 

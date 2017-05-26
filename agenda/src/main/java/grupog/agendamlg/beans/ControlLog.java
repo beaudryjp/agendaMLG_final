@@ -32,21 +32,19 @@ public class ControlLog implements Serializable {
         return usuario;
     }
 
-    public String home() {
-
-        String pageToShow = "login?faces-redirect=true";
-
+    public void home() {
         if (usuario.getRol_usuario() != null) {
-            pageToShow = "profile?faces-redirect=true";
+            Redirect.redirectToProfile();
         }
+        else
+            Redirect.redirectToLogin();
 
-        return pageToShow;
     }
 
-    public String logout() {
+    public void logout() {
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         usuario = null;
-        return "index?faces-redirect=true";
+        Redirect.redirectToIndex();
     }
 
     public ControlLog() {
@@ -55,11 +53,11 @@ public class ControlLog implements Serializable {
 
     public void checkUserPrivileges(){
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        System.out.println(hsr.getRequestURI());
+        //System.out.println(hsr.getRequestURI());
         if (usuario == null) {
-            Redirect.redirectTo("index?faces-redirect=true");
+            Redirect.redirectToIndex();
         } else if (hsr.getParameterMap().containsKey("event") && (usuario.getRol_usuario() != Usuario.Tipo_Rol.REDACTOR && usuario.getRol_usuario() != Usuario.Tipo_Rol.VALIDADO)) {
-            Redirect.redirectTo("events_all?faces-redirect=true");
+            Redirect.redirectTo("/event/all");
         }
         
     }
@@ -67,11 +65,11 @@ public class ControlLog implements Serializable {
     public void userHasAdminPrivilege(){
         if(usuario != null){
             if(!usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR)){
-                Redirect.redirectTo("index?faces-redirect=true");
+                Redirect.redirectToIndex();
             }
         }
         else{
-            Redirect.redirectTo("index?faces-redirect=true");
+            Redirect.redirectToIndex();
         }
     }
 
@@ -85,15 +83,14 @@ public class ControlLog implements Serializable {
                 if(business.getEventById(eventId) != null){
                     
                 }
-                else{
-                    Redirect.redirectTo("index?faces-redirect=true");
-                }
+                else
+                    Redirect.redirectToIndex();
             }
             else{
-                Redirect.redirectTo("index?faces-redirect=true");
+                Redirect.redirectToIndex();
             }
         } else {
-            Redirect.redirectTo("index?faces-redirect=true");
+            Redirect.redirectToIndex();
         }
     }
     
@@ -108,20 +105,20 @@ public class ControlLog implements Serializable {
                     
                 }
                 else{
-                    Redirect.redirectTo("index?faces-redirect=true");
+                    Redirect.redirectToIndex();
                 }
             }
             else{
-                Redirect.redirectTo("index?faces-redirect=true");
+                Redirect.redirectToIndex();
             }
         } else {
-            Redirect.redirectTo("index?faces-redirect=true");
+            Redirect.redirectToIndex();
         }
     }
     
     public void checkLoggedIn(){
         if(usuario != null){
-            Redirect.redirectTo("profile?faces-redirect=true");
+            Redirect.redirectToProfile();
         }   
     }
 
@@ -130,7 +127,9 @@ public class ControlLog implements Serializable {
     }
     
     public boolean isUserValidated(){
-        return (this.usuario != null) && (this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.VALIDADO) || this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR) );
+        return (this.usuario != null) && 
+                (this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.VALIDADO) || 
+                this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR) );
     }
     
     public boolean isUserRegistered(){
@@ -141,4 +140,10 @@ public class ControlLog implements Serializable {
         return this.usuario != null && this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR);
     }
 
+    public boolean isUserLoggedIn(){
+        return this.usuario != null && 
+                (this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR) || 
+                this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.VALIDADO) || 
+                this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REGISTRADO));
+    }
 }

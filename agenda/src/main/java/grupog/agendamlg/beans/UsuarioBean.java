@@ -144,12 +144,11 @@ public class UsuarioBean implements Serializable {
 
     
 
-    public String autenticar() {
+    public void autenticar() {
         char[] password;
         byte[] hash;
         byte[] sal;
         byte[] expected_hash;
-        String authentication_result_site = "login?faces-redirect=true";
         for (Usuario index_user : business.getUsers()) {
             if (index_user.getEmail().equals(email)) {
                 //Convert string password to char[]
@@ -164,7 +163,8 @@ public class UsuarioBean implements Serializable {
                 //Check if they are same hashed password
                 if (Arrays.equals(hash, expected_hash)) {
                     ctrl.setUsuario(index_user);
-                    authentication_result_site = ctrl.home();
+                    ctrl.home();
+                    
                 }
                 else{
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario o contraseña incorrecto."));
@@ -172,8 +172,6 @@ public class UsuarioBean implements Serializable {
                 
             }
         }
-
-        return authentication_result_site;
     }
 
     public String resetPassword(Usuario u) {

@@ -134,13 +134,6 @@ public class Business implements BusinessLocal {
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
         List<Evento> ev = new ArrayList<>();
-        System.out.println("text: " + text);
-        System.out.println("localidad: " + loca);
-        System.out.println("etiqueta: " + etiq);
-        System.out.println("destinatario: " + dest);
-        for (Evento x : query.getResultList()) {
-            System.out.println(x.getTitulo());
-        }
 
         if (!text.isEmpty() && !text.equals("")) {
             for (Evento e : query.getResultList()) {
@@ -251,12 +244,6 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public Evento getEvent(String id) {
-        return em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", Long.parseLong(id)).getResultList().get(0);
-    }
-
-    @Override
     public void assist(Evento e, Usuario u) {
         TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
                 .setParameter("id_usuario", u.getId_usuario());
@@ -328,7 +315,7 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Comentario> getComentarios(Evento e) {
+    public List<Comentario> getComments(Evento e) {
         TypedQuery<Comentario> query = em.createNamedQuery("getAllCommentsFromEvent", Comentario.class)
                 .setParameter("evento", e.getId_evento());
         return query.getResultList();
@@ -342,9 +329,8 @@ public class Business implements BusinessLocal {
 
     @Override
     public Evento getEventById(String event) {
-        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", Long.parseLong(event));
-        return query.getResultList().get(0);
+        return em.createNamedQuery("getEventById", Evento.class)
+                .setParameter("evento", Long.parseLong(event)).getResultList().get(0);
     }
 
     @Override
@@ -436,21 +422,33 @@ public class Business implements BusinessLocal {
     public int numAssist(Evento e) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", e.getId_evento());
-        return query.getResultList().get(0).getAsiste().size();
+        List<Evento> events = query.getResultList();
+        if(events.isEmpty())
+            return 0;
+        else
+            return events.get(0).getAsiste().size();
     }
 
     @Override
     public int numLike(Evento e) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", e.getId_evento());
-        return query.getResultList().get(0).getMegusta().size();
+        List<Evento> events = query.getResultList();
+        if(events.isEmpty())
+            return 0;
+        else
+            return events.get(0).getMegusta().size();
     }
 
     @Override
     public int numFollow(Evento e) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", e.getId_evento());
-        return query.getResultList().get(0).getSigue().size();
+        List<Evento> events = query.getResultList();
+        if(events.isEmpty())
+            return 0;
+        else
+            return events.get(0).getSigue().size();
     }
 
     @Override

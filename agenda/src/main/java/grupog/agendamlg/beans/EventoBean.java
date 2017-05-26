@@ -10,6 +10,9 @@ import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,9 +21,12 @@ import java.util.Comparator;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -30,6 +36,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.io.FilenameUtils;
 import org.primefaces.event.map.PointSelectEvent;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.map.LatLng;
@@ -62,7 +69,9 @@ public class EventoBean implements Serializable {
     private List<String> etiquetas;
     private List<String> destinatarios;
     private List<Destinatario> eventDestinatarios;
-    private List<Comentario> comentarios;
+    private List<Comentario> eventComentarios;
+    private List<Etiqueta> eventoEtiquetas;
+    private String eventNewComment;
     private String searchLocalidad;
     private String searchDestinatario;
     private String searchEtiqueta;
@@ -126,7 +135,7 @@ public class EventoBean implements Serializable {
 
     public void searchEvents() {
         eventoSearch = business.getEventsBySearch(searchText, prov.getLocalidad(), searchEtiqueta, searchDestinatario);
-        Redirect.redirectTo("events_search");
+        Redirect.redirectTo("/event/search");
     }
 
     public List<Evento> getSearchEventosEtiquetas() {
@@ -136,7 +145,7 @@ public class EventoBean implements Serializable {
 
     public Evento getEvento() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        return business.getEvent(hsr.getParameter("id"));
+        return business.getEventById(hsr.getParameter("id"));
     }
 
     public String getSearchLocalidad() {
@@ -195,35 +204,35 @@ public class EventoBean implements Serializable {
         return model;
     }
 
-    public void sendNotificationLike(ActionEvent e) throws IOException {
+    public void sendNotificationLike(ActionEvent e) {
         Evento evento = business.getEventById(eventId);
         if (!business.checkLike(evento, current_user.getUsuario())) {
             sendMailSocial("Has pinchado like en el evento");
             business.like(evento, current_user.getUsuario());
         }
-        redirectEventInfo();
+        Redirect.redirectToEventInfo(eventId);
     }
 
-    public void sendNotificationAssist(ActionEvent e)  throws IOException {
+    public void sendNotificationAssist(ActionEvent e) {
         Evento evento = business.getEventById(eventId);
         if (!business.checkAssist(evento, current_user.getUsuario())) {
             sendMailSocial("Has indicado que vas a asistir al evento");
             business.assist(evento, current_user.getUsuario());
         }
-        redirectEventInfo();
+        Redirect.redirectToEventInfo(eventId);
     }
 
-    public void sendNotificationFollow(ActionEvent e)  throws IOException {
+    public void sendNotificationFollow(ActionEvent e) {
         Evento evento = business.getEventById(eventId);
         if (!business.checkFollow(evento, current_user.getUsuario())) {
             sendMailSocial("Has indicado que quieres seguir el evento");
             business.follow(evento, current_user.getUsuario());
         }
-        redirectEventInfo();
+        Redirect.redirectToEventInfo(eventId);
     }
 
     private void sendMailSocial(String msg) {
-        Evento ev = business.getEvent(eventId);
+        Evento ev = business.getEventById(eventId);
         final Usuario u = current_user.getUsuario();
         final StringBuilder m = new StringBuilder();
         String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
@@ -247,7 +256,7 @@ public class EventoBean implements Serializable {
         n.setUsuario(u);
         n.setMensaje(msg);
         business.setNotifications(n);
-        Redirect.redirectTo("event_info.xhtml?id=" + eventId);
+        Redirect.redirectToEventInfo(eventId);
     }
 
     private String changeHtmlChars(String m) {
@@ -383,6 +392,7 @@ public class EventoBean implements Serializable {
         model = getModelTags();
         Evento e = business.getEventById(eventId);
         eventDestinatarios = business.getAllAudiencesByEvent(eventId);
+        eventComentarios = business.getComments(e);
         numAssists = business.numAssist(e);
         numLikes = business.numLike(e);
         numFollows = business.numFollow(e);
@@ -397,15 +407,8 @@ public class EventoBean implements Serializable {
         this.setTag(hsr.getParameter("tag"));
     }
 
-    public String createEvent() throws java.text.ParseException {
+    public void createEvent() throws java.text.ParseException {
 
-//        Path folder = Paths.get("/path/to/uploads");
-//        String filename = FilenameUtils.getBaseName(event_new_imagen_url.getFileName());
-//        String extension = FilenameUtils.getExtension(event_new_imagen_url.getFileName());
-//        Path file = Files.createTempFile(folder, filename + "-", "." + extension);
-//        try (InputStream input = event_new_imagen_url.getInputstream()) {
-//            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
-//        }
         System.out.println("Estoy intentando crear un evento 1");
         Evento e = new Evento();
         SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
@@ -421,35 +424,55 @@ public class EventoBean implements Serializable {
         e.setLatitud(event_new_latitud);
         e.setDestacado(event_new_destacado);
         List<Destinatario> s = new ArrayList<>();
-        System.out.println("Estoy intentando crear un evento 2");
         for (String str : destinatarios) {
             s.add(business.getDestinatarioByDescripcion(str));
         }
-        System.out.println("Estoy intentando crear un evento 3");
 
         e.setDestinatario(s);
-        System.out.println("Estoy intentando crear un evento 4");
         List<Etiqueta> etq = new ArrayList<>();
         for (String etiqueta : etiquetas) {
             etq.add(business.getEtiquetaByName(etiqueta));
         }
-        System.out.println("Estoy intentando crear un evento 5");
 
         e.setEtiqueta(etq);
-        System.out.println("Estoy intentando crear un evento 6");
         Localidad l = business.getLocalidadByName(prov.getLocalidad());
-        System.out.println("Estoy intentando crear un evento 7");
         e.setLocalidad(l);
-        // e.setImagen_url(event_new_imagen_url.getFileName());
-        // e.setImagen_titulo(event_new_imagen_titulo);
+        e.setImagen_url(event_new_imagen_url.getFileName());
+        e.setImagen_titulo(event_new_titulo);
+
         System.out.println("Estoy intentando crear un evento 8");
-        business.createEvent(e);
-        return "index";
+        //business.createEvent(e);
+        Redirect.redirectToIndex();
     }
 
-    // verify if these are necessary
-    public List<Comentario> getComentarios() {
-        return comentarios;
+    public void uploadImage() throws IOException {
+        ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
+        System.out.println("Name " + event_new_imagen_url.getFileName());
+        System.out.println("tmp directory" + System.getProperty("java.io.tmpdir"));
+        System.out.println("Size " + event_new_imagen_url.getSize());
+        String filePath = extContext.getRealPath("//resources//img//eventos//");
+        System.out.println("destination folder: " + filePath);
+        if (event_new_imagen_url != null) {
+            byte[] bytes = event_new_imagen_url.getContents();
+            String filename = FilenameUtils.getName(event_new_imagen_url.getFileName());
+            try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath + filename)))) {
+                stream.write(bytes);
+            }
+        }
+    }
+
+    public void createComment() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String id = hsr.getParameter("id");
+        Evento e = business.getEventById(id);
+
+        Comentario c = new Comentario();
+        c.setEvento(e);
+        c.setUsuario(current_user.getUsuario());
+        c.setFecha_hora(LocalDateTime.now());
+        c.setMensaje(eventNewComment);
+        business.createComment(c);
+        Redirect.redirectToEventInfo(id);
     }
 
     public List<String> getDestinatarios() {
@@ -458,10 +481,6 @@ public class EventoBean implements Serializable {
 
     public void setDestinatarios(List<String> d) {
         this.destinatarios = d;
-    }
-
-    public void setComentarios(List<Comentario> comentarios) {
-        this.comentarios = comentarios;
     }
 
     public List<String> getEtiquetas() {
@@ -548,17 +567,34 @@ public class EventoBean implements Serializable {
         this.eventoSearch = eventoSearch;
     }
 
-    private void redirectEventInfo() throws IOException{
-        FacesContext fc = FacesContext.getCurrentInstance();
-        ExternalContext ec = fc.getExternalContext();
-        String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
-        ec.redirect(full_url);
+    public List<Etiqueta> getEventoEtiquetas() {
+        return eventoEtiquetas;
     }
-    
+
+    public void setEventoEtiquetas(List<Etiqueta> eventoEtiquetas) {
+        this.eventoEtiquetas = eventoEtiquetas;
+    }
+
+    public String getEventNewComment() {
+        return eventNewComment;
+    }
+
+    public void setEventNewComment(String eventNewComment) {
+        this.eventNewComment = eventNewComment;
+    }
+
+    public List<Comentario> getEventComentarios() {
+        return eventComentarios;
+    }
+
+    public void setEventComentarios(List<Comentario> eventComentarios) {
+        this.eventComentarios = eventComentarios;
+    }
+
     public void onPointSelect(PointSelectEvent event) {
         LatLng latlng = event.getLatLng();
-          
-        event_new_latitud=latlng.getLat();
-        event_new_longitud=latlng.getLng();
+
+        event_new_latitud = latlng.getLat();
+        event_new_longitud = latlng.getLng();
     }
 }
