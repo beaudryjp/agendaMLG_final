@@ -6,6 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+  
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
@@ -114,19 +115,34 @@
                                                   allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
                                 </p:column>
                             </p:row>
-                            <p:row>
+                        <p:row>
                                 <p:column>
                                     Coordenadas
                                 </p:column>
-                                <p:column>
-                                    <p:commandButton id="btnMap" type="button" icon="ui-icon-pin-s" value="Elige tus coordenadas" onclick="PF('dlg').show();"/>
-             
-                                    <p:dialog id="gmapDialog" widgetVar="dlg" width="625" height="400" modal="true">
-                                        <p:gmap id="gmap" center="-4.4248549, 36.7203713" zoom="15" type="HYBRID" style="width:100%;height:400px" >
-                                            <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}"/>
-                                        </p:gmap>
-                                    </p:dialog>
+
+
                                 
+                                <p:column>
+                                     <p:inputText id="loquetuquieras" value="#{eventoBean.event_new_latitud}"/>
+                                   <p:inputText id="loquetuquieras2" value="#{eventoBean.event_new_longitud}" />     
+                                   
+                                </p:column>
+                                    </p:row>
+                                <p:row>
+                                    <p:column></p:column>
+                                <p:column>
+                                   
+                              
+             
+                                   
+                                          <p:gmap id="gmap" center="36.7203713, -4.4248549" zoom="15" type="HYBRID" style="width:100%;height:400px" >
+                                              <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras" immediate="true"/>
+                                               <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2" immediate="true"/>
+                                          </p:gmap>
+                 
+                                       
+                                  
+                                          
                                 </p:column>
                             </p:row>
                             <p:row>

@@ -437,11 +437,11 @@ public class EventoBean implements Serializable {
         e.setEtiqueta(etq);
         Localidad l = business.getLocalidadByName(prov.getLocalidad());
         e.setLocalidad(l);
-        e.setImagen_url(event_new_imagen_url.getFileName());
-        e.setImagen_titulo(event_new_titulo);
+        //e.setImagen_url(event_new_imagen_url.getFileName());
+        //e.setImagen_titulo(event_new_titulo);
 
         System.out.println("Estoy intentando crear un evento 8");
-        //business.createEvent(e);
+        business.createEvent(e);
         Redirect.redirectToIndex();
     }
 
@@ -594,7 +594,14 @@ public class EventoBean implements Serializable {
     public void onPointSelect(PointSelectEvent event) {
         LatLng latlng = event.getLatLng();
 
+        System.out.println(event_new_latitud);
+        System.out.println(event_new_longitud);
+        
         event_new_latitud = latlng.getLat();
         event_new_longitud = latlng.getLng();
+        
+        System.out.println(event_new_latitud);
+        System.out.println(event_new_longitud);
+        
     }
 }
