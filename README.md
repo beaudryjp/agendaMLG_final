@@ -1,6 +1,13 @@
 # agendaMLG
 La aplicación Java EE (JPA + JSF) de la aplicación agendaMLG para el Diario Sur - SII
 
+# Comando para hacer clean, build y deploy
+Seleccionar el proyecto agendaMLG_final y ir a Tools -> Open in terminal
+
+Ejecutar el comando cada vez que se quiera desplegar
+
+mvn clean install && cd agendaMLG-ear/ && mvn wildfly:deploy -X && cd ..
+
 # Importar datos
 Para importar datos hay que ejecutar el siguiente comando:
 
@@ -8,20 +15,6 @@ mysql -u root -p agenda < data.sql
 
 Es posible que no salgan los acentos y caracteres especiales, en este caso en la consola mysql ejecutar:
 ALTER DATABASE agenda CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
-Si sigue saliendo hay que modificar el fichero my.cnf que se encontrará en bin:
-
-[mysqld]
-
-...
-
-skip-character-set-client-handshake
-
-collation-server=utf8_unicode_ci
-
-character-set-server=utf8
-
-...
 
 # Usuarios
 
