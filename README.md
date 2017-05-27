@@ -1,7 +1,7 @@
 # agendaMLG
 La aplicación Java EE (JPA + JSF) de la aplicación agendaMLG para el Diario Sur - SII
 
-# Comando para hacer clean, build y deploy
+# Comando para hacer clean, build y deploy (es necesario tener instalado maven en el pc)
 Seleccionar el proyecto agendaMLG_final y ir a Tools -> Open in terminal
 
 Ejecutar el comando cada vez que se quiera desplegar

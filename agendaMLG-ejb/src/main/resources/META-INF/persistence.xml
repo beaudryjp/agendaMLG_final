@@ -17,8 +17,11 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>
-            <!-- Cuando se quiera crear las tablas se cambia el value a create -->
-            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <!--
+                Cuando se quiera crear las tablas se cambia el value a create.
+                Sino se pone a validate         
+            -->
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
         </properties>
     </persistence-unit>
 </persistence>
