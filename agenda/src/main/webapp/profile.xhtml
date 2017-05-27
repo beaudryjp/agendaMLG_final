@@ -181,7 +181,15 @@
                                                     <p:graphicImage class="event-image" name="img/event-general.png"/>
                                                 </p:column>
                                                 <p:column>
-                                                    <h:outputLabel  value="#{item.nombre}" />
+                                                    <c:if test="#{!empty item.id_evento}">
+                                                        <pretty:link mappingId="infoEvent">
+                                                            #{item.nombre}
+                                                            <f:param value="#{item.id_evento}" />
+                                                        </pretty:link>
+                                                    </c:if>
+                                                    <c:otherwise>
+                                                        <h:outputLabel  value="#{item.nombre}" />
+                                                    </c:otherwise>
                                                 </p:column>
                                                 <p:column>
                                                     <p class="notification-message-button"><p:commandButton action="#{tareas.approve(item)}" value ="Aprobar" icon="ui-icon-check" update="pan"/> </p>

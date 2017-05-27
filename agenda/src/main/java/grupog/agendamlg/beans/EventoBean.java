@@ -8,6 +8,7 @@ import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
+import grupog.agendamlg.entities.Tarea;
 import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
 import java.io.File;
@@ -454,7 +455,23 @@ public class EventoBean implements Serializable {
         e.setImagen_url("default.png");
         e.setImagen_titulo(event_new_titulo.toLowerCase());
         e.setValoracion(event_new_rating);
+        if(current_user.isUserRegistered()){
+            e.setVisible(false);
+            
+        }else{
+            e.setVisible(true);
+        }
         business.createEvent(e);
+        if(current_user.isUserRegistered()){
+        Tarea t = new Tarea();
+            t.setCreador_peticion(current_user.getUsuario());
+            t.setFecha_hora(LocalDateTime.now());
+            t.setId_evento(e.getId_evento());
+            t.setMensaje(current_user.getUsuario().getPseudonimo()+" desea crear un evento");
+            t.setNombre("Propuesta de evento");
+            t.setRedactores(business.getRedactores());
+            business.createTask(t);
+        }
         Redirect.redirectToEventInfo(e.getId_evento().toString());
         /*
         System.out.println(e.getId_evento());
@@ -710,5 +727,14 @@ public class EventoBean implements Serializable {
     public void updateEvento(){
         business.updateEvent(business.getEventById(eventId));
         Redirect.redirectToEventInfo(eventId);
+    }
+    
+    public void checkVisibility() {
+        HttpServletRequest hsr = Redirect.getRequest();
+        Evento e = business.getEventById(eventId);
+        if (!current_user.isUserAdmin() && !e.getVisible()) {
+            Redirect.redirectToIndex();
+        }
+
     }
 }

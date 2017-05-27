@@ -54,18 +54,25 @@ public class TareasBean implements Serializable {
     
     public void approve(Tarea t) {
         
-        if(t.getId_evento()==null)//Evento
+        if(t.getId_evento()==null)//Usuario
         {
             Usuario usi = t.getCreador_peticion();
             usi.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
             business.updateUser(usi);
-        }else{
-            
+        }else{//Evento
+            Evento e = business.getEventById(t.getId_evento()+"");
+            e.setVisible(true);
+            business.updateEvent(e);
         }
         business.deleteTask(t.getId_tarea());
     }
     
     public void reject(Tarea t) {
+        
+        if(t.getId_evento()!=null){
+           business.deleteEvent(business.getEventById(t.getId_evento()+"")); 
+        }
+        
         business.deleteTask(t.getId_tarea());
     }
     
