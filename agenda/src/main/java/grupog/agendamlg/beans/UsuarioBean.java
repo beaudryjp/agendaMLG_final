@@ -142,8 +142,6 @@ public class UsuarioBean implements Serializable {
         this.emailNotifier = emailNotifier;
     }
 
-    
-
     public void autenticar() {
         char[] password;
         byte[] hash;

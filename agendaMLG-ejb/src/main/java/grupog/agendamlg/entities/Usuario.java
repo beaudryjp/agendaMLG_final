@@ -34,6 +34,7 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name="checkUsername", query="SELECT u from Usuario u WHERE u.pseudonimo = :upseudonimo"),
     @NamedQuery(name="getAllUsers", query="SELECT u from Usuario u"),
     @NamedQuery(name="getUser", query="SELECT u from Usuario u WHERE u.id_usuario = :id_usuario"),
+    @NamedQuery(name="getRedactores", query="SELECT u from Usuario u WHERE u.rol = :rol"),
 })
 public class Usuario implements Serializable, Comparable {
     

@@ -23,7 +23,7 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "getNotifications", query = "SELECT n from Notificacion n WHERE usuario.id_usuario = :id_usuario")
+    @NamedQuery(name = "getNotifications", query = "SELECT no from Notificacion no WHERE no.usuario.id_usuario = :id_usuario")
 })
 public class Notificacion implements Serializable {
 

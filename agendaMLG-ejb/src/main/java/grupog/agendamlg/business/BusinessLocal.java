@@ -64,4 +64,9 @@ public interface BusinessLocal {
     public boolean checkLike(Evento e, Usuario u);
     public boolean checkFollow(Evento e, Usuario u);
     public void deleteNotificacion(Long id);
+    public List<Usuario> getRedactores();
+    public void createTask(Tarea t);
+    public void deleteTask(Long t);
+    public List<Tarea> getPeticiones(Long id);
+    public void deleteComentario(Long c);
 }

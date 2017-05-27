@@ -703,8 +703,12 @@ public class EventoBean implements Serializable {
     }
     
     public void deleteEvento(){
-        
         business.deleteEvent(business.getEventById(eventId));
         Redirect.redirectToIndex();
+    }
+    
+    public void updateEvento(){
+        business.updateEvent(business.getEventById(eventId));
+        Redirect.redirectToEventInfo(eventId);
     }
 }

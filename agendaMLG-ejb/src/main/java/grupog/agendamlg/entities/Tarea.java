@@ -10,10 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -23,7 +23,9 @@ import javax.persistence.ManyToOne;
 * @author Jean Paul Beaudry
 */
 @Entity
-
+@NamedQueries({
+    @NamedQuery(name="getTareas", query="SELECT t from Tarea t join fetch t.redactores algo WHERE algo.id_usuario = :id_usuario"),
+})
 public class Tarea implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,12 +38,22 @@ public class Tarea implements Serializable {
     private String mensaje;
     @Column(nullable = false)
     private LocalDateTime fecha_hora;
-    
+    @Column(nullable = true)
+    private Long id_evento;
+
     @ManyToMany
     private List <Usuario> redactores;
     @ManyToOne(optional=true)
     private Usuario creador_peticion;
 
+    public Long getId_evento() {
+        return id_evento;
+    }
+
+    public void setId_evento(Long id_evento) {
+        this.id_evento = id_evento;
+    }
+    
     public Long getId_tarea() {
         return id_tarea;
     }

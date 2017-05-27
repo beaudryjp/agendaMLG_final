@@ -139,7 +139,9 @@
                                                  styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
 
                                 <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
-                                    <p:commandButton id="solicitarValid" value="Solicitar validación" action="#{ControlLog.solicitar()}"/>
+                                    <c:if test="#{tareas.validado() == false}">
+                                        <p:commandButton id="solicitarValid" value="Solicitar validación" action="#{tareas.createTaskUser()}"/>
+                                    </c:if>
                                 </c:if>
                             </h:panelGroup>
                         </p:tab>
@@ -179,7 +181,7 @@
                                                     <p:graphicImage class="event-image" name="img/event-general.png"/>
                                                 </p:column>
                                                 <p:column>
-                                                    <h:outputLabel  value="#{item.titulo}" />
+                                                    <h:outputLabel  value="#{item.nombre}" />
                                                 </p:column>
                                                 <p:column>
                                                     <p class="notification-message-button"><p:commandButton action="#{tareas.approve(item)}" value ="Aprobar" icon="ui-icon-check" update="pan"/> </p>
@@ -187,7 +189,7 @@
                                             </p:row>
                                             <p:row>
                                                 <p:column>
-                                                    <h:outputLabel value="#{item.descripcion}" />
+                                                    <h:outputLabel value="#{item.mensaje}" />
                                                 </p:column>
                                                 <p:column>
                                                     <p class="notification-message-button"> <p:commandButton action="#{tareas.reject(item)}" value ="Denegar" icon="ui-icon-close" update="pan"/> </p>

@@ -78,9 +78,9 @@ public class Business implements BusinessLocal {
     public void createUser(Usuario u) {
 
         if (validateRegister(u.getPseudonimo(), u.getEmail())) {
-            //         
+                  
             em.persist(u);
-            //          
+                  
         }
     }
 
@@ -94,8 +94,10 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Tarea> getTasks(Usuario u) {
-        TypedQuery<Tarea> query = em.createNamedQuery("getTasks", Tarea.class)
+        
+        TypedQuery<Tarea> query = em.createNamedQuery("getTareas", Tarea.class)
                 .setParameter("id_usuario", u.getId_usuario());
+        
         return query.getResultList();
     }
 
@@ -171,13 +173,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public Evento updateEvent(Evento e) {
-
         em.merge(e);
-
-        //[Optional] RF-005 Mandar notificaciones al correo y notificaciones internas si un evento cambia
-        //Get all users who are liking, assisting or following
-        //Check if the users have the email notifier enabled
-        //Send internal notification in any case
         return e;
     }
 
@@ -413,13 +409,35 @@ public class Business implements BusinessLocal {
 
         TypedQuery <Evento> nombreClaro = em.createNamedQuery("getEventById",Evento.class).setParameter("evento", e.getId_evento());
         Evento e1 = nombreClaro.getResultList().get(0);
-        e1.getEtiqueta().clear();
-       e1.getMegusta().clear();
-       e1.getSigue().clear();
-       e1.getAsiste().clear();
-       e1.getDestinatario().clear();
-       
-       
+        
+        List<Etiqueta> eti = e1.getEtiqueta();
+        for(Etiqueta et:eti){
+            et.getEvento().remove(e1);
+        }
+        
+        List<Destinatario> di = e1.getDestinatario();
+        for(Destinatario d:di){
+            d.getEvento().remove(e1);
+        } 
+        
+        e1.getComentarios().clear();
+        e1.getNotificaciones().clear();
+        
+        List<Usuario> usersList = e1.getAsiste();
+        for(Usuario u:usersList){
+            u.getAsiste().remove(e1);
+        }
+        
+        List<Usuario> usersList2 = e1.getMegusta();
+        for(Usuario u:usersList2){
+            u.getMegusta().remove(e1);
+        }
+        
+        List<Usuario>usersList3 = e1.getSigue();
+        for(Usuario u:usersList3){
+            u.getSigue().remove(e1);
+        }
+        
         em.remove(em.merge(e1));
     }
 
@@ -487,5 +505,35 @@ public class Business implements BusinessLocal {
         Notificacion noti = em.find(Notificacion.class, id);
         em.remove(em.merge(noti));
     }
+
+    @Override
+    public List<Usuario> getRedactores() {
+        TypedQuery<Usuario> u = em.createNamedQuery("getRedactores",Usuario.class)
+                .setParameter("rol", Usuario.Tipo_Rol.REDACTOR);
+        return u.getResultList();
+    }
+
+    @Override
+    public void createTask(Tarea t) {
+        em.persist(t);
+    }
+
+    @Override
+    public void deleteTask(Long t) {
+        Tarea tari = em.find(Tarea.class, t);
+        em.remove(em.merge(tari));
+    }
     
+    @Override
+    public List<Tarea> getPeticiones(Long id){
+        Usuario susi = em.find(Usuario.class, id);
+        boolean p = susi.getPeticion().isEmpty();
+        return susi.getPeticion();
+    }
+    
+    @Override
+    public void deleteComentario(Long c){
+        Comentario co = em.find(Comentario.class, c);
+        em.remove(em.merge(co));  
+    }
 }

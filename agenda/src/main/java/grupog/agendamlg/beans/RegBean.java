@@ -132,7 +132,7 @@ public class RegBean implements Serializable {
             u.setPassword_hash(Password.bytesToHex(hash_bytes));
             u.setSal(Password.bytesToHex(salt_bytes));
             u.setPseudonimo(pseudonimo);
-            u.setEmail_notifier(acepta);
+            u.setEmail_notifier(email_notifier);
             business.createUser(u);
         }
         
