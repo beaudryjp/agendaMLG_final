@@ -35,7 +35,6 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -98,6 +97,7 @@ public class EventoBean implements Serializable {
     private double event_new_longitud;
     private double event_new_latitud;
     private boolean event_new_destacado;
+    private Integer event_new_rating;
     private String event_new_imagen_url;
     private UploadedFile newEventImage;
     private int numAssists;
@@ -383,6 +383,16 @@ public class EventoBean implements Serializable {
         this.event_new_destacado = event_new_destacado;
     }
 
+    public Integer getEvent_new_rating() {
+        return event_new_rating;
+    }
+
+    public void setEvent_new_rating(Integer event_new_rating) {
+        this.event_new_rating = event_new_rating;
+    }
+    
+    
+
     public List<Destinatario> getEventDestinatarios() {
         return eventDestinatarios;
     }
@@ -443,7 +453,7 @@ public class EventoBean implements Serializable {
 
         e.setImagen_url("default.png");
         e.setImagen_titulo(event_new_titulo.toLowerCase());
-
+        e.setValoracion(event_new_rating);
         business.createEvent(e);
         Redirect.redirectToEventInfo(e.getId_evento().toString());
         /*

@@ -74,6 +74,7 @@ public class Evento implements Serializable, Comparable {
     private String imagen_url;
     @Column(nullable = false)
     private String imagen_titulo;
+    private Integer valoracion;
 
     @OneToMany(mappedBy="evento")
     private List<Comentario> comentarios;
@@ -268,6 +269,14 @@ public class Evento implements Serializable, Comparable {
 
     public void setPropietario(Usuario propietario) {
         this.propietario = propietario;
+    }
+
+    public Integer getValoracion() {
+        return valoracion;
+    }
+
+    public void setValoracion(Integer valoracion) {
+        this.valoracion = valoracion;
     }
     
     

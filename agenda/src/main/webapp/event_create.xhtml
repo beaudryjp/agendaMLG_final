@@ -15,7 +15,7 @@
 
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
                     <p:panelGrid id="eventCreate" class="eventCreate">
-                        <h:form>
+                        <h:form id="evento">
                             <p:messages id="errors" autoUpdate="true"/>
 
                             <p:row>
@@ -41,7 +41,7 @@
                                     Título
                                 </p:column>
                                 <p:column colspan="2">
-                                    <p:inputText id="titulo" value="#{eventoBean.event_new_titulo}" placeholder="Título" />
+                                    <p:inputText id="titulo" value="#{eventoBean.event_new_titulo}" placeholder="Título" required="true"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -49,7 +49,7 @@
                                     Descripcion
                                 </p:column>
                                 <p:column>
-                                    <p:inputTextarea id="descripcion" placeholder="Descripción"  rows="10" cols="50" value="#{eventoBean.event_new_descripcion}"/>
+                                    <p:inputTextarea id="descripcion" placeholder="Descripción"  rows="10" cols="50" value="#{eventoBean.event_new_descripcion}" required="true"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -77,7 +77,7 @@
                                     Fecha inicio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="fecha_inicio" value="#{eventoBean.event_new_fecha_inicio}"  placeholder="dd-mm-yyyy"/>
+                                    <p:inputText id="fecha_inicio" value="#{eventoBean.event_new_fecha_inicio}"  placeholder="dd-mm-yyyy" required="true"/>
 
                                 </p:column>
                             </p:row>
@@ -86,7 +86,7 @@
                                     Fecha fin
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="fecha_fin" value="#{eventoBean.event_new_fecha_fin}"  placeholder="dd-mm-yyyy"/>
+                                    <p:inputText id="fecha_fin" value="#{eventoBean.event_new_fecha_fin}"  placeholder="dd-mm-yyyy" required="true"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -94,7 +94,7 @@
                                     Horario
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="horario" value="#{eventoBean.event_new_horario}"  placeholder="Horario" />
+                                    <p:inputText id="horario" value="#{eventoBean.event_new_horario}"  placeholder="Horario"  required="true"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -102,7 +102,7 @@
                                     Precio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="precio" value="#{eventoBean.event_new_precio}"  placeholder="Precio" />
+                                    <p:inputText id="precio" value="#{eventoBean.event_new_precio}"  placeholder="Precio"  required="true"/>
                                 </p:column>
                             </p:row>
                             <!--
@@ -122,8 +122,8 @@
                                     Coordenadas
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="loquetuquieras" value="#{eventoBean.event_new_latitud}"/>
-                                    <p:inputText id="loquetuquieras2" value="#{eventoBean.event_new_longitud}" />     
+                                    <p:inputText id="loquetuquieras" value="#{eventoBean.event_new_latitud}" disabled="true"/>
+                                    <p:inputText id="loquetuquieras2" value="#{eventoBean.event_new_longitud}" disabled="true"/>     
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -141,11 +141,11 @@
                                 </p:column>
                                 <p:column colspan="2">
                                     <h:selectOneMenu id="provincia" class="form-control" value="#{eventoBean.prov.provincia}">
-
                                         <p:ajax listener="#{eventoBean.prov.onCambioProvincia()}" update="localidad" />
                                         <f:selectItems value="#{eventoBean.prov.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
                                     </h:selectOneMenu>
-                                </p:column></p:row>
+                                </p:column>
+                            </p:row>
                             <p:row>
                                 <p:column>
                                     Localidad
@@ -166,10 +166,18 @@
                                     </p:column>
                                 </p:row>
                             </c:if> 
+                            <p:row>
+                                <p:column>
+                                    Valoración
+                                </p:column>
+                                <p:column>
+                                    <p:rating value="#{eventoBean.event_new_rating}"  required="true"/>
+                                </p:column>
+                            </p:row>
                             <p:row>  
                                 <p:column colspan="2">
-                                    <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
-                                    <p:commandButton  action="#{eventoBean.createEvent()}" ajax="false" icon="ui-icon-check" validateClient="true" value="Crear" id="createSubmit"  styleClass="btn btn-default btn-lg" />
+                                    <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSubmit btn btn-default btn-lg editButtons"/>
+                                    <h:commandLink  action="#{eventoBean.createEvent()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons" />
                                 </p:column>
                             </p:row>
 

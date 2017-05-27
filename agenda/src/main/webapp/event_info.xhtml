@@ -30,7 +30,9 @@
                         <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
                     </div>
                     <div class="floatRight">
-
+                        <div class="rating">
+                            <p:rating value="#{evento.valoracion}" readonly="true" />
+                        </div>
                         <c:choose>
                             <c:when test="#{!empty ControlLog.usuario}">
                                 <h5 class="icon">
@@ -143,14 +145,14 @@
 
                         </p:dialog>
                     </h:form>
-                    
+
                     <h:form id="formChange" enctype="multipart/form-data">
-                        <p:dialog header="Cambiar imágen" widgetVar="dlg_delete" minHeight="40">
+                        <p:dialog header="Cambiar imágen" widgetVar="dlg_change" minHeight="40">
                             <p:fileUpload id="eventImage" value="#{eventoBean.newEventImage}" fileLimit="1" 
-                                                  mode="advanced" dragDropSupport="true" label="Seleccionar"
-                                                  uploadLabel="Subir" cancelLabel="Borrar" 
-                                                  fileUploadListener="#{eventoBean.changeImage}" 
-                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
+                                          mode="advanced" dragDropSupport="true" label="Seleccionar"
+                                          uploadLabel="Subir" cancelLabel="Borrar" 
+                                          fileUploadListener="#{eventoBean.changeImage}" 
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
                         </p:dialog>
                     </h:form>
                     <c:if test="#{!empty ControlLog.usuario}">
@@ -162,7 +164,7 @@
                             Editar
                             <f:param value="#{evento.id_evento}" />
                         </pretty:link>
-                        <p:commandLink id="changeImage" onclick="PF('dlg_delete').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
+                        <p:commandLink id="changeImage" onclick="PF('dlg_change').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
                     </c:if>
 
                 </p:column>

@@ -40,6 +40,7 @@ create table Evento(
 	longitud double not null,
 	precio varchar(255) not null,
 	titulo varchar(255) not null,
+	valoracion int not null,
 	localidad_id_localidad bigint null,
 	propietario bigint null);
 
