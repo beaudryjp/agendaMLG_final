@@ -52,44 +52,52 @@ public class Evento implements Serializable, Comparable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_evento;
+    @Column(nullable = false)
     private String titulo;
-    @Column(columnDefinition = "TEXT", name = "descripcion", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String descripcion;
-    @Column(name = "fecha_inicio", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fecha_inicio;
     @Temporal(TemporalType.DATE)
     private Date fecha_fin;
+    @Column(nullable = false)
     private String horario;
+    @Column(nullable = false)
     private String precio;
-    private double longitud;
-    private double latitud;
-    private boolean destacado;
+    @Column(nullable = false)
+    private Double longitud;
+    @Column(nullable = false)
+    private Double latitud;
+    @Column(nullable = false)
+    private Boolean destacado;
+    @Column(nullable = false)
     private String imagen_url;
+    @Column(nullable = false)
     private String imagen_titulo;
 
-    @OneToMany
-    @JoinTable(name = "jn_comentarios_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_comentario"))
+    @OneToMany(mappedBy="evento")
     private List<Comentario> comentarios;
-//    @OneToMany(cascade = CascadeType.ALL)
-//    private List<Imagen> imagenes;
+    
     @ManyToMany
-    @JoinTable(name = "jn_etiqueta_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
+    private List<Destinatario> destinatario;
+    
+    @ManyToMany
     private List<Etiqueta> etiqueta;
+    
     @ManyToOne
     private Localidad localidad;
-    @OneToMany
-    @JoinTable(name = "jn_notificaciones_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_notificacion"))
+    
+    @OneToMany(mappedBy="evento")
     private List<Notificacion> notificaciones;
+    
     @ManyToMany(mappedBy = "megusta")
     private List<Usuario> megusta;
     @ManyToMany(mappedBy = "sigue")
     private List<Usuario> sigue;
     @ManyToMany(mappedBy = "asiste")
     private List<Usuario> asiste;
-    @ManyToMany()
-    @JoinTable(name = "jn_destinatario_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_destinatario"))
-    private List<Destinatario> destinatario;
+    
     @ManyToOne
     @JoinColumn(name="propietario", insertable=false, updatable=false)
     private Usuario propietario;

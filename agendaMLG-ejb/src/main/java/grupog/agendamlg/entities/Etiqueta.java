@@ -35,7 +35,7 @@ public class Etiqueta implements Serializable, Comparable<Etiqueta>  {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_etiqueta;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
     @ManyToMany(mappedBy="etiqueta")
     private List<Evento> evento;

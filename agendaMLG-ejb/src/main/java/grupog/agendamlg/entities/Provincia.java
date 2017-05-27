@@ -34,9 +34,9 @@ public class Provincia implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_provincia;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval=true, mappedBy="provincia")
+    @OneToMany(orphanRemoval=true, mappedBy="provincia")
     private List<Localidad> localidades;
 
     public Long getId_provincia() {

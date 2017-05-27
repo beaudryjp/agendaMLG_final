@@ -3,6 +3,7 @@ package grupog.agendamlg.entities;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,7 +28,9 @@ public class Notificacion implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_notificacion;
+    @Column(nullable = false)
     private String mensaje;
+    @Column(nullable = false)
     private LocalDateTime fecha_hora;
     @ManyToOne(optional=true)
     private Usuario usuario;

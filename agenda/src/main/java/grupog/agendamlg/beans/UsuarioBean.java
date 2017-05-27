@@ -135,7 +135,7 @@ public class UsuarioBean implements Serializable {
     }
    
     public boolean isEmailNotifier() {
-        return emailNotifier;
+        return ctrl.getUsuario().isEmail_notifier();
     }
 
     public void setEmailNotifier(boolean emailNotifier) {

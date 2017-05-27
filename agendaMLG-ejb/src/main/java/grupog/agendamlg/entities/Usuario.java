@@ -5,7 +5,6 @@ import com.google.common.collect.ComparisonChain;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -47,30 +46,31 @@ public class Usuario implements Serializable, Comparable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_usuario;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
-    @Column(name="apellidos", nullable=false)
+    @Column(nullable=false)
     private String apellidos;
-    @Column(name="pseudonimo", nullable=false)
+    @Column(nullable=false)
     private String pseudonimo;
 
-    @Column(name="email", nullable=false)
+    @Column(nullable=false)
     private String email;
-    @Column(name="email_notifier", nullable=false, columnDefinition="TINYINT", length = 1)  
-    private boolean email_notifier;
-    @Column(name="password_hash", nullable=false)
+    @Column(nullable=false)  
+    private Boolean email_notifier;
+    @Column(nullable=false)
     private String password_hash;
-    @Column(name="sal", nullable=false)
+    @Column(nullable=false)
     private String sal;
     @Enumerated(EnumType.STRING)
     private Tipo_Rol rol;
     
-    //(orphanRemoval=true)
-    @OneToMany
+    @OneToMany(mappedBy="usuario")
     private List<Comentario> comentarios;
-    @OneToMany(cascade=CascadeType.ALL)
+    
+    @OneToMany(orphanRemoval = true, mappedBy="usuario")
     private List <Notificacion> notificaciones;
-    @ManyToMany()
+    
+    @ManyToMany
     @JoinTable(name="jn_megusta_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> megusta;
     @ManyToMany
@@ -79,9 +79,11 @@ public class Usuario implements Serializable, Comparable {
     @ManyToMany
     @JoinTable(name="jn_asiste_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> asiste;
+    
     @ManyToMany
     @JoinTable(name = "jn_tareas_id", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_tarea"))
     private List<Tarea> tareas;
+    
     @OneToMany(mappedBy="creador_peticion",orphanRemoval=true)
     private List<Tarea> peticion;
     

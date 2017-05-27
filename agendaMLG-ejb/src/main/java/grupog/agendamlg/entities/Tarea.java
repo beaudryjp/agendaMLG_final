@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -29,14 +30,16 @@ public class Tarea implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_tarea;
+    @Column(nullable = false)
     private String nombre;
+    @Column(nullable = false)
     private String mensaje;
-    private boolean aceptado;
+    @Column(nullable = false)
     private LocalDateTime fecha_hora;
+    
     @ManyToMany
     private List <Usuario> redactores;
     @ManyToOne(optional=true)
-    @JoinTable(name = "jn_tarea_peticion_id", joinColumns = @JoinColumn(name = "id_tarea"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
     private Usuario creador_peticion;
 
     public Long getId_tarea() {
@@ -62,15 +65,7 @@ public class Tarea implements Serializable {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
-    public boolean isAceptado() {
-        return aceptado;
-    }
-
-    public void setAceptado(boolean aceptado) {
-        this.aceptado = aceptado;
-    }
-
+    
     public LocalDateTime getFecha_hora() {
         return fecha_hora;
     }
@@ -122,7 +117,7 @@ public class Tarea implements Serializable {
 
     @Override
     public String toString() {
-        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", aceptado=" + aceptado + ", fecha_hora=" + fecha_hora + ", dador=" + redactores + ", beneficiario=" + creador_peticion + '}';
+        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", dador=" + redactores + ", beneficiario=" + creador_peticion + '}';
     }
     
     

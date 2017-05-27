@@ -32,9 +32,8 @@ public class Localidad implements Serializable, Comparable<Localidad> {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id_localidad")
     private Long id_localidad;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
     @ManyToOne
     private Provincia provincia;

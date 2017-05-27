@@ -36,7 +36,7 @@ public class Destinatario implements Serializable, Comparable<Destinatario> {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_destinatario;
-    @Column(name="descripcion", nullable=false)
+    @Column(nullable=false)
     private String descripcion;
     @ManyToMany(mappedBy="destinatario")
     private List<Evento> evento;
