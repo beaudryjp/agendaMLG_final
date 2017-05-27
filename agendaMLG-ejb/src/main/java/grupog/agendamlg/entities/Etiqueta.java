@@ -28,6 +28,7 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name="getTagById", query="SELECT t from Etiqueta t WHERE t.id_etiqueta = :etiqueta"),
     @NamedQuery(name="getTagByName", query="SELECT t from Etiqueta t WHERE t.nombre = :nombre"),
     @NamedQuery(name="getAllTagsByEventId", query="SELECT t from Etiqueta t inner join t.evento e WHERE e.id_evento = :evento"),
+    @NamedQuery(name="getCountEventsByTag", query="SELECT t from Etiqueta t"),
 })
 public class Etiqueta implements Serializable, Comparable<Etiqueta>  {
 

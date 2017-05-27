@@ -185,7 +185,7 @@ public class Business implements BusinessLocal {
     public void createEvent(Evento e) {
 
         em.persist(e);
-
+        em.flush();
     }
 
     @Override

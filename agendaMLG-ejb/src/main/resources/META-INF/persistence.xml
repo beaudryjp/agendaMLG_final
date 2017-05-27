@@ -21,7 +21,7 @@
                 Cuando se quiera crear las tablas se cambia el value a create.
                 Sino se pone a validate         
             -->
-            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
         </properties>
     </persistence-unit>
 </persistence>

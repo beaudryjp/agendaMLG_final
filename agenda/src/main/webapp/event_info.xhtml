@@ -60,7 +60,12 @@
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
                     <div class="imageEvent">
+                        <!--
                         <h:graphicImage name="#{evento.imagen_url}" width="500" height="300"/>
+                        -->
+                        <p:graphicImage value="#{eventoBean.getImage()}" width="500px" height="300px">
+                            <f:param name="filename" value="#{evento.imagen_url}" />
+                        </p:graphicImage>
                     </div>
                     <div>
 
@@ -96,27 +101,27 @@
                             </p>
                         </c:if>
                     </div>
-                        <div>
-                            <h5 class="h5bold">Comentarios</h5>
-                            <ul class="comments">
-                                <c:choose>
-                                    <c:when test="#{!empty eventoBean.eventComentarios}">
-                                        <ui:repeat value="#{eventoBean.eventComentarios}" var="comen">
-                                            <li>
-                                                <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote>
-                                                <i>
-                                                    <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> -
-                                                    <h:outputText value="#{comen.getFecha_hora_formateado()}"/>
-                                                </i>
-                                            </li>
-                                        </ui:repeat>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <li><blockquote>Ninguno</blockquote></li>
-                                    </c:otherwise>
-                                </c:choose>
-                            </ul>
-                        </div>
+                    <div>
+                        <h5 class="h5bold">Comentarios</h5>
+                        <ul class="comments">
+                            <c:choose>
+                                <c:when test="#{!empty eventoBean.eventComentarios}">
+                                    <ui:repeat value="#{eventoBean.eventComentarios}" var="comen">
+                                        <li>
+                                            <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote>
+                                            <i>
+                                                <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> -
+                                                <h:outputText value="#{comen.getFecha_hora_formateado()}"/>
+                                            </i>
+                                        </li>
+                                    </ui:repeat>
+                                </c:when>
+                                <c:otherwise>
+                                    <li><blockquote>Ninguno</blockquote></li>
+                                </c:otherwise>
+                            </c:choose>
+                        </ul>
+                    </div>
                     <div>
                         <f:view contentType="text/html">
                             <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
@@ -138,15 +143,26 @@
 
                         </p:dialog>
                     </h:form>
+                    
+                    <h:form id="formChange" enctype="multipart/form-data">
+                        <p:dialog header="Cambiar imágen" widgetVar="dlg_delete" minHeight="40">
+                            <p:fileUpload id="eventImage" value="#{eventoBean.newEventImage}" fileLimit="1" 
+                                                  mode="advanced" dragDropSupport="true" label="Seleccionar"
+                                                  uploadLabel="Subir" cancelLabel="Borrar" 
+                                                  fileUploadListener="#{eventoBean.changeImage}" 
+                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
+                        </p:dialog>
+                    </h:form>
                     <c:if test="#{!empty ControlLog.usuario}">
                         <p:commandLink id="addComment" styleClass="addComment btn btn-default btn-lg" onclick="PF('dlg_comen').show();" value="Añadir comentario"/>
                     </c:if>
-                    <c:if test="#{ControlLog.isUserValidated()}">
+                    <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
                         <p:commandLink id="deleteEvent" onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg"/>
                         <pretty:link mappingId="editEvent" id="editEvent" styleClass="editEvent btn btn-default btn-lg">
                             Editar
                             <f:param value="#{evento.id_evento}" />
                         </pretty:link>
+                        <p:commandLink id="changeImage" onclick="PF('dlg_delete').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
                     </c:if>
 
                 </p:column>

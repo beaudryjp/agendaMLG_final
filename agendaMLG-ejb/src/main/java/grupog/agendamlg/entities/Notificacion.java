@@ -1,4 +1,3 @@
-
 package grupog.agendamlg.entities;
 
 import java.io.Serializable;
@@ -16,30 +15,30 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 /**
-* Notificacion.java
-*
-* Mar 31, 2017
-* @author Jean Paul Beaudry
-*/
+ * Notificacion.java
+ *
+ * Mar 31, 2017
+ *
+ * @author Jean Paul Beaudry
+ */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="getNotifications", query="SELECT n from Notificacion n WHERE usuario.id_usuario = :id_usuario")
+    @NamedQuery(name = "getNotifications", query = "SELECT n from Notificacion n WHERE usuario.id_usuario = :id_usuario")
 })
 public class Notificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_notificacion;
     @Column(nullable = false)
     private String mensaje;
     @Column(nullable = false)
     private LocalDateTime fecha_hora;
-    @ManyToOne(optional=true)
+    @ManyToOne(optional = true)
     private Usuario usuario;
-    @ManyToOne(optional=true)
+    @ManyToOne(optional = true)
     private Evento evento;
-    
 
     public Usuario getUsuario() {
         return usuario;
@@ -56,6 +55,7 @@ public class Notificacion implements Serializable {
     public void setEvento(Evento evento) {
         this.evento = evento;
     }
+
     public String getMensaje() {
         return mensaje;
     }
@@ -63,7 +63,6 @@ public class Notificacion implements Serializable {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
 
     public Long getId_notificacion() {
         return id_notificacion;
@@ -110,6 +109,5 @@ public class Notificacion implements Serializable {
     public String toString() {
         return "Notificacion{" + "id_notificacion=" + id_notificacion + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", usuario=" + usuario + ", evento=" + evento + '}';
     }
-
 
 }

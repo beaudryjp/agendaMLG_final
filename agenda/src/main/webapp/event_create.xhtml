@@ -6,7 +6,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
-  
+
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
@@ -14,8 +14,10 @@
             </f:metadata>
 
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
-                    <h:form id="createEvento">
-                        <p:panelGrid class="eventCreate">
+                    <p:panelGrid id="eventCreate" class="eventCreate">
+                        <h:form>
+                            <p:messages id="errors" autoUpdate="true"/>
+
                             <p:row>
                                 <p:column colspan="2">
                                     <div id="event-goBack">
@@ -39,7 +41,7 @@
                                     Título
                                 </p:column>
                                 <p:column colspan="2">
-                                    <p:inputText id="eventTitle" value="#{eventoBean.event_new_titulo}" placeholder="Título" />
+                                    <p:inputText id="titulo" value="#{eventoBean.event_new_titulo}" placeholder="Título" />
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -47,7 +49,7 @@
                                     Descripcion
                                 </p:column>
                                 <p:column>
-                                    <p:inputTextarea id="eventDescripcion" placeholder="Descripción"   rows="10" cols="50" value="#{eventoBean.event_new_descripcion}"/>
+                                    <p:inputTextarea id="descripcion" placeholder="Descripción"  rows="10" cols="50" value="#{eventoBean.event_new_descripcion}"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -55,7 +57,7 @@
                                     Publico
                                 </p:column>
                                 <p:column>
-                                    <p:selectManyMenu id="eventDestinatario" value="#{eventoBean.destinatarios}" showCheckbox="true">
+                                    <p:selectManyMenu id="destinatario" value="#{eventoBean.destinatarios}" showCheckbox="true">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}"  var="d" itemLabel="#{d.descripcion}" itemValue="#{d.descripcion}" />
                                     </p:selectManyMenu>
                                 </p:column>
@@ -65,7 +67,7 @@
                                     Etiquetas
                                 </p:column>
                                 <p:column>
-                                    <p:selectManyMenu id="eventEtiqueta" value="#{eventoBean.etiquetas}" showCheckbox="true">
+                                    <p:selectManyMenu id="etiqueta" value="#{eventoBean.etiquetas}" showCheckbox="true" >
                                         <f:selectItems value="#{etiquetaBean.etiquetas}"  var="e" itemLabel="#{e.nombre}" itemValue="#{e.nombre}" />
                                     </p:selectManyMenu>
                                 </p:column>
@@ -75,7 +77,7 @@
                                     Fecha inicio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaIni" value="#{eventoBean.event_new_fecha_inicio}"  placeholder="dd-mm-yyyy"/>
+                                    <p:inputText id="fecha_inicio" value="#{eventoBean.event_new_fecha_inicio}"  placeholder="dd-mm-yyyy"/>
 
                                 </p:column>
                             </p:row>
@@ -84,7 +86,7 @@
                                     Fecha fin
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaFin" value="#{eventoBean.event_new_fecha_fin}"  placeholder="dd-mm-yyyy"/>
+                                    <p:inputText id="fecha_fin" value="#{eventoBean.event_new_fecha_fin}"  placeholder="dd-mm-yyyy"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -92,7 +94,7 @@
                                     Horario
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventHorario" value="#{eventoBean.event_new_horario}"  placeholder="Horario"/>
+                                    <p:inputText id="horario" value="#{eventoBean.event_new_horario}"  placeholder="Horario" />
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -100,49 +102,37 @@
                                     Precio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventPrecio" value="#{eventoBean.event_new_precio}"  placeholder="Precio"/>
+                                    <p:inputText id="precio" value="#{eventoBean.event_new_precio}"  placeholder="Precio" />
                                 </p:column>
                             </p:row>
+                            <!--
                             <p:row>
                                 <p:column>
                                     Imagen
                                 </p:column>
                                 <p:column>
-                                    <p:fileUpload id="eventImage" value="#{eventoBean.event_new_imagen_url}" fileLimit="1" 
-                                                  mode="advanced" dragDropSupport="true" label="Seleccionar"
-                                                  uploadLabel="Subir" cancelLabel="Borrar" 
-                                                  fileUploadListener="#{eventoBean.handleFileUpload}" 
-                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
+                                    <h:inputFile value="#{eventoBean.file}" immediate="true" title="Enviar">
+                                        <f:ajax listener="#{eventoBean.createEvent()}" />
+                                    </h:inputFile>
                                 </p:column>
                             </p:row>
-                        <p:row>
+                            -->
+                            <p:row>
                                 <p:column>
                                     Coordenadas
                                 </p:column>
-
-
-                                
                                 <p:column>
-                                     <p:inputText id="loquetuquieras" value="#{eventoBean.event_new_latitud}"/>
-                                   <p:inputText id="loquetuquieras2" value="#{eventoBean.event_new_longitud}" />     
-                                   
+                                    <p:inputText id="loquetuquieras" value="#{eventoBean.event_new_latitud}"/>
+                                    <p:inputText id="loquetuquieras2" value="#{eventoBean.event_new_longitud}" />     
                                 </p:column>
-                                    </p:row>
-                                <p:row>
-                                    <p:column></p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column></p:column>
                                 <p:column>
-                                   
-                              
-             
-                                   
-                                          <p:gmap id="gmap" center="36.7203713, -4.4248549" zoom="15" type="HYBRID" style="width:100%;height:400px" >
-                                              <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras" immediate="true"/>
-                                               <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2" immediate="true"/>
-                                          </p:gmap>
-                 
-                                       
-                                  
-                                          
+                                    <p:gmap id="gmap" center="36.7203713, -4.4248549" zoom="15" type="HYBRID" style="width:100%;height:400px" >
+                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras" immediate="true"/>
+                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2" immediate="true"/>
+                                    </p:gmap>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -151,7 +141,7 @@
                                 </p:column>
                                 <p:column colspan="2">
                                     <h:selectOneMenu id="provincia" class="form-control" value="#{eventoBean.prov.provincia}">
-                                        
+
                                         <p:ajax listener="#{eventoBean.prov.onCambioProvincia()}" update="localidad" />
                                         <f:selectItems value="#{eventoBean.prov.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
                                     </h:selectOneMenu>
@@ -167,24 +157,26 @@
                                 </p:column>
                             </p:row>  
                             <c:if test="#{ControlLog.isUserAdmin()}">
-                            <p:row>
-                                <p:column>
-                                    Destacado
-                                </p:column>
-                                <p:column>
-                                    <p:selectBooleanCheckbox value="#{eventoBean.event_new_destacado}" />
-                                </p:column>
-                            </p:row>
+                                <p:row>
+                                    <p:column>
+                                        Destacado
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectBooleanCheckbox value="#{eventoBean.event_new_destacado}" />
+                                    </p:column>
+                                </p:row>
                             </c:if> 
                             <p:row>  
                                 <p:column colspan="2">
                                     <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
-                                    <p:commandButton  action="#{eventoBean.createEvent()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons" />
+                                    <p:commandButton  action="#{eventoBean.createEvent()}" ajax="false" icon="ui-icon-check" validateClient="true" value="Crear" id="createSubmit"  styleClass="btn btn-default btn-lg" />
                                 </p:column>
                             </p:row>
-                        </p:panelGrid>
-                            
-                    </h:form>
+
+
+                        </h:form>
+                        
+                    </p:panelGrid>
                 </div>
             </div>
             <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>

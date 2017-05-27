@@ -10,32 +10,44 @@ import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import org.apache.commons.io.FilenameUtils;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.map.PointSelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 import org.primefaces.model.map.LatLng;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
@@ -86,17 +98,24 @@ public class EventoBean implements Serializable {
     private double event_new_longitud;
     private double event_new_latitud;
     private boolean event_new_destacado;
-    private UploadedFile event_new_imagen_url;
-    private String event_new_imagen_titulo;
+    private String event_new_imagen_url;
+    private UploadedFile newEventImage;
     private int numAssists;
     private int numLikes;
     private int numFollows;
+    private Part file;
+    private List<File> files;
 
     @PostConstruct
     public void init() {
         searchLocalidad = "Málaga";
         searchDestinatario = "Todos";
         searchEtiqueta = "Todos";
+        files = new ArrayList<>();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-YYY");
+        LocalDate localDate = LocalDate.now();
+        event_new_fecha_inicio = dtf.format(localDate);
+        event_new_fecha_fin = dtf.format(localDate.plusDays(1));
     }
 
     public List<Evento> getEventosProximos() {
@@ -207,8 +226,9 @@ public class EventoBean implements Serializable {
         if (!business.checkLike(evento, current_user.getUsuario())) {
             sendMailSocial("Has pinchado like en el evento");
             business.like(evento, current_user.getUsuario());
+        } else {
+            Redirect.redirectToEventInfo(eventId);
         }
-        Redirect.redirectToEventInfo(eventId);
     }
 
     public void sendNotificationAssist(ActionEvent e) {
@@ -216,8 +236,9 @@ public class EventoBean implements Serializable {
         if (!business.checkAssist(evento, current_user.getUsuario())) {
             sendMailSocial("Has indicado que vas a asistir al evento");
             business.assist(evento, current_user.getUsuario());
+        } else {
+            Redirect.redirectToEventInfo(eventId);
         }
-        Redirect.redirectToEventInfo(eventId);
     }
 
     public void sendNotificationFollow(ActionEvent e) {
@@ -225,8 +246,9 @@ public class EventoBean implements Serializable {
         if (!business.checkFollow(evento, current_user.getUsuario())) {
             sendMailSocial("Has indicado que quieres seguir el evento");
             business.follow(evento, current_user.getUsuario());
+        } else {
+            Redirect.redirectToEventInfo(eventId);
         }
-        Redirect.redirectToEventInfo(eventId);
     }
 
     private void sendMailSocial(String msg) {
@@ -361,22 +383,6 @@ public class EventoBean implements Serializable {
         this.event_new_destacado = event_new_destacado;
     }
 
-    public UploadedFile getEvent_new_imagen_url() {
-        return event_new_imagen_url;
-    }
-
-    public void setEvent_new_imagen_url(UploadedFile event_new_imagen_url) {
-        this.event_new_imagen_url = event_new_imagen_url;
-    }
-
-    public String getEvent_new_imagen_titulo() {
-        return event_new_imagen_titulo;
-    }
-
-    public void setEvent_new_imagen_titulo(String event_new_imagen_titulo) {
-        this.event_new_imagen_titulo = event_new_imagen_titulo;
-    }
-
     public List<Destinatario> getEventDestinatarios() {
         return eventDestinatarios;
     }
@@ -407,8 +413,6 @@ public class EventoBean implements Serializable {
     }
 
     public void createEvent() throws java.text.ParseException {
-
-        System.out.println("Estoy intentando crear un evento 1");
         Evento e = new Evento();
         SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
         Date endDate = df.parse(event_new_fecha_fin);
@@ -436,35 +440,80 @@ public class EventoBean implements Serializable {
         e.setEtiqueta(etq);
         Localidad l = business.getLocalidadByName(prov.getLocalidad());
         e.setLocalidad(l);
-        //e.setImagen_url(event_new_imagen_url.getFileName());
-        //e.setImagen_titulo(event_new_titulo);
 
-        System.out.println("Estoy intentando crear un evento 8");
+        e.setImagen_url("default.png");
+        e.setImagen_titulo(event_new_titulo.toLowerCase());
+
         business.createEvent(e);
-        Redirect.redirectToIndex();
+        Redirect.redirectToEventInfo(e.getId_evento().toString());
+        /*
+        System.out.println(e.getId_evento());
+        Redirect.redirectTo("/event/all");
+         */
     }
 
-    public void uploadImage() throws IOException {
-        ExternalContext extContext = FacesContext.getCurrentInstance().getExternalContext();
-        System.out.println("Name " + event_new_imagen_url.getFileName());
-        System.out.println("tmp directory" + System.getProperty("java.io.tmpdir"));
-        System.out.println("Size " + event_new_imagen_url.getSize());
-        String filePath = extContext.getRealPath("//resources//img//eventos//");
-        System.out.println("destination folder: " + filePath);
-        if (event_new_imagen_url != null) {
-            byte[] bytes = event_new_imagen_url.getContents();
-            String filename = FilenameUtils.getName(event_new_imagen_url.getFileName());
-            try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(new File(filePath + filename)))) {
-                stream.write(bytes);
+//    public void handleFileUpload(FileUploadEvent event) throws IOException {
+//        files = new ArrayList<>();
+//        newEventImage = event.getFile();
+//
+//        InputStream input = newEventImage.getInputstream();
+//        Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
+//        String filename = FilenameUtils.getBaseName(newEventImage.getFileName()) + "." + FilenameUtils.getExtension(newEventImage.getFileName());
+//        File newFile = new File(path.toString() + "/" + filename);
+//        Path file = Files.createFile(newFile.toPath());
+//        Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
+//        files.add(newFile);
+//        System.out.println(files.size());
+//        System.out.println(filename);
+//        System.out.println("handleFileUpload(): event_new_imagen_url " + event_new_imagen_url);
+//
+//        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Successful", "Uploaded file successfully saved in " + file));
+//
+//    }
+
+    public void changeImage(FileUploadEvent event) {
+        HttpServletRequest hsr = Redirect.getRequest();
+
+        if (newEventImage != null) {
+            if (hsr.getParameterMap().containsKey("id")) {
+                if (!hsr.getParameter("id").isEmpty()) {
+
+                    try (InputStream input = newEventImage.getInputstream()) {
+                        newEventImage = event.getFile();
+                        System.out.println("changeImage(): newEventImage: " + newEventImage.getFileName());
+                        Evento e = business.getEventById(hsr.getParameter("id"));
+                        System.out.println("changeImage(): eventid: " + e.getId_evento());
+                        Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
+                        String filename = FilenameUtils.getBaseName(newEventImage.getFileName()) + "." + FilenameUtils.getExtension(newEventImage.getFileName());
+                        System.out.println(path.toString() + " " + filename);
+
+                        //update event
+                        e.setImagen_url(filename);
+                        business.updateEvent(e);
+
+                        //delete file if exists
+                        File newFile = new File(path.toString() + "/" + filename);
+                        if (newFile.delete()) {
+                            System.out.println(newFile.getName() + " is deleted!");
+                        }
+
+                        //create file
+                        Path nfile = Files.createFile(newFile.toPath());
+                        Files.copy(input, nfile, StandardCopyOption.REPLACE_EXISTING);
+                    } catch (IOException ex) {
+                        Logger.getLogger(EventoBean.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
             }
         }
+
     }
 
     public void createComment() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String id = hsr.getParameter("id");
         Evento e = business.getEventById(id);
-
         Comentario c = new Comentario();
         c.setEvento(e);
         c.setUsuario(current_user.getUsuario());
@@ -535,18 +584,17 @@ public class EventoBean implements Serializable {
     }
 
     public void setNumAssists(int numAssists) {
+        int n = business.getEventById(eventId).getAsiste().size();
         this.numAssists = numAssists;
     }
 
     public void setNumLikes(int numLikes) {
         int n = business.getEventById(eventId).getMegusta().size();
-        System.out.println(n);
         this.numLikes = n;
     }
 
     public void setNumFollows(int numFollows) {
         int n = business.getEventById(eventId).getSigue().size();
-        System.out.println(n);
         this.numFollows = n;
     }
 
@@ -590,18 +638,58 @@ public class EventoBean implements Serializable {
         this.eventComentarios = eventComentarios;
     }
 
+    public String getEvent_new_imagen_url() {
+        return event_new_imagen_url;
+    }
+
+    public void setEvent_new_imagen_url(String event_new_imagen_url) {
+        this.event_new_imagen_url = event_new_imagen_url;
+    }
+
     public void onPointSelect(PointSelectEvent event) {
         LatLng latlng = event.getLatLng();
 
-        System.out.println(event_new_latitud);
-        System.out.println(event_new_longitud);
-        
+//        System.out.println(event_new_latitud);
+//        System.out.println(event_new_longitud);
         event_new_latitud = latlng.getLat();
         event_new_longitud = latlng.getLng();
-        
-        System.out.println(event_new_latitud);
-        System.out.println(event_new_longitud);
-        
+
+//        System.out.println(event_new_latitud);
+//        System.out.println(event_new_longitud);
+    }
+
+    public UploadedFile getNewEventImage() {
+        return newEventImage;
+    }
+
+    public void setNewEventImage(UploadedFile newEventImage) {
+        this.newEventImage = newEventImage;
+    }
+
+    public Part getFile() {
+        return file;
+    }
+
+    public void setFile(Part file) {
+        this.file = file;
+    }
+
+    public StreamedContent getImage() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
+            return new DefaultStreamedContent();
+        } else {
+            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
+            String filename = context.getExternalContext().getRequestParameterMap().get("filename");
+            Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
+            if (filename.isEmpty()) {
+                filename = "default.png";
+            }
+//            System.out.println(filename);
+//            System.out.println(path.toString());
+            return new DefaultStreamedContent(new FileInputStream(new File(path.toString(), filename)));
+        }
     }
     
     public void deleteEvento(){
