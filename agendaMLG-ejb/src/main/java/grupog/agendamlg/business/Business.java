@@ -347,14 +347,14 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public Destinatario getAudienceById(int audience) {
+    public Destinatario getAudienceById(Long audience) {
         TypedQuery<Destinatario> query = em.createNamedQuery("getEventById", Destinatario.class)
                 .setParameter("destinatario", audience);
         return query.getResultList().get(0);
     }
 
     @Override
-    public Etiqueta getTagById(int tag) {
+    public Etiqueta getTagById(Long tag) {
         TypedQuery<Etiqueta> query = em.createNamedQuery("getEventById", Etiqueta.class)
                 .setParameter("etiqueta", tag);
         return query.getResultList().get(0);
@@ -410,7 +410,17 @@ public class Business implements BusinessLocal {
 
     @Override
     public void deleteEvent(Evento e) {
-        em.remove(em.merge(e));
+
+        TypedQuery <Evento> nombreClaro = em.createNamedQuery("getEventById",Evento.class).setParameter("evento", e.getId_evento());
+        Evento e1 = nombreClaro.getResultList().get(0);
+        e1.getEtiqueta().clear();
+       e1.getMegusta().clear();
+       e1.getSigue().clear();
+       e1.getAsiste().clear();
+       e1.getDestinatario().clear();
+       
+       
+        em.remove(em.merge(e1));
     }
 
     @Override
@@ -472,4 +482,10 @@ public class Business implements BusinessLocal {
         return query2.getResultList().get(0).getSigue().contains(u);
     }
 
+    @Override
+    public void deleteNotificacion(Long id) {
+        Notificacion noti = em.find(Notificacion.class, id);
+        em.remove(em.merge(noti));
+    }
+    
 }

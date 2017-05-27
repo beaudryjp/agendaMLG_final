@@ -25,8 +25,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -255,6 +253,7 @@ public class EventoBean implements Serializable {
         n.setEvento(ev);
         n.setUsuario(u);
         n.setMensaje(msg);
+        n.setFecha_hora(LocalDateTime.now());
         business.setNotifications(n);
         Redirect.redirectToEventInfo(eventId);
     }
@@ -603,5 +602,11 @@ public class EventoBean implements Serializable {
         System.out.println(event_new_latitud);
         System.out.println(event_new_longitud);
         
+    }
+    
+    public void deleteEvento(){
+        
+        business.deleteEvent(business.getEventById(eventId));
+        Redirect.redirectToIndex();
     }
 }

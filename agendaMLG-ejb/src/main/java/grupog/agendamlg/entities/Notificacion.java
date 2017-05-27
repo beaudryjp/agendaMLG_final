@@ -2,7 +2,10 @@
 package grupog.agendamlg.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -74,6 +77,11 @@ public class Notificacion implements Serializable {
         return fecha_hora;
     }
 
+    public Date getFecha_hora_date() {
+        Instant instant = fecha_hora.atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
+    }
+    
     public void setFecha_hora(LocalDateTime fecha_hora) {
         this.fecha_hora = fecha_hora;
     }

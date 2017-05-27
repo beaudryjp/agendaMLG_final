@@ -48,8 +48,8 @@ public interface BusinessLocal {
     public Evento getEventById(String event);
     public List<Evento> getEvents();
     public void setNotifications(Notificacion n);
-    public Destinatario getAudienceById(int audience);
-    public Etiqueta getTagById(int tag);
+    public Destinatario getAudienceById(Long audience);
+    public Etiqueta getTagById(Long tag);
     public Provincia getProvinciaByName(String name);
     public Localidad getLocalidadByName(String name);
     public Destinatario getDestinatarioByDescripcion(String desc);
@@ -63,4 +63,5 @@ public interface BusinessLocal {
     public boolean checkAssist(Evento e, Usuario u);
     public boolean checkLike(Evento e, Usuario u);
     public boolean checkFollow(Evento e, Usuario u);
+    public void deleteNotificacion(Long id);
 }

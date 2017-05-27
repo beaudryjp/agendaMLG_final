@@ -160,7 +160,9 @@
                                         </p:row>
                                         <p:row>
                                             <p:column>
-                                                <h:outputLabel value="#{noti.fecha_hora}" />
+                                                <h:outputLabel value="#{noti.fecha_hora_date}">
+                                                    <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                                </h:outputLabel>
                                             </p:column>
                                         </p:row>
                                     </p:panelGrid>
