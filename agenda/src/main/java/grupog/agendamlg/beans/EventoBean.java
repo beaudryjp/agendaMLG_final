@@ -96,7 +96,6 @@ public class EventoBean implements Serializable {
     private String event_new_latitud;
     private String event_new_longitud;
     private boolean event_new_destacado;
-    private boolean event_new_visible;
     private Integer event_new_rating;
     private String event_new_imagen_url;
     private int numAssists;
@@ -146,16 +145,17 @@ public class EventoBean implements Serializable {
     }
 
     public void searchEvents() {
-        System.out.println("searchEvents()");
-        System.out.println("text: " + searchText);
-        System.out.println("localidad: " + prov.getLocalidad());
-        System.out.println("etiqueta: " + searchEtiqueta);
-        System.out.println("destinatario: " + searchDestinatario);
+//        System.out.println("searchEvents()");
+//        System.out.println("text: " + searchText);
+//        System.out.println("localidad: " + prov.getLocalidad());
+//        System.out.println("etiqueta: " + searchEtiqueta);
+//        System.out.println("destinatario: " + searchDestinatario);
         eventoSearch = business.getEventsBySearch(searchText, prov.getLocalidad(), searchEtiqueta, searchDestinatario);
-        for (Evento x : eventoSearch) {
-            System.out.println(x.getTitulo());
-        }
-        Redirect.redirectTo("/event/search");
+//        for (Evento x : eventoSearch) {
+//            System.out.println(x.getTitulo());
+//        }
+        
+        Redirect.redirect2("events_search");
     }
 
     public List<Evento> getSearchEventosEtiquetas() {
@@ -230,7 +230,7 @@ public class EventoBean implements Serializable {
             sendMailSocial("Has pinchado like en el evento");
             business.like(evento, current_user.getUsuario());
         } else {
-            Redirect.redirectToEventInfo(eventId);
+            Redirect.redirectToEventInfo(evento.getId_evento());
         }
     }
 
@@ -240,7 +240,7 @@ public class EventoBean implements Serializable {
             sendMailSocial("Has indicado que vas a asistir al evento");
             business.assist(evento, current_user.getUsuario());
         } else {
-            Redirect.redirectToEventInfo(eventId);
+            Redirect.redirectToEventInfo(evento.getId_evento());
         }
     }
 
@@ -250,7 +250,7 @@ public class EventoBean implements Serializable {
             sendMailSocial("Has indicado que quieres seguir el evento");
             business.follow(evento, current_user.getUsuario());
         } else {
-            Redirect.redirectToEventInfo(eventId);
+            Redirect.redirectToEventInfo(evento.getId_evento());
         }
     }
 
@@ -280,7 +280,7 @@ public class EventoBean implements Serializable {
         n.setMensaje(msg);
         n.setFecha_hora(LocalDateTime.now());
         business.setNotifications(n);
-        Redirect.redirectToEventInfo(eventId);
+        Redirect.redirectToEventInfo(ev.getId_evento());
     }
 
     private String changeHtmlChars(String m) {
@@ -378,8 +378,6 @@ public class EventoBean implements Serializable {
         this.event_new_longitud = event_new_longitud;
     }
 
- 
-
     public boolean isEvent_new_destacado() {
         return event_new_destacado;
     }
@@ -394,14 +392,6 @@ public class EventoBean implements Serializable {
 
     public void setEvent_new_rating(Integer event_new_rating) {
         this.event_new_rating = event_new_rating;
-    }
-
-    public boolean isEvent_new_visible() {
-        return event_new_visible;
-    }
-
-    public void setEvent_new_visible(boolean event_new_visible) {
-        this.event_new_visible = event_new_visible;
     }
 
     public List<Destinatario> getEventDestinatarios() {
@@ -480,7 +470,6 @@ public class EventoBean implements Serializable {
             e.setDestacado(event_new_destacado);
         }
 
-        e.setVisible(event_new_visible);
         e.setPropietario(business.getUserByEmail(current_user.getUsuario().getEmail()).get(0));
         business.createEvent(e);
         if (current_user.isUserRegistered()) {
@@ -493,7 +482,7 @@ public class EventoBean implements Serializable {
             t.setRedactores(business.getRedactores());
             business.createTask(t);
         }
-        Redirect.redirectToEventInfo(e.getId_evento().toString());
+        Redirect.redirectToEventInfo(e.getId_evento());
         /*
         System.out.println(e.getId_evento());
         Redirect.redirectTo("/event/all");
@@ -510,32 +499,29 @@ public class EventoBean implements Serializable {
                     try (InputStream input = event.getFile().getInputstream()) {
 
                         Evento e = business.getEventById(hsr.getParameter("id"));
-                        System.out.println("changeImage(): eventid: " + e.getId_evento());
+                        //System.out.println("changeImage(): eventid: " + e.getId_evento());
                         Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
                         String filename = FilenameUtils.getBaseName(event.getFile().getFileName()) + "." + FilenameUtils.getExtension(event.getFile().getFileName());
-                        System.out.println(path.toString() + " " + filename);
+                        //System.out.println(path.toString() + " " + filename);
 
                         //update event
                         e.setImagen_url(filename);
                         business.updateEvent(e);
 
-                        //delete file if exists
-                        File newFile = new File(path.toString() + "/" + filename);
-                        
-
                         //create file
+                        File newFile = new File(path.toString() + "/" + filename);
                         Path nfile = Files.createFile(newFile.toPath());
                         Files.copy(input, nfile, StandardCopyOption.REPLACE_EXISTING);
 
-                        Redirect.redirectToEventInfo(e.getId_evento().toString());
+                        
                     } catch (IOException ex) {
-                        Logger.getLogger(EventoBean.class.getName()).log(Level.SEVERE, null, ex);
+                        
                     }
                 }
 
             }
         }
-
+        Redirect.redirectToEventInfo(Long.parseLong(eventId));
     }
 
     public void createComment() {
@@ -548,7 +534,7 @@ public class EventoBean implements Serializable {
         c.setFecha_hora(LocalDateTime.now());
         c.setMensaje(eventNewComment);
         business.createComment(c);
-        Redirect.redirectToEventInfo(id);
+        Redirect.redirectToEventInfo(e.getId_evento());
     }
 
     public List<String> getDestinatarios() {
@@ -710,21 +696,8 @@ public class EventoBean implements Serializable {
     }
 
     public void updateEvento() {
-        business.updateEvent(business.getEventById(eventId));
-        Redirect.redirectToEventInfo(eventId);
-    }
-
-    public void checkVisibility() {
-       
         Evento e = business.getEventById(eventId);
-        if (!current_user.isUserAdmin() && !e.getVisible()) {
-            Redirect.redirectToIndex();
-        }
-    }
-    
-    public Boolean isVisible(){
-        Evento e = business.getEventById(eventId);
-        System.out.println(e.getTitulo());
-        return e.getVisible();
+        business.updateEvent(e);
+        Redirect.redirectToEventInfo(e.getId_evento());
     }
 }

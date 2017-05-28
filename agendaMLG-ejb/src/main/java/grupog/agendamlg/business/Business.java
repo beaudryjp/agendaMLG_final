@@ -135,25 +135,25 @@ public class Business implements BusinessLocal {
                 .setParameter("localidad", loca)
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
-        System.out.println("localidad: " + loca);
-        System.out.println("etiqueta: " + etiq);
-        System.out.println("destinatario: " + dest);
-        for (Evento x : query.getResultList()) {
-            System.out.println(x.getTitulo());
-        }
+//        System.out.println("localidad: " + loca);
+//        System.out.println("etiqueta: " + etiq);
+//        System.out.println("destinatario: " + dest);
+//        for (Evento x : query.getResultList()) {
+//            System.out.println(x.getTitulo());
+//        }
 
         if (!text.isEmpty() && !text.equals("")) {
             List<Evento> ev = new ArrayList<>();
-            System.out.println("getEventsBySearch(): if text not empty");
+            //System.out.println("getEventsBySearch(): if text not empty");
             for (Evento e : query.getResultList()) {
                 if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {
-                    System.out.println("getEventsBySearch(): event exists with that text");
+                    //System.out.println("getEventsBySearch(): event exists with that text");
                     ev.add(e);
                 }
             }
             return ev;
         } else {
-            System.out.println("getEventsBySearch(): text is empty");
+            //System.out.println("getEventsBySearch(): text is empty");
             return query.getResultList();
         }
     }
@@ -187,18 +187,14 @@ public class Business implements BusinessLocal {
 
     @Override
     public void createEvent(Evento e) {
-//        Usuario u = e.getPropietario();
-//        List<Evento> ev = this.getUserEvents(u);
-//        ev.add(e);
-//        u.setMisEventos(ev);
-//        em.merge(u);
         Usuario u = e.getPropietario();
         Usuario us = em.find(Usuario.class, u.getId_usuario());
         us.getMisEventos().add(e);
-        
         em.persist(e);
-        
-        //hago un flush para que justo despues de persistir pueda llamar al evento inserto para obtener el id autogenerado
+        /* 
+            hago un flush para que justo despues de persistir pueda llamar 
+        al evento inserto para obtener el id autogenerado
+        */
         em.flush();
     }
 
@@ -343,14 +339,14 @@ public class Business implements BusinessLocal {
 
     @Override
     public Evento getEventById(String event) {
-        System.out.println(event+" aqui");
+        System.out.println(event + " aqui");
         Evento e = em.find(Evento.class, Long.parseLong(event));
 //         TypedQuery <Evento> esta = em.createNamedQuery("getEventById", Evento.class)
 //                .setParameter("evento", Long.parseLong(event));
 //         for(Evento e: esta.getResultList()){
 //             System.out.println(e.getId_evento());
 //         }
-         return e;
+        return e;
     }
 
     @Override
@@ -430,7 +426,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public void deleteEvent(Evento e) {
-        System.out.println(e.getId_evento()+" no revientes");
+        System.out.println(e.getId_evento() + " no revientes");
         TypedQuery<Evento> nombreClaro = em.createNamedQuery("getEventById", Evento.class).setParameter("evento", e.getId_evento());
         Evento e1 = nombreClaro.getResultList().get(0);
         System.out.println("deleteEvent(): entered");
@@ -577,9 +573,9 @@ public class Business implements BusinessLocal {
 
         return tags;
     }
-    
+
     @Override
-    public List<Evento> getUserEvents(Usuario u){
+    public List<Evento> getUserEvents(Usuario u) {
         return em.createNamedQuery("getUserEvents", Evento.class).setParameter("usuario", u.getId_usuario()).getResultList();
     }
 

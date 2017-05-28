@@ -30,8 +30,8 @@ public class Redirect {
         redirectTo("/");
     }
 
-    public static void redirectToEventInfo(String eventId) {
-        redirectTo("/event/show/" + eventId);
+    public static void redirectToEventInfo(Long eventId) {
+        redirectTo("/event/show/" + eventId.toString());
     }
 
     public static void redirectToProfile() {
@@ -44,5 +44,9 @@ public class Redirect {
 
     public static HttpServletRequest getRequest() {
         return (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+    }
+    
+    public static void redirect2(String page){
+        FacesContext.getCurrentInstance().getApplication().getNavigationHandler().handleNavigation(FacesContext.getCurrentInstance(), null, page);
     }
 }

@@ -133,85 +133,77 @@
                         </c:otherwise>
                     </c:choose>
 
-                            <div>
-                                <f:view contentType="text/html">
-                                    <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
-                                        <p:gmap id="gmap" center="#{evento.latitud}, #{evento.longitud}" zoom="15" type="HYBRID" styleClass="mapDialog" />
-                                    </p:dialog>
-                                </f:view>
-                            </div>
-                            <h:form id="formComentario">
-                                <p:dialog header="Añadir comentario" widgetVar="dlg_comen" minHeight="40">
-                                    <p:inputText id="eventComentario" placeholder="Comentario" value="#{eventoBean.eventNewComment}"/>
-                                    <p:commandButton value="Enviar" id="submitComen" action="#{eventoBean.createComment()}"  ajax="false" icon="ui-icon-disk" />
-                                </p:dialog>
-                            </h:form>
-                            <h:form id="formDelete">
-                                <h:inputHidden id="hidden3" value="#{eventoBean.eventId}" />
-                                <!--
-                                <p:dialog header="Borrar evento" widgetVar="dlg_delete" minHeight="40">
-                                        <h4><p:commandButton action="#{eventoBean.deleteEvento()}" value="Confirmar" /></h4>
-                                </p:dialog>
-                                -->
-                                <p:confirmDialog global="true" widgetVar="dlg_delete" showEffect="fade" hideEffect="fade">
-                                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                                </p:confirmDialog>
-                            </h:form>
+                    <div>
+                        <f:view contentType="text/html">
+                            <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
+                                <p:gmap id="gmap" center="#{evento.latitud}, #{evento.longitud}" zoom="15" type="HYBRID" styleClass="mapDialog" />
+                            </p:dialog>
+                        </f:view>
+                    </div>
+                    <h:form id="formComentario">
+                        <p:dialog header="Añadir comentario" widgetVar="dlg_comen" minHeight="40">
+                            <p:inputText id="eventComentario" placeholder="Comentario" value="#{eventoBean.eventNewComment}"/>
+                            <p:commandButton value="Enviar" id="submitComen" action="#{eventoBean.createComment()}"  ajax="false" icon="ui-icon-disk" />
+                        </p:dialog>
+                    </h:form>
+                    <h:form id="formDelete">
+                        <h:inputHidden id="hidden3" value="#{eventoBean.eventId}" />
+                        <p:confirmDialog global="true" widgetVar="dlg_delete" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:form>
 
-                            <h:form id="formChange" enctype="multipart/form-data">
-                                <p:dialog header="Cambiar imágen" widgetVar="dlg_change" minHeight="40">
-                                    <p:fileUpload id="eventImage" fileLimit="1" oncomplete="PF('dlg_change').hide()"
-                                                  mode="advanced" dragDropSupport="true" label="Seleccionar"
-                                                  uploadLabel="Subir" cancelLabel="Borrar" 
-                                                  fileUploadListener="#{eventoBean.changeImage}" 
-                                                  allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
-                                </p:dialog>
-                            </h:form>
-                            <c:if test="#{!empty ControlLog.usuario}">
-
-                                <p:commandLink id="addComment" styleClass="addComment btn btn-default btn-lg" onclick="PF('dlg_comen').show();" value="Añadir comentario"/>
-
-                            </c:if>
-                            <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
-                                <p:commandLink id="deleteEvent" onsuccess="PF('dlg_change').hide()" actionListener="#{eventoBean.deleteEvento()}" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg">
-                                    <p:confirm header="Confirmacion" message="Estas seguro?" icon="ui-icon-alert" />
-                                </p:commandLink>
-                                <pretty:link mappingId="editEvent" id="editEvent" styleClass="editEvent btn btn-default btn-lg">
-                                    Editar
-                                    <f:param value="#{evento.id_evento}" />
-                                </pretty:link>
-                                <p:commandLink id="changeImage" onclick="PF('dlg_change').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
-                            </c:if>
-                            </p:column>
-                            </p:dataTable>
-                            <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>
-                            <h:outputScript name="js/tweet-opt.js" />
-                            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-                            <script type="text/javascript">
-                                            !function (d, s, id) {
-                                                var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-                                                if (!d.getElementById(id)) {
-                                                    js = d.createElement(s);
-                                                    js.id = id;
-                                                    js.src = p + '://platform.twitter.com/widgets.js';
-                                                    fjs.parentNode.insertBefore(js, fjs);
-                                                }
-                                            }(document, 'script', 'twitter-wjs');
-                                            function invokeClickLike() {
-                                                document.getElementById('formLike:linkLike').click();
-                                            }
-                                            function invokeClickAssist() {
-                                                document.getElementById('formLike:linkAssist').click();
-                                            }
-                                            function invokeClickFollow() {
-                                                document.getElementById('formLike:linkFollow').click();
-                                            }
-                                            $(document).ready(function () {
-                                                $('[data-toggle="tooltip"]').tooltip();
-                                            });
-
-                            </script>
-                            </ui:define>
-                            </ui:composition>
-                            </html>
+                    <h:form id="formChange" enctype="multipart/form-data">
+                        <p:dialog header="Cambiar imágen" widgetVar="dlg_change" minHeight="40">
+                            <p:fileUpload id="eventImage" fileLimit="1" oncomplete="PF('dlg_change').hide()"
+                                          mode="advanced" dragDropSupport="true" label="Seleccionar"
+                                          uploadLabel="Subir" cancelLabel="Borrar" 
+                                          fileUploadListener="#{eventoBean.changeImage}" 
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
+                        </p:dialog>
+                    </h:form>
+                    <c:if test="#{!empty ControlLog.usuario}">
+                        <p:commandLink id="addComment" styleClass="addComment btn btn-default btn-lg" onclick="PF('dlg_comen').show();" value="Añadir comentario"/>
+                    </c:if>
+                    <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
+                        <p:commandLink id="deleteEvent" onsuccess="PF('dlg_change').hide()" actionListener="#{eventoBean.deleteEvento()}" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg">
+                            <p:confirm header="Confirmacion" message="Estas seguro?" icon="ui-icon-alert" />
+                        </p:commandLink>
+                        <pretty:link mappingId="editEvent" id="editEvent" styleClass="editEvent btn btn-default btn-lg">
+                            Editar
+                            <f:param value="#{evento.id_evento}" />
+                        </pretty:link>
+                        <p:commandLink id="changeImage" onclick="PF('dlg_change').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
+                    </c:if>
+                </p:column>
+            </p:dataTable>
+            <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>
+            <h:outputScript name="js/tweet-opt.js" />
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+            <script type="text/javascript">
+                            !function (d, s, id) {
+                                var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
+                                if (!d.getElementById(id)) {
+                                    js = d.createElement(s);
+                                    js.id = id;
+                                    js.src = p + '://platform.twitter.com/widgets.js';
+                                    fjs.parentNode.insertBefore(js, fjs);
+                                }
+                            }(document, 'script', 'twitter-wjs');
+                            function invokeClickLike() {
+                                document.getElementById('formLike:linkLike').click();
+                            }
+                            function invokeClickAssist() {
+                                document.getElementById('formLike:linkAssist').click();
+                            }
+                            function invokeClickFollow() {
+                                document.getElementById('formLike:linkFollow').click();
+                            }
+                            $(document).ready(function () {
+                                $('[data-toggle="tooltip"]').tooltip();
+                            });
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

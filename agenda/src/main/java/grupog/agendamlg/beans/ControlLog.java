@@ -61,9 +61,9 @@ public class ControlLog implements Serializable {
         }
 
     }
-    
-    public void checkIfOwner(){
-        if(!this.isUserOwnerOfEvent()){
+
+    public void checkIfOwner() {
+        if (!this.isUserOwnerOfEvent()) {
             Redirect.redirectTo(Redirect.getRequest().getParameter("id"));
         }
     }
@@ -99,24 +99,38 @@ public class ControlLog implements Serializable {
     }
 
     //Destinatario
-    public void checkPublicParameter() {
-        String name;
+//    public void checkPublicParameter() {
+//        String name;
+//        HttpServletRequest hsr = Redirect.getRequest();
+//        if (hsr.getParameterMap().containsKey("id")) {
+//            name = hsr.getParameter("id");
+//            if (name != null && !name.isEmpty()) {
+//                if (business.getAudienceById(Long.parseLong(name)) != null) {
+//
+//                } else {
+//                    Redirect.redirectToIndex();
+//                }
+//            } else {
+//                Redirect.redirectToIndex();
+//            }
+//        } else {
+//            Redirect.redirectToIndex();
+//        }
+//    }
+
+    public void checkVisibility() {
+        String eventId;
         HttpServletRequest hsr = Redirect.getRequest();
         if (hsr.getParameterMap().containsKey("id")) {
-            name = hsr.getParameter("id");
-            if (name != null && !name.isEmpty()) {
-                 if(business.getAudienceById(Long.parseLong(name)) != null){
-                    
-                }
-                else{
+            eventId = hsr.getParameter("id");
+            if (eventId != null && !eventId.isEmpty()) {
+                Evento e = business.getEventById(eventId);
+                if(!isUserAdmin() && !e.getVisible()){
                     Redirect.redirectToIndex();
                 }
-            } else {
-                Redirect.redirectToIndex();
             }
-        } else {
-            Redirect.redirectToIndex();
         }
+
     }
 
     public void checkLoggedIn() {
@@ -164,6 +178,22 @@ public class ControlLog implements Serializable {
             }
         }
 
+        return result;
+    }
+    
+    public boolean isEventVisible(){
+        boolean result = false;
+        HttpServletRequest hsr = Redirect.getRequest();
+        if (hsr.getParameterMap().containsKey("id")) {
+            if (!hsr.getParameter("id").isEmpty()) {
+                Evento e = business.getEventById(hsr.getParameter("id"));
+                if (e != null && usuario != null) {
+                    
+                }
+            }
+        }
+        //return this.usuario != null && this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR);
+        
         return result;
     }
 }

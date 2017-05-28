@@ -130,10 +130,8 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:gmap id="gmap" center="36.7203713, -4.4248549" zoom="15" type="HYBRID" style="width:100%;height:400px" >
-
-                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras" />
-                                       <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2" />
-
+                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras"/>
+                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2"/>
                                     </p:gmap>
 
                                 </p:column>
@@ -176,14 +174,6 @@
                                     </p:column>
                                     <p:column>
                                         <p:selectBooleanCheckbox value="#{eventoBean.event_new_destacado}" />
-                                    </p:column>
-                                </p:row>
-                                <p:row>
-                                    <p:column>
-                                        Visible
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectBooleanCheckbox value="#{eventoBean.event_new_visible}" />
                                     </p:column>
                                 </p:row>
                             </c:if> 
