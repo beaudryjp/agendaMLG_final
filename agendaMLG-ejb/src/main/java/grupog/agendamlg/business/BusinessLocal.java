@@ -69,4 +69,6 @@ public interface BusinessLocal {
     public void deleteTask(Long t);
     public List<Tarea> getPeticiones(Long id);
     public void deleteComentario(Long c);
+    public List<Etiqueta> getTagsWithEvents();
+    public List<Evento> getUserEvents(Usuario u);
 }

@@ -27,22 +27,20 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="getAllEvents", query="SELECT e from Evento e where e.visible = true"),
-    @NamedQuery(name="getEventById", query="SELECT e from Evento e WHERE e.id_evento = :evento"),
+    @NamedQuery(name="getAllEvents", query="SELECT e from Evento e WHERE e.visible = true"),
+    @NamedQuery(name="getEventById", query="SELECT e from Evento e WHERE e.id_evento = :evento and e.visible = true"),
     @NamedQuery(name="getEventsImportant", query="SELECT e from Evento e WHERE e.destacado = true and e.visible = true"),
-    @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha and e.visible = true ORDER BY e.fecha_inicio ASC"),
+    @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha ORDER BY e.fecha_inicio ASC"),
     @NamedQuery(name="getEventsNearestByDate", query="SELECT e from Evento e WHERE e.fecha_inicio >= current_date() and e.visible = true ORDER BY e.fecha_inicio ASC"),
-    //revisar que funcione
     @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e inner join e.etiqueta et inner join e.destinatario d "
-            + "WHERE e.localidad.nombre = :localidad and "
-            + " et.nombre = :etiqueta and d.descripcion = :destinatario and e.visible = true"),
-    
+            + "WHERE e.localidad.nombre = :localidad and e.visible = true and "
+            + " et.nombre = :etiqueta and d.descripcion = :destinatario"),
     @NamedQuery(name="getUserAssists", query="select e from Evento e join fetch e.asiste a where a.id_usuario = :id"),
     @NamedQuery(name="getUserLikes", query="select e from Evento e join fetch e.megusta a where a.id_usuario = :id"),
     @NamedQuery(name="getUserFollows", query="select e from Evento e join fetch e.sigue a where a.id_usuario = :id"),
-    //Event by tag
-    @NamedQuery(name="getEventsByTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre and e.visible = true"),
-    @NamedQuery(name="getEventsByAudience", query="SELECT e from Evento e INNER JOIN e.destinatario de WHERE de.descripcion = :descripcion and e.visible = true")
+    @NamedQuery(name="getEventsByTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre"),
+    @NamedQuery(name="getEventsByAudience", query="SELECT e from Evento e INNER JOIN e.destinatario de WHERE de.descripcion = :descripcion"),
+    @NamedQuery(name="getUserEvents", query="SELECT e from Evento e inner join e.propietario u WHERE u.id_usuario = :usuario"),
 })
 
 public class Evento implements Serializable, Comparable {
@@ -128,16 +126,6 @@ public class Evento implements Serializable, Comparable {
     public void setDestinatario(List<Destinatario> destinatario) {
         this.destinatario = destinatario;
     }
-
-    public Boolean getVisible() {
-        return visible;
-    }
-
-    public void setVisible(Boolean visibleRedactor) {
-        this.visible = visibleRedactor;
-    }
-
-    
     
     public boolean isDestacado() {
         return destacado;
@@ -290,8 +278,14 @@ public class Evento implements Serializable, Comparable {
     public void setValoracion(Integer valoracion) {
         this.valoracion = valoracion;
     }
-    
-    
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
 
     @Override
     public int hashCode() {

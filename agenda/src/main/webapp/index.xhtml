@@ -9,7 +9,7 @@
             <ui:insert name="search-sidebar">
                 <ui:include src = "/WEB-INF/templates/search_menu.xhtml" />
             </ui:insert>
-            <p class="lead"><h2>eventos proximos</h2></p>
+            <p class="lead"><h1>eventos proximos</h1></p>
             <!--<p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="events" class="eventLists" paginator="true" rows="1">-->
             <p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="eventsNext" styleClass="eventsNext">
                 <ui:insert name="search-sidebar">
@@ -27,7 +27,7 @@
                     </pretty:link>
                 </h5>
             </p>
-            <p class="lead"><h2 class="eventsImportant">eventos destacados</h2></p>
+            <p class="lead"><h1 class="eventsImportant">eventos destacados</h1></p>
             <p:dataTable value="#{eventoBean.eventosDestacados}" var="evento">
                 <ui:insert name="search-sidebar">
                     <ui:include src = "/WEB-INF/templates/event.xhtml" />

@@ -78,9 +78,9 @@ public class Business implements BusinessLocal {
     public void createUser(Usuario u) {
 
         if (validateRegister(u.getPseudonimo(), u.getEmail())) {
-                  
+
             em.persist(u);
-                  
+
         }
     }
 
@@ -94,10 +94,10 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Tarea> getTasks(Usuario u) {
-        
+
         TypedQuery<Tarea> query = em.createNamedQuery("getTareas", Tarea.class)
                 .setParameter("id_usuario", u.getId_usuario());
-        
+
         return query.getResultList();
     }
 
@@ -135,19 +135,27 @@ public class Business implements BusinessLocal {
                 .setParameter("localidad", loca)
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
-        List<Evento> ev = new ArrayList<>();
+        System.out.println("localidad: " + loca);
+        System.out.println("etiqueta: " + etiq);
+        System.out.println("destinatario: " + dest);
+        for (Evento x : query.getResultList()) {
+            System.out.println(x.getTitulo());
+        }
 
         if (!text.isEmpty() && !text.equals("")) {
+            List<Evento> ev = new ArrayList<>();
+            System.out.println("getEventsBySearch(): if text not empty");
             for (Evento e : query.getResultList()) {
                 if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {
+                    System.out.println("getEventsBySearch(): event exists with that text");
                     ev.add(e);
                 }
             }
+            return ev;
         } else {
-            ev = query.getResultList();
+            System.out.println("getEventsBySearch(): text is empty");
+            return query.getResultList();
         }
-
-        return ev;
     }
 
     @Override
@@ -179,8 +187,14 @@ public class Business implements BusinessLocal {
 
     @Override
     public void createEvent(Evento e) {
-
+//        Usuario u = e.getPropietario();
+//        List<Evento> ev = this.getUserEvents(u);
+//        ev.add(e);
+//        u.setMisEventos(ev);
+//        em.merge(u);
         em.persist(e);
+        
+        //hago un flush para que justo despues de persistir pueda llamar al evento inserto para obtener el id autogenerado
         em.flush();
     }
 
@@ -406,38 +420,39 @@ public class Business implements BusinessLocal {
 
     @Override
     public void deleteEvent(Evento e) {
-
-        TypedQuery <Evento> nombreClaro = em.createNamedQuery("getEventById",Evento.class).setParameter("evento", e.getId_evento());
+        TypedQuery<Evento> nombreClaro = em.createNamedQuery("getEventById", Evento.class).setParameter("evento", e.getId_evento());
         Evento e1 = nombreClaro.getResultList().get(0);
-        
+        System.out.println("deleteEvent(): entered");
+        System.out.println("deleteEvent(): event " + e1.getTitulo());
+
         List<Etiqueta> eti = e1.getEtiqueta();
-        for(Etiqueta et:eti){
+        for (Etiqueta et : eti) {
             et.getEvento().remove(e1);
         }
-        
+
         List<Destinatario> di = e1.getDestinatario();
-        for(Destinatario d:di){
+        for (Destinatario d : di) {
             d.getEvento().remove(e1);
-        } 
-        
+        }
+
         e1.getComentarios().clear();
         e1.getNotificaciones().clear();
-        
+
         List<Usuario> usersList = e1.getAsiste();
-        for(Usuario u:usersList){
+        for (Usuario u : usersList) {
             u.getAsiste().remove(e1);
         }
-        
+
         List<Usuario> usersList2 = e1.getMegusta();
-        for(Usuario u:usersList2){
+        for (Usuario u : usersList2) {
             u.getMegusta().remove(e1);
         }
-        
-        List<Usuario>usersList3 = e1.getSigue();
-        for(Usuario u:usersList3){
+
+        List<Usuario> usersList3 = e1.getSigue();
+        for (Usuario u : usersList3) {
             u.getSigue().remove(e1);
         }
-        
+
         em.remove(em.merge(e1));
     }
 
@@ -451,10 +466,11 @@ public class Business implements BusinessLocal {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", e.getId_evento());
         List<Evento> events = query.getResultList();
-        if(events.isEmpty())
+        if (events.isEmpty()) {
             return 0;
-        else
+        } else {
             return events.get(0).getAsiste().size();
+        }
     }
 
     @Override
@@ -462,10 +478,11 @@ public class Business implements BusinessLocal {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", e.getId_evento());
         List<Evento> events = query.getResultList();
-        if(events.isEmpty())
+        if (events.isEmpty()) {
             return 0;
-        else
+        } else {
             return events.get(0).getMegusta().size();
+        }
     }
 
     @Override
@@ -473,10 +490,11 @@ public class Business implements BusinessLocal {
         TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
                 .setParameter("evento", e.getId_evento());
         List<Evento> events = query.getResultList();
-        if(events.isEmpty())
+        if (events.isEmpty()) {
             return 0;
-        else
+        } else {
             return events.get(0).getSigue().size();
+        }
     }
 
     @Override
@@ -508,7 +526,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Usuario> getRedactores() {
-        TypedQuery<Usuario> u = em.createNamedQuery("getRedactores",Usuario.class)
+        TypedQuery<Usuario> u = em.createNamedQuery("getRedactores", Usuario.class)
                 .setParameter("rol", Usuario.Tipo_Rol.REDACTOR);
         return u.getResultList();
     }
@@ -523,17 +541,35 @@ public class Business implements BusinessLocal {
         Tarea tari = em.find(Tarea.class, t);
         em.remove(em.merge(tari));
     }
-    
+
     @Override
-    public List<Tarea> getPeticiones(Long id){
+    public List<Tarea> getPeticiones(Long id) {
         Usuario susi = em.find(Usuario.class, id);
         boolean p = susi.getPeticion().isEmpty();
         return susi.getPeticion();
     }
+
+    @Override
+    public void deleteComentario(Long c) {
+        Comentario co = em.find(Comentario.class, c);
+        em.remove(em.merge(co));
+    }
+
+    @Override
+    public List<Etiqueta> getTagsWithEvents() {
+        List<Etiqueta> tags = new ArrayList<>();
+        for (Etiqueta x : getTags()) {
+            if (getEventsByTag(x.getNombre()).size() > 0) {
+                tags.add(x);
+            }
+        }
+
+        return tags;
+    }
     
     @Override
-    public void deleteComentario(Long c){
-        Comentario co = em.find(Comentario.class, c);
-        em.remove(em.merge(co));  
+    public List<Evento> getUserEvents(Usuario u){
+        return em.createNamedQuery("getUserEvents", Evento.class).setParameter("usuario", u.getId_usuario()).getResultList();
     }
+
 }

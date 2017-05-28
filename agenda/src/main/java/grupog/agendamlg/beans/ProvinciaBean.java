@@ -39,6 +39,7 @@ public class ProvinciaBean implements Serializable {
         List<Provincia> p = business.getProvinces();
         if (!p.isEmpty()) {
             provincia = p.get(6).getNombre();
+            localidad = "Málaga";
             localidades = provinciaGetLocalidades(provincia);
         }
 

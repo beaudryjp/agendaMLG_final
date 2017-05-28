@@ -49,7 +49,7 @@
                                     Publico
                                 </p:column>
                                 <p:column>
-                                    <p:selectManyMenu> id="eventDestinatario" itemValue="#{evento.destinatario.descripcion}">
+                                    <p:selectManyMenu id="destinatario" showCheckbox="true" >
                                         <f:selectItems value="#{destinatarioBean.destinatarios}"  var="d" itemLabel="#{d.descripcion}" itemValue="#{d.descripcion}" />
                                     </p:selectManyMenu>
                                 </p:column>
@@ -59,7 +59,7 @@
                                     Etiquetas
                                 </p:column>
                                 <p:column>
-                                    <p:selectManyMenu id="eventEtiqueta" value="#{evento.etiqueta}" >
+                                    <p:selectManyMenu id="etiqueta" showCheckbox="true" >
                                         <f:selectItems value="#{etiquetaBean.etiquetas}"  var="e" itemLabel="#{e.nombre}" itemValue="#{e.nombre}" />
                                     </p:selectManyMenu>
                                 </p:column>

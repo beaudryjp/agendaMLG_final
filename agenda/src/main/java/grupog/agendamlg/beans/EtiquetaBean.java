@@ -27,7 +27,7 @@ public class EtiquetaBean implements Serializable {
     private String etiquetaCreate;
     private String etiquetaUpdate;
     private String etiquetaAnt;
-    private List<String> etiquetaDelete;        
+    private List<String> etiquetaDelete;
     @EJB
     private Business business;
 
@@ -35,6 +35,7 @@ public class EtiquetaBean implements Serializable {
     }
 
     public List<Etiqueta> getEtiquetas() {
+        //List<Etiqueta> e = business.getTagsWithEvents();
         List<Etiqueta> e = business.getTags();
         if (!e.isEmpty()) {
             Collections.sort(e, new Comparator<Etiqueta>() {
@@ -45,25 +46,33 @@ public class EtiquetaBean implements Serializable {
             });
             return e;
         } else {
-            return new ArrayList<Etiqueta>();
-        }
-    }
-
-    public List<Etiqueta> getEtiquetasCabecera() {
-        List<Etiqueta> e = getEtiquetas();
-        if (!e.isEmpty()) {
-            if (e.size() > 9) {
-                e.remove(0);
-                return e.subList(0, 9);
-            }
-            else
-                return e;
-        } else {
             return new ArrayList<>();
         }
     }
 
-    public String createTag(){
+    public List<Etiqueta> getEtiquetasCabecera() {
+        List<Etiqueta> e = business.getTagsWithEvents();
+        if (!e.isEmpty()) { //get tags who have at least one event
+            if (e.size() > 9) {
+                return e.subList(0, 9);
+            } else {
+                return e;
+            }
+        } else { //get all tags
+            e = business.getTags();
+            if (!e.isEmpty()) {
+                if (e.size() > 9) {
+                    return e.subList(0, 9);
+                } else {
+                    return e;
+                }
+            } else {
+                return new ArrayList<>();
+            }
+        }
+    }
+
+    public String createTag() {
         System.out.println("Estoy intentando crear Tags");
         System.out.println("etiqueta " + etiquetaCreate);
         Etiqueta e = new Etiqueta();
@@ -72,14 +81,14 @@ public class EtiquetaBean implements Serializable {
         return "index?faces-redirect=true";
     }
 
-    public String updateTag(){
+    public String updateTag() {
         Etiqueta a = business.getEtiquetaByName(etiquetaAnt);
         a.setNombre(etiquetaUpdate);
         business.updateTag(a);
         return "index?faces-redirect=true";
     }
 
-    public String deleteTag(){
+    public String deleteTag() {
         System.out.println("Estoy intentando delete Tags");
 
         for (String str : etiquetaDelete) {
@@ -96,8 +105,7 @@ public class EtiquetaBean implements Serializable {
     public void setEtiquetaAnt(String etiquetaAnt) {
         this.etiquetaAnt = etiquetaAnt;
     }
-    
-    
+
     public String getEtiquetaCreate() {
         return etiquetaCreate;
     }
@@ -121,6 +129,5 @@ public class EtiquetaBean implements Serializable {
     public void setEtiquetaDelete(List<String> etiquetaDelete) {
         this.etiquetaDelete = etiquetaDelete;
     }
-    
-    
+
 }

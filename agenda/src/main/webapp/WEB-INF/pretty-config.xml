@@ -3,8 +3,6 @@
                xsi:schemaLocation="http://ocpsoft.com/prettyfaces/3.3.0
                                    		http://ocpsoft.com/xml/ns/prettyfaces/ocpsoft-pretty-faces-3.3.0.xsd">
     
-    <!--<rewrite match="^[^(/primefaces_resource/)|^(javascript)]" trailingSlash="append"  toCase="lowercase" redirect="301"/>-->
-
     <url-mapping id="index"> 
         <pattern value="/" /> 
         <view-id value="/faces/index.xhtml" />

@@ -130,9 +130,16 @@
                                 <p:column></p:column>
                                 <p:column>
                                     <p:gmap id="gmap" center="36.7203713, -4.4248549" zoom="15" type="HYBRID" style="width:100%;height:400px" >
-                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras" immediate="true"/>
-                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2" immediate="true"/>
+                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="errors"/>
+                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2"/>
                                     </p:gmap>
+                                    <!--
+                                    <p:dialog id="gmapDialog" widgetVar="dlg" width="625" height="400" modal="true">
+                                        <p:gmap id="gmap" center="41.381542, 2.122893" zoom="15" type="HYBRID" style="width:100%;height:400px" >
+                                            <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}"/>
+                                        </p:gmap>
+                                    </p:dialog>
+                                    -->
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -163,6 +170,14 @@
                                     </p:column>
                                     <p:column>
                                         <p:selectBooleanCheckbox value="#{eventoBean.event_new_destacado}" />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        Visible
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectBooleanCheckbox value="#{eventoBean.event_new_visible}" />
                                     </p:column>
                                 </p:row>
                             </c:if> 

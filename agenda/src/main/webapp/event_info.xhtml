@@ -148,14 +148,20 @@
                     </h:form>
                     <h:form id="formDelete">
                         <h:inputHidden id="hidden3" value="#{eventoBean.eventId}" />
+                        <!--
                         <p:dialog header="Borrar evento" widgetVar="dlg_delete" minHeight="40">
                                 <h4><p:commandButton action="#{eventoBean.deleteEvento()}" value="Confirmar" /></h4>
                         </p:dialog>
+                        -->
+                        <p:confirmDialog global="true" widgetVar="dlg_delete" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
                     </h:form>
 
                     <h:form id="formChange" enctype="multipart/form-data">
                         <p:dialog header="Cambiar imágen" widgetVar="dlg_change" minHeight="40">
-                            <p:fileUpload id="eventImage" value="#{eventoBean.newEventImage}" fileLimit="1" 
+                            <p:fileUpload id="eventImage" fileLimit="1" oncomplete="PF('dlg_change').hide()"
                                           mode="advanced" dragDropSupport="true" label="Seleccionar"
                                           uploadLabel="Subir" cancelLabel="Borrar" 
                                           fileUploadListener="#{eventoBean.changeImage}" 
@@ -170,7 +176,11 @@
                     <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
                        
                             <p:commandLink id="deleteEvent" onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg"/>
+                        </c:if>
                         
+                        <p:commandLink id="deleteEvent" onsuccess="PF('dlg_change').hide()" actionListener="#{eventoBean.deleteEvento()}" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg">
+                            <p:confirm header="Confirmacion" message="Estas seguro?" icon="ui-icon-alert" />
+                        </p:commandLink>
                         <pretty:link mappingId="editEvent" id="editEvent" styleClass="editEvent btn btn-default btn-lg">
                             Editar
                             <f:param value="#{evento.id_evento}" />
