@@ -481,7 +481,7 @@ public class EventoBean implements Serializable {
         }
 
         e.setVisible(event_new_visible);
-        e.setPropietario(current_user.getUsuario());
+        e.setPropietario(business.getUserByEmail(current_user.getUsuario().getEmail()).get(0));
         business.createEvent(e);
         if (current_user.isUserRegistered()) {
             Tarea t = new Tarea();
