@@ -69,8 +69,8 @@ public class TareasBean implements Serializable {
     
     public void reject(Tarea t) {
         
-        if(t.getId_evento()!=null){
-           business.deleteEvent(business.getEventById(t.getId_evento()+"")); 
+        if(t.getId_evento()!= null){
+           business.deleteEvent(business.getEventById(String.valueOf(t.getId_evento()))); 
         }
         
         business.deleteTask(t.getId_tarea());

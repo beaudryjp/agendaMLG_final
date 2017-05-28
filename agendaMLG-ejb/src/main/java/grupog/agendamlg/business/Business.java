@@ -339,8 +339,14 @@ public class Business implements BusinessLocal {
 
     @Override
     public Evento getEventById(String event) {
-        return em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", Long.parseLong(event)).getResultList().get(0);
+        System.out.println(event+" aqui");
+        Evento e = em.find(Evento.class, Long.parseLong(event));
+//         TypedQuery <Evento> esta = em.createNamedQuery("getEventById", Evento.class)
+//                .setParameter("evento", Long.parseLong(event));
+//         for(Evento e: esta.getResultList()){
+//             System.out.println(e.getId_evento());
+//         }
+         return e;
     }
 
     @Override
@@ -420,6 +426,7 @@ public class Business implements BusinessLocal {
 
     @Override
     public void deleteEvent(Evento e) {
+        System.out.println(e.getId_evento()+" no revientes");
         TypedQuery<Evento> nombreClaro = em.createNamedQuery("getEventById", Evento.class).setParameter("evento", e.getId_evento());
         Evento e1 = nombreClaro.getResultList().get(0);
         System.out.println("deleteEvent(): entered");

@@ -521,9 +521,7 @@ public class EventoBean implements Serializable {
 
                         //delete file if exists
                         File newFile = new File(path.toString() + "/" + filename);
-                        if (newFile.delete()) {
-                            System.out.println(newFile.getName() + " is deleted!");
-                        }
+                        
 
                         //create file
                         Path nfile = Files.createFile(newFile.toPath());
@@ -717,12 +715,11 @@ public class EventoBean implements Serializable {
     }
 
     public void checkVisibility() {
-        HttpServletRequest hsr = Redirect.getRequest();
+       
         Evento e = business.getEventById(eventId);
         if (!current_user.isUserAdmin() && !e.getVisible()) {
             Redirect.redirectToIndex();
         }
-
     }
     
     public Boolean isVisible(){

@@ -24,7 +24,9 @@
 
                                             <p:row>
                                                 <p:column rowspan="2">
-                                                   <!-- <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/> -->
+                                                   <p:graphicImage value="#{eventoBean.getImage()}" width="50px" height="50px">
+                                                        <f:param name="filename" value="#{item.imagen_url}" />
+                                                    </p:graphicImage>
                                                 </p:column>
                                                 <p:column>
 
@@ -53,7 +55,9 @@
                                         <c:forEach var="item" items="#{usuario.sigue}">
                                             <p:row>
                                                 <p:column rowspan="2">
-                                                   <!-- <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/> -->
+                                                  <p:graphicImage value="#{eventoBean.getImage()}" width="50px" height="50px">
+                                                        <f:param name="filename" value="#{item.imagen_url}" />
+                                                    </p:graphicImage>
                                                 </p:column>
                                                 <p:column>
 
@@ -83,7 +87,9 @@
 
                                             <p:row>
                                                 <p:column rowspan="2">
-                                                   <!-- <p:graphicImage class="event-image" name="#{item.imagen_url}" width="100" height="100"/> -->
+                                                    <p:graphicImage value="#{eventoBean.getImage()}" width="50px" height="50px">
+                                                        <f:param name="filename" value="#{item.imagen_url}" />
+                                                    </p:graphicImage>
                                                 </p:column>
                                                 <p:column>
 
@@ -151,7 +157,9 @@
                                     <p:panelGrid styleClass="mis_notificaciones" id="prueba" >
                                         <p:row>
                                             <p:column rowspan="2" id="columna1">
-                                                <p:graphicImage class="event-image" name="img/event-general.png"/>
+                                                <p:graphicImage value="#{eventoBean.getImage()}" width="50px" height="50px">
+                                                    <f:param name="filename" value="#{noti.evento.imagen_url}" />
+                                                </p:graphicImage>
                                             </p:column>
                                             <p:column id="columna2">
                                                 <h:outputLabel  value="#{noti.mensaje}" />
@@ -178,13 +186,13 @@
                                         <p:panelGrid styleClass="mis-tareas"  id="panel-tar">
                                             <p:row>
                                                 <p:column rowspan="2">
-                                                    <p:graphicImage class="event-image" name="img/event-general.png"/>
+                                                    <p:graphicImage class="event-image" name="img/eventos/default.png" width="50px" height="50px"/>
                                                 </p:column>
                                                 <p:column>
                                                     <c:choose>
                                                         <c:when test="#{not empty item.id_evento}">
                                                             <pretty:link mappingId="infoEvent">
-                                                            #{item.nombre}
+                                                                #{item.nombre}
                                                                 <f:param value="#{item.id_evento}" />
                                                             </pretty:link>
                                                         </c:when>

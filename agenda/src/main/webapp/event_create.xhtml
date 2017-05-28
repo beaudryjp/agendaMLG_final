@@ -119,27 +119,33 @@
                             -->
                             <p:row>
                                 <p:column>
-                                    Coordenadas
+                                    Están son las coordenadas de su evento, introdúzcalas después del mapa
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="loquetuquieras" value="#{eventoBean.event_new_latitud}" />
-                                    <p:inputText id="loquetuquieras2" value="#{eventoBean.event_new_longitud}" />     
+                                    <p:inputText id="loquetuquieras" value="#{eventoBean.getEvent_new_latitud()}" readonly="true" />
+                                    <p:inputText id="loquetuquieras2" value="#{eventoBean.getEvent_new_longitud()}" readonly="true" />     
                                 </p:column>
                             </p:row>
                             <p:row>
                                 <p:column></p:column>
                                 <p:column>
                                     <p:gmap id="gmap" center="36.7203713, -4.4248549" zoom="15" type="HYBRID" style="width:100%;height:400px" >
-                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="errors"/>
-                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2"/>
+
+                                        <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras" />
+                                       <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2" />
+
                                     </p:gmap>
-                                    <!--
-                                    <p:dialog id="gmapDialog" widgetVar="dlg" width="625" height="400" modal="true">
-                                        <p:gmap id="gmap" center="41.381542, 2.122893" zoom="15" type="HYBRID" style="width:100%;height:400px" >
-                                            <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}"/>
-                                        </p:gmap>
-                                    </p:dialog>
-                                    -->
+
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    Coordenadas a rellenar
+                                </p:column>
+                                 <p:column>
+                                    <p:inputText  value="#{eventoBean.event_new_latitud}"  />
+                                    <p:inputText value="#{eventoBean.event_new_longitud}"  />     
+
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -192,7 +198,7 @@
                             <p:row>  
                                 <p:column colspan="2">
                                     <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSubmit btn btn-default btn-lg editButtons"/>
-                                    <h:commandLink  action="#{eventoBean.createEvent()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons" />
+                                    <h:commandLink action="#{eventoBean.createEvent()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons" />
                                 </p:column>
                             </p:row>
 
