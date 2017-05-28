@@ -192,6 +192,10 @@ public class Business implements BusinessLocal {
 //        ev.add(e);
 //        u.setMisEventos(ev);
 //        em.merge(u);
+        Usuario u = e.getPropietario();
+        Usuario us = em.find(Usuario.class, u.getId_usuario());
+        us.getMisEventos().add(e);
+        
         em.persist(e);
         
         //hago un flush para que justo despues de persistir pueda llamar al evento inserto para obtener el id autogenerado
