@@ -95,8 +95,8 @@ public class EventoBean implements Serializable {
     private String event_new_fecha_fin;
     private String event_new_horario;
     private String event_new_precio;
-    private double event_new_longitud;
-    private double event_new_latitud;
+    private String event_new_latitud;
+    private String event_new_longitud;
     private boolean event_new_destacado;
     private Integer event_new_rating;
     private String event_new_imagen_url;
@@ -360,21 +360,23 @@ public class EventoBean implements Serializable {
         this.event_new_precio = event_new_precio;
     }
 
-    public double getEvent_new_longitud() {
-        return event_new_longitud;
-    }
-
-    public void setEvent_new_longitud(double event_new_longitud) {
-        this.event_new_longitud = event_new_longitud;
-    }
-
-    public double getEvent_new_latitud() {
+    public String getEvent_new_latitud() {
         return event_new_latitud;
     }
 
-    public void setEvent_new_latitud(double event_new_latitud) {
+    public void setEvent_new_latitud(String event_new_latitud) {
         this.event_new_latitud = event_new_latitud;
     }
+
+    public String getEvent_new_longitud() {
+        return event_new_longitud;
+    }
+
+    public void setEvent_new_longitud(String event_new_longitud) {
+        this.event_new_longitud = event_new_longitud;
+    }
+
+ 
 
     public boolean isEvent_new_destacado() {
         return event_new_destacado;
@@ -434,8 +436,14 @@ public class EventoBean implements Serializable {
         e.setFecha_fin(endDate);
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
-        e.setLongitud(event_new_longitud);
-        e.setLatitud(event_new_latitud);
+        e.setLatitud(Double.parseDouble(event_new_latitud));
+        e.setLongitud(Double.parseDouble(event_new_longitud));
+        
+        System.out.println(event_new_latitud);
+        System.out.println(event_new_longitud);
+        System.out.println(e.getLatitud());
+        System.out.println(e.getLongitud());
+        
         e.setDestacado(event_new_destacado);
         List<Destinatario> s = new ArrayList<>();
         for (String str : destinatarios) {
@@ -676,13 +684,13 @@ public class EventoBean implements Serializable {
     public void onPointSelect(PointSelectEvent event) {
         LatLng latlng = event.getLatLng();
 
-//        System.out.println(event_new_latitud);
-//        System.out.println(event_new_longitud);
-        event_new_latitud = latlng.getLat();
-        event_new_longitud = latlng.getLng();
+        System.out.println("onclick lati "+event_new_latitud);
+        System.out.println("onclick longi " + event_new_longitud);
+        event_new_latitud = String.valueOf(latlng.getLat());
+        event_new_longitud = String.valueOf(latlng.getLng());
 
-//        System.out.println(event_new_latitud);
-//        System.out.println(event_new_longitud);
+        System.out.println("onclick lati 2 " +event_new_latitud);
+        System.out.println("onclick longi 2 " +event_new_longitud);
     }
 
     public UploadedFile getNewEventImage() {
@@ -736,5 +744,11 @@ public class EventoBean implements Serializable {
             Redirect.redirectToIndex();
         }
 
+    }
+    
+    public Boolean isVisible(){
+        Evento e = business.getEventById(eventId);
+        System.out.println(e.getTitulo());
+        return e.getVisible();
     }
 }

@@ -36,7 +36,7 @@
                         <div class="rating">
                             <p:rating value="#{evento.valoracion}" readonly="true" />
                         </div>
-                        <c:if test="#{evento.visible == true}">
+                        
                         <c:choose>
                             <c:when test="#{!empty ControlLog.usuario}">
                                 <h5 class="icon">
@@ -50,11 +50,11 @@
                                 </h5>
                             </c:when>
                         </c:choose>
-                        </c:if>
+                        
                         <h5 class="icon">
                             <a class="icon fa fa-map fa-2x" onclick="PF('gmap').show();"  data-toggle="tooltip" title="Show map"  data-placement="left" />
                         </h5>
-                        <c:if test="#{evento.visible == true}">
+                       
                         <h5 class="icon">
                             <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank" data-toggle="tooltip" title="Twitter"  data-placement="left" ></a>
                         </h5>
@@ -64,7 +64,7 @@
                         <h5 class="icon">
                             <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
                         </h5>
-                        </c:if>
+                        
                     </div>
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
@@ -110,7 +110,7 @@
                             </p>
                         </c:if>
                     </div>
-                    <c:if test="#{evento.visible == true}">
+                    
                     <div>
                         <h5 class="h5bold">Comentarios</h5>
                         <ul class="comments">
@@ -132,7 +132,7 @@
                             </c:choose>
                         </ul>
                     </div>
-                    </c:if>
+                    
                     <div>
                         <f:view contentType="text/html">
                             <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
@@ -163,14 +163,14 @@
                         </p:dialog>
                     </h:form>
                     <c:if test="#{!empty ControlLog.usuario}">
-                        <c:if test="#{evento.visible == true}">
+                        
                             <p:commandLink id="addComment" styleClass="addComment btn btn-default btn-lg" onclick="PF('dlg_comen').show();" value="Añadir comentario"/>
-                        </c:if>
+                        
                     </c:if>
                     <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
-                        <c:if test="#{evento.visible == true}">
+                       
                             <p:commandLink id="deleteEvent" onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg"/>
-                        </c:if>
+                        
                         <pretty:link mappingId="editEvent" id="editEvent" styleClass="editEvent btn btn-default btn-lg">
                             Editar
                             <f:param value="#{evento.id_evento}" />
