@@ -578,5 +578,10 @@ public class Business implements BusinessLocal {
     public List<Evento> getUserEvents(Usuario u) {
         return em.createNamedQuery("getUserEvents", Evento.class).setParameter("usuario", u.getId_usuario()).getResultList();
     }
+    
+    @Override
+    public void highlightEvent(Evento e){
+        em.merge(e);
+    }
 
 }

@@ -181,6 +181,7 @@ public class ControlLog implements Serializable {
         return result;
     }
     
+        
     public boolean isEventVisible(){
         boolean result = false;
         HttpServletRequest hsr = Redirect.getRequest();
@@ -188,12 +189,24 @@ public class ControlLog implements Serializable {
             if (!hsr.getParameter("id").isEmpty()) {
                 Evento e = business.getEventById(hsr.getParameter("id"));
                 if (e != null && usuario != null) {
-                    
+                    result = (e.getVisible() && this.isUserRegistered()) || (isUserOwnerOfEvent());
                 }
             }
         }
-        //return this.usuario != null && this.usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR);
-        
+        return result;
+    }
+    
+    public boolean isEventHighlighted(){
+        boolean result = false;
+        HttpServletRequest hsr = Redirect.getRequest();
+        if (hsr.getParameterMap().containsKey("id")) {
+            if (!hsr.getParameter("id").isEmpty()) {
+                Evento e = business.getEventById(hsr.getParameter("id"));
+                if (e != null && usuario != null) {
+                    result = e.isDestacado();
+                }
+            }
+        }
         return result;
     }
 }

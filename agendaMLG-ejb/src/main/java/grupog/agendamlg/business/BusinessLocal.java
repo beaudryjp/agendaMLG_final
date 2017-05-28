@@ -71,4 +71,5 @@ public interface BusinessLocal {
     public void deleteComentario(Long c);
     public List<Etiqueta> getTagsWithEvents();
     public List<Evento> getUserEvents(Usuario u);
+    public void highlightEvent(Evento e);
 }

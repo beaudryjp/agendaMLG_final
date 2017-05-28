@@ -47,19 +47,18 @@
         <!--Normal  menu, big screen-->
         <section id="header-option-icons">
             <ul class="icons">
+                <c:choose>
+                    <c:when test="#{ControlLog.userLoggedIn}">
+                        <li><h:link value="@#{ControlLog.usuario.pseudonimo}" outcome="profile"  class="icon fa-user-circle"/></li>               
+                        <li><h:form><h:commandLink id="closeSession" value="Cerrar Sesión" action="#{ControlLog.logout}"  class="icon fa-sign-out"  /></h:form></li>  
+                    </c:when>
+                    <c:otherwise>
+                        <li><h:link value="Iniciar sesión" outcome="login"  class="icon fa-sign-in"/></li>
+                    </c:otherwise>
+                </c:choose>
                 <li>
                     <pretty:link mappingId="allEvents" class="icon fa-calendar"> Eventos </pretty:link>
                 </li>
-                <c:choose>
-                    <c:when test="#{ControlLog.userLoggedIn}">
-                        <li><h:link value="Perfil" outcome="profile"  class="icon fa-user-circle"/></li>               
-                        <li><h:form><h:commandLink id="closeSession" value="Cerrar Sesión" action="#{ControlLog.logout}"  class="icon fa-user-circle"  /></h:form></li>  
-                    </c:when>
-                    <c:otherwise>
-                        <li><h:link value="Iniciar sesión" outcome="login"  class="icon fa-user-circle"/></li>
-                    </c:otherwise>
-                </c:choose>
-
 
                 <li><a href="https://twitter.com/diariosur?lang=es" class="fa-twitter header-sn"></a></li>
                 <li><a href="https://es-es.facebook.com/diariosur/" class=" fa-facebook header-sn"></a></li>

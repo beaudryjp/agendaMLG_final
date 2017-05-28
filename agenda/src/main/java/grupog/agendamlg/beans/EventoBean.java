@@ -7,7 +7,6 @@ import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
-import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Tarea;
 import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
@@ -31,8 +30,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -513,7 +510,6 @@ public class EventoBean implements Serializable {
                         Path nfile = Files.createFile(newFile.toPath());
                         Files.copy(input, nfile, StandardCopyOption.REPLACE_EXISTING);
 
-                        
                     } catch (IOException ex) {
                         
                     }
@@ -521,7 +517,6 @@ public class EventoBean implements Serializable {
 
             }
         }
-        Redirect.redirectToEventInfo(Long.parseLong(eventId));
     }
 
     public void createComment() {
@@ -698,6 +693,13 @@ public class EventoBean implements Serializable {
     public void updateEvento() {
         Evento e = business.getEventById(eventId);
         business.updateEvent(e);
+        Redirect.redirectToEventInfo(e.getId_evento());
+    }
+    
+    public void destacarEvento(){
+        Evento e = business.getEventById(eventId);
+        e.setDestacado(!e.isDestacado());
+        business.highlightEvent(e);
         Redirect.redirectToEventInfo(e.getId_evento());
     }
 }

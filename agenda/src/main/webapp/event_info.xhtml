@@ -11,9 +11,9 @@
         <ui:define name="main-content">
             <f:metadata>
                 <f:viewAction action="#{ControlLog.checkEventParameter()}" />
-                <f:viewParam name="eventId" value="#{eventoBean.eventId}" />
                 <f:viewAction action="#{eventoBean.onload}" />
-                <f:viewAction action="#{eventoBean.checkVisibility()}" />
+                <f:viewAction action="#{ControlLog.checkVisibility()}" />
+                <f:viewParam name="eventId" value="#{eventoBean.eventId}" />
             </f:metadata>
 
             <h:form id="formLike">
@@ -37,34 +37,33 @@
                             <p:rating value="#{evento.valoracion}" readonly="true" />
                         </div>
 
-                        <c:choose>
-                            <c:when test="#{!empty ControlLog.usuario}">
-                                <h5 class="icon">
-                                    <i><h:outputText value="#{eventoBean.numLikes}"/></i><a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
-                                </h5>
-                                <h5 class="icon">
-                                    <i><h:outputText value="#{eventoBean.numAssists}"/></i><a data-toggle="tooltip" title="Assist"  data-placement="left" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
-                                </h5>
-                                <h5 class="icon">
-                                    <i><h:outputText value="#{eventoBean.numFollows}"/></i><a data-toggle="tooltip" title="Follow"  data-placement="left" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
-                                </h5>
-                            </c:when>
-                        </c:choose>
+                        <c:if test="#{(ControlLog.eventVisible)}">
+                            <h5 class="icon">
+                                <i><h:outputText value="#{eventoBean.numLikes}"/></i><a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
+                            </h5>
+                            <h5 class="icon">
+                                <i><h:outputText value="#{eventoBean.numAssists}"/></i><a data-toggle="tooltip" title="Assist"  data-placement="left" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
+                            </h5>
+                            <h5 class="icon">
+                                <i><h:outputText value="#{eventoBean.numFollows}"/></i><a data-toggle="tooltip" title="Follow"  data-placement="left" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
+                            </h5>
+                        </c:if>
 
                         <h5 class="icon">
                             <a class="icon fa fa-map fa-2x" onclick="PF('gmap').show();"  data-toggle="tooltip" title="Show map"  data-placement="left" />
                         </h5>
 
-                        <h5 class="icon">
-                            <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank" data-toggle="tooltip" title="Twitter"  data-placement="left" ></a>
-                        </h5>
-                        <h5 class="icon">
-                            <a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Google+"  data-placement="left" ></a>
-                        </h5>
-                        <h5 class="icon">
-                            <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
-                        </h5>
-
+                        <c:if test="#{(ControlLog.eventVisible || empty ControlLog.usuario)}">
+                            <h5 class="icon">
+                                <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank" data-toggle="tooltip" title="Twitter"  data-placement="left" ></a>
+                            </h5>
+                            <h5 class="icon">
+                                <a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Google+"  data-placement="left" ></a>
+                            </h5>
+                            <h5 class="icon">
+                                <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
+                            </h5>
+                        </c:if>
                     </div>
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
@@ -132,7 +131,7 @@
 
                         </c:otherwise>
                     </c:choose>
-
+                    <br/>
                     <div>
                         <f:view contentType="text/html">
                             <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
@@ -156,14 +155,14 @@
 
                     <h:form id="formChange" enctype="multipart/form-data">
                         <p:dialog header="Cambiar imágen" widgetVar="dlg_change" minHeight="40">
-                            <p:fileUpload id="eventImage" fileLimit="1" oncomplete="PF('dlg_change').hide()"
+                            <p:fileUpload id="eventImage" fileLimit="1" oncomplete="PF('dlg_change').hide(); reloadEvent();"
                                           mode="advanced" dragDropSupport="true" label="Seleccionar"
-                                          uploadLabel="Subir" cancelLabel="Borrar" 
-                                          fileUploadListener="#{eventoBean.changeImage}" 
-                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000"/>
+                                          uploadLabel="Subir" cancelLabel="Borrar" update="@form" 
+                                          fileUploadListener="#{eventoBean.changeImage}"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000" />
                         </p:dialog>
                     </h:form>
-                    <c:if test="#{!empty ControlLog.usuario}">
+                    <c:if test="#{(ControlLog.eventVisible)}">
                         <p:commandLink id="addComment" styleClass="addComment btn btn-default btn-lg" onclick="PF('dlg_comen').show();" value="Añadir comentario"/>
                     </c:if>
                     <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
@@ -174,6 +173,15 @@
                             Editar
                             <f:param value="#{evento.id_evento}" />
                         </pretty:link>
+                        <c:choose>
+                            <c:when test="#{ControlLog.eventHighlighted}">
+                                <p:commandLink id="ocultarEvento" action="#{eventoBean.destacarEvento()}" value="Quitar destacado" styleClass="editEvent btn btn-default btn-lg"/>
+                            </c:when>
+                            <c:otherwise>
+                                <p:commandLink id="destacarEvento" action="#{eventoBean.destacarEvento()}" value="Destacar evento" styleClass="editEvent btn btn-default btn-lg"/>
+                            </c:otherwise>
+                        </c:choose>
+                        
                         <p:commandLink id="changeImage" onclick="PF('dlg_change').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
                     </c:if>
                 </p:column>
@@ -199,6 +207,9 @@
                             }
                             function invokeClickFollow() {
                                 document.getElementById('formLike:linkFollow').click();
+                            }
+                            function reloadEvent() {
+                                window.location.reload();
                             }
                             $(document).ready(function () {
                                 $('[data-toggle="tooltip"]').tooltip();
