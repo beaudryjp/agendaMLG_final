@@ -11,9 +11,11 @@
             <f:metadata>
                 <f:viewAction action="#{ControlLog.checkEventParameter()}" />
                 <f:viewAction action="#{ControlLog.checkUserPrivileges()}" />
+                <f:viewParam name="eventId" value="#{eventoBean.eventId}" />
+                <f:viewAction action="#{eventoBean.onload2}" />
             </f:metadata>
             <h:form id="editEvent">
-                <p:dataTable value="#{eventoBean.getEvento()}" var="evento" id="eventEdit">
+                <h:inputHidden id="hidden2" value="#{eventoBean.eventId}" />
                     <p:column>
                         <p:panelGrid styleClass="companyHeaderGrid">
                             <p:row>
@@ -21,7 +23,7 @@
                                     <div id="event-goBack">
                                         <pretty:link mappingId="infoEvent" class="icon fa-chevron-left">
                                             Volver
-                                            <f:param value="#{evento.id_evento}" />
+                                            <f:param value="#{eventoBean.eventId}" />
                                         </pretty:link>
                                     </div>
                                     <h2 class="eventTitle">Editar evento </h2>
@@ -32,24 +34,24 @@
                                     Título
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventTitle"  class="form-control" value="#{evento.titulo}" placeholder="Título" />
+                                    <p:inputText id="eventTitle"  class="form-control" value="#{eventoBean.updateTitulo}" placeholder="Título" />
                                 </p:column>
                             </p:row>
                             <p:row>
                                 <p:column>
-                                    Descripcion
+                                    Descripción
                                 </p:column>
                                 <p:column>
-                                    <p:inputTextarea id="eventDescripcion"  class="form-control" placeholder="Descripción"   rows="10" cols="50" value="#{evento.descripcion}"/>
+                                    <p:inputTextarea id="eventDescripcion"  class="form-control" placeholder="Descripción"   rows="10" cols="50" value="#{eventoBean.updateDescripcion}"/>
                                 </p:column>
                             </p:row>
 
                             <p:row>
                                 <p:column>
-                                    Publico
+                                    Público
                                 </p:column>
                                 <p:column>
-                                    <p:selectManyMenu id="destinatario" showCheckbox="true" >
+                                    <p:selectManyMenu id="destinatario" showCheckbox="true" value="#{eventoBean.updateDestinatario}">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}"  var="d" itemLabel="#{d.descripcion}" itemValue="#{d.descripcion}" />
                                     </p:selectManyMenu>
                                 </p:column>
@@ -59,7 +61,7 @@
                                     Etiquetas
                                 </p:column>
                                 <p:column>
-                                    <p:selectManyMenu id="etiqueta" showCheckbox="true" >
+                                    <p:selectManyMenu id="etiqueta" showCheckbox="true" value="#{eventoBean.updateEtiquetas}">
                                         <f:selectItems value="#{etiquetaBean.etiquetas}"  var="e" itemLabel="#{e.nombre}" itemValue="#{e.nombre}" />
                                     </p:selectManyMenu>
                                 </p:column>
@@ -69,7 +71,7 @@
                                     Fecha inicio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaIni" value="#{evento.fecha_inicio}" placeholder="Fecha Inicio">
+                                    <p:inputText id="eventFechaIni" value="#{eventoBean.updateFechaInicio}" placeholder="Fecha Inicio">
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </p:inputText>
                                 </p:column>
@@ -80,7 +82,7 @@
                                     Fecha fin
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventFechaFin" value="#{evento.fecha_fin}"  placeholder="Fecha Fin">
+                                    <p:inputText id="eventFechaFin" value="#{eventoBean.updateFechaFin}"  placeholder="Fecha Fin">
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </p:inputText>
 
@@ -91,7 +93,7 @@
                                     Horario
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventHorario"  class="form-control" value="#{evento.horario}"  placeholder="Horario"/>
+                                    <p:inputText id="eventHorario"  class="form-control" value="#{eventoBean.updateHorario}"  placeholder="Horario"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -99,32 +101,15 @@
                                     Precio
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="eventPrecio"  class="form-control" value="#{evento.precio}"   placeholder="Precio"/>
+                                    <p:inputText id="eventPrecio"  class="form-control" value="#{eventoBean.updatePrecio}"   placeholder="Precio"/>
                                 </p:column>
                             </p:row>
-                            <p:row>
-                                <p:column>
-                                    Imagen
-                                </p:column>
-                                <p:column>
-                                    <p:inputText id="eventImage" class="form-control"  value="#{evento.imagen_url}"  placeholder="Imagén"/>
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column>
-                                    Destacado
-                                </p:column>
-                                <p:column>
-                                    <p:selectBooleanCheckbox id="destacado" />
-                                </p:column>
-                            </p:row>
-
-                            <p:row>
+                            <p:row rendered="false">
                                 <p:column>
                                     Provincia
                                 </p:column>
                                 <p:column>
-                                    <h:selectOneMenu id="provincia" class="form-control"  value="#{evento.localidad.provincia}" >
+                                    <h:selectOneMenu id="provincia" class="form-control" disabled="true">
                                         <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
                                         <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
                                     </h:selectOneMenu>
@@ -135,22 +120,21 @@
                                     Localidad
                                 </p:column>
                                 <p:column>
-                                    <h:selectOneMenu id="localidad"  class="form-control" value="#{evento.localidad}" >
+                                    <h:selectOneMenu id="localidad"  class="form-control" value="#{eventoBean.updateLocalidad}" >
                                         <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                     </h:selectOneMenu>
                                 </p:column>
                             </p:row>
-
                             <p:row>
                                 <p:column colspan="2">
-                                    <h:link outcome="index" value="Cancelar" id="cancelSumit"   styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
-                                    <h:link outcome="events_all" value="Editar" id="createSubmit"   styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
+                                    <h:link outcome="index" value="Cancelar" id="cancelSumit" styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
+                                    <h:commandLink action="#{eventoBean.updateEvento()}" value="Editar" id="createSubmit"   styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
                                 </p:column>
                             </p:row>
                         </p:panelGrid>
                     </p:column>
 
-                </p:dataTable>
+                
             </h:form>
 
         </ui:define>

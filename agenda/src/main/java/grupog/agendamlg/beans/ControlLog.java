@@ -98,26 +98,6 @@ public class ControlLog implements Serializable {
         }
     }
 
-    //Destinatario
-//    public void checkPublicParameter() {
-//        String name;
-//        HttpServletRequest hsr = Redirect.getRequest();
-//        if (hsr.getParameterMap().containsKey("id")) {
-//            name = hsr.getParameter("id");
-//            if (name != null && !name.isEmpty()) {
-//                if (business.getAudienceById(Long.parseLong(name)) != null) {
-//
-//                } else {
-//                    Redirect.redirectToIndex();
-//                }
-//            } else {
-//                Redirect.redirectToIndex();
-//            }
-//        } else {
-//            Redirect.redirectToIndex();
-//        }
-//    }
-
     public void checkVisibility() {
         String eventId;
         HttpServletRequest hsr = Redirect.getRequest();

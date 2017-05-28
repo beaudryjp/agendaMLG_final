@@ -10,6 +10,7 @@ import grupog.agendamlg.entities.Provincia;
 import grupog.agendamlg.entities.Tarea;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -184,6 +185,25 @@ public class Business implements BusinessLocal {
         em.merge(e);
         return e;
     }
+    
+    @Override
+    public Evento updateEvent2(Evento e) {
+        System.out.println("existo?2");
+        Evento original = getEventById(e.getId_evento().toString());
+        List<Comentario> coOriginal = original.getComentarios();
+        List<Usuario> megustaOriginal = original.getMegusta();
+        List<Usuario> asisteOriginal = original.getAsiste();
+        List<Usuario> sigueOriginal = original.getSigue();
+        List<Notificacion> notiOriginal = original.getNotificaciones();
+        deleteEvent(getEventById(e.getId_evento().toString()));
+        e.setComentarios(coOriginal);
+        e.setMegusta(megustaOriginal);
+        e.setAsiste(asisteOriginal);
+        e.setSigue(sigueOriginal);
+        e.setNotificaciones(notiOriginal);
+        createEvent(e);
+        return e;
+    }
 
     @Override
     public void createEvent(Evento e) {
@@ -194,7 +214,7 @@ public class Business implements BusinessLocal {
         /* 
             hago un flush para que justo despues de persistir pueda llamar 
         al evento inserto para obtener el id autogenerado
-        */
+         */
         em.flush();
     }
 
@@ -442,8 +462,58 @@ public class Business implements BusinessLocal {
             d.getEvento().remove(e1);
         }
 
-        e1.getComentarios().clear();
-        e1.getNotificaciones().clear();
+        List<Notificacion> noti = e1.getNotificaciones();
+        for (Notificacion n : noti) {
+            deleteNotificacion(n.getId_notificacion());
+        }
+
+        List<Comentario> comi = e1.getComentarios();
+        for (Comentario c : comi) {
+            deleteComentario(c.getId_comentario());
+        }
+
+        Evento system = getEventById("999999");
+
+        List<Usuario> enviados = new ArrayList<>();
+        List<Usuario> usersList01 = e1.getAsiste();
+        for (Usuario u : usersList01) {
+            if (!enviados.contains(u)) {
+                Notificacion notiplana = new Notificacion();
+                notiplana.setEvento(system);
+                notiplana.setFecha_hora(LocalDateTime.now());
+                notiplana.setMensaje("El evento "+ e1.getTitulo()+" ha sido suspendido");
+                notiplana.setUsuario(u);
+                setNotifications(notiplana);
+                enviados.add(u);
+            }
+
+        }
+
+        List<Usuario> usersList02 = e1.getMegusta();
+        for (Usuario u : usersList02) {
+            if (!enviados.contains(u)) {
+                Notificacion notiplana = new Notificacion();
+                notiplana.setEvento(system);
+                notiplana.setFecha_hora(LocalDateTime.now());
+                notiplana.setMensaje("El evento "+ e1.getTitulo()+" ha sido suspendido");
+                notiplana.setUsuario(u);
+                setNotifications(notiplana);
+                enviados.add(u);
+            }
+        }
+
+        List<Usuario> usersList03 = e1.getSigue();
+        for (Usuario u : usersList03) {
+            if (!enviados.contains(u)) {
+                Notificacion notiplana = new Notificacion();
+                notiplana.setEvento(system);
+                notiplana.setFecha_hora(LocalDateTime.now());
+                notiplana.setMensaje("El evento "+ e1.getTitulo()+" ha sido suspendido");
+                notiplana.setUsuario(u);
+                setNotifications(notiplana);
+                enviados.add(u);
+            }
+        }
 
         List<Usuario> usersList = e1.getAsiste();
         for (Usuario u : usersList) {

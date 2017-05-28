@@ -105,18 +105,7 @@
                                     <p:inputText id="precio" value="#{eventoBean.event_new_precio}"  placeholder="Precio"  required="true"/>
                                 </p:column>
                             </p:row>
-                            <!--
-                            <p:row>
-                                <p:column>
-                                    Imagen
-                                </p:column>
-                                <p:column>
-                                    <h:inputFile value="#{eventoBean.file}" immediate="true" title="Enviar">
-                                        <f:ajax listener="#{eventoBean.createEvent()}" />
-                                    </h:inputFile>
-                                </p:column>
-                            </p:row>
-                            -->
+                           
                             <p:row>
                                 <p:column>
                                     Están son las coordenadas de su evento, introdúzcalas después del mapa
@@ -140,7 +129,7 @@
                                 <p:column>
                                     Coordenadas a rellenar
                                 </p:column>
-                                 <p:column>
+                                <p:column>
                                     <p:inputText  value="#{eventoBean.event_new_latitud}"  />
                                     <p:inputText value="#{eventoBean.event_new_longitud}"  />     
 
@@ -192,9 +181,8 @@
                                 </p:column>
                             </p:row>
 
-
                         </h:form>
-                        
+
                     </p:panelGrid>
                 </div>
             </div>

@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,6 +99,16 @@ public class EventoBean implements Serializable {
     private int numAssists;
     private int numLikes;
     private int numFollows;
+    private String updateTitulo;
+    private String updateDescripcion;
+    private List<String> updateEtiquetas;
+    private List<String> updateDestinatario;
+    private String updateFechaInicio;
+    private String updateFechaFin;
+    private String updateHorario;
+    private String updatePrecio;
+    private String updateDestacado;
+    private String updateLocalidad;
 
     @PostConstruct
     public void init() {
@@ -291,6 +302,86 @@ public class EventoBean implements Serializable {
         return m;
     }
 
+    public String getUpdateTitulo() {
+        return updateTitulo;
+    }
+
+    public void setUpdateTitulo(String updateTitulo) {
+        this.updateTitulo = updateTitulo;
+    }
+
+    public String getUpdateDescripcion() {
+        return updateDescripcion;
+    }
+
+    public void setUpdateDescripcion(String updateDescripcion) {
+        this.updateDescripcion = updateDescripcion;
+    }
+
+    public List<String> getUpdateEtiquetas() {
+        return updateEtiquetas;
+    }
+
+    public void setUpdateEtiquetas(List<String> updateEtiquetas) {
+        this.updateEtiquetas = updateEtiquetas;
+    }
+
+    public List<String> getUpdateDestinatario() {
+        return updateDestinatario;
+    }
+
+    public void setUpdateDestinatario(List<String> updateDestinatario) {
+        this.updateDestinatario = updateDestinatario;
+    }
+
+    public String getUpdateFechaInicio() {
+        return updateFechaInicio;
+    }
+
+    public void setUpdateFechaInicio(String updateFechaInicio) {
+        this.updateFechaInicio = updateFechaInicio;
+    }
+
+    public String getUpdateFechaFin() {
+        return updateFechaFin;
+    }
+
+    public void setUpdateFechaFin(String updateFechaFin) {
+        this.updateFechaFin = updateFechaFin;
+    }
+
+    public String getUpdateHorario() {
+        return updateHorario;
+    }
+
+    public void setUpdateHorario(String updateHorario) {
+        this.updateHorario = updateHorario;
+    }
+
+    public String getUpdatePrecio() {
+        return updatePrecio;
+    }
+
+    public void setUpdatePrecio(String updatePrecio) {
+        this.updatePrecio = updatePrecio;
+    }
+
+    public String getUpdateDestacado() {
+        return updateDestacado;
+    }
+
+    public void setUpdateDestacado(String updateDestacado) {
+        this.updateDestacado = updateDestacado;
+    }
+
+    public String getUpdateLocalidad() {
+        return updateLocalidad;
+    }
+
+    public void setUpdateLocalidad(String updateLocalidad) {
+        this.updateLocalidad = updateLocalidad;
+    }
+    
     public String getEventId() {
         return eventId;
     }
@@ -415,6 +506,11 @@ public class EventoBean implements Serializable {
          */
     }
 
+    public void onload2() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        this.setEventId(hsr.getParameter("edit"));      
+    }
+    
     public void tag_onLoad() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setTag(hsr.getParameter("tag"));
@@ -690,9 +786,35 @@ public class EventoBean implements Serializable {
         Redirect.redirectToIndex();
     }
 
-    public void updateEvento() {
+    public void updateEvento() throws ParseException{
         Evento e = business.getEventById(eventId);
-        business.updateEvent(e);
+        System.out.println("existo?");
+        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+        Date endDate = df.parse(updateFechaFin);
+        Date startDate = df.parse(updateFechaInicio);
+        e.setTitulo(updateTitulo);
+        e.setDescripcion(updateDescripcion);
+        
+        List<Destinatario> s = new ArrayList<>();
+        for (String str : updateDestinatario) {
+            s.add(business.getDestinatarioByDescripcion(str));
+        }
+
+        e.setDestinatario(s);
+        List<Etiqueta> etq = new ArrayList<>();
+        for (String etiqueta : updateEtiquetas) {
+            etq.add(business.getEtiquetaByName(etiqueta));
+        }
+ 
+        e.setEtiqueta(etq);
+        e.setFecha_inicio(startDate);
+        e.setFecha_fin(endDate);
+        e.setHorario(updateHorario);
+        e.setPrecio(updatePrecio);
+        e.setLocalidad(business.getLocalidadByName(updateLocalidad));
+        System.out.println("hemos entrado?");
+        System.out.println("Po");
+        business.updateEvent2(e);
         Redirect.redirectToEventInfo(e.getId_evento());
     }
     
