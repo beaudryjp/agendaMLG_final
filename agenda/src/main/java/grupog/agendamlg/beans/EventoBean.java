@@ -114,7 +114,7 @@ public class EventoBean implements Serializable {
     public void init() {
         searchDestinatario = "Todos";
         searchEtiqueta = "Todos";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-YYY");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-YYYY");
         LocalDate localDate = LocalDate.now();
         event_new_fecha_inicio = dtf.format(localDate);
         event_new_fecha_fin = dtf.format(localDate.plusDays(1));
@@ -162,7 +162,7 @@ public class EventoBean implements Serializable {
 //        for (Evento x : eventoSearch) {
 //            System.out.println(x.getTitulo());
 //        }
-        
+
         Redirect.redirect2("events_search");
     }
 
@@ -381,7 +381,7 @@ public class EventoBean implements Serializable {
     public void setUpdateLocalidad(String updateLocalidad) {
         this.updateLocalidad = updateLocalidad;
     }
-    
+
     public String getEventId() {
         return eventId;
     }
@@ -507,34 +507,54 @@ public class EventoBean implements Serializable {
     }
 
     public void onload2() {
+
+         System.out.println("Estoy en onload2");
+         
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        this.setEventId(hsr.getParameter("edit"));      
+        this.setEventId(hsr.getParameter("id"));
+        Evento e = business.getEventById(eventId);
+        updateTitulo = e.getTitulo();
+        updatePrecio = e.getPrecio();
+        updateDescripcion = e.getDescripcion();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+        updateFechaInicio = df.format(e.getFecha_inicio());
+        updateFechaFin = df.format(e.getFecha_fin());
+
+        updateHorario = e.getHorario();
+
+        System.out.println("Imprimo " + eventId + " " + hsr.getParameter("id"));
     }
-    
+
     public void tag_onLoad() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setTag(hsr.getParameter("tag"));
     }
 
-    public void createEvent() throws java.text.ParseException {
+    public void createEvent() {
         Evento e = new Evento();
-        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
-        Date endDate = df.parse(event_new_fecha_fin);
-        Date startDate = df.parse(event_new_fecha_inicio);
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+            Date endDate = df.parse(event_new_fecha_fin);
+            Date startDate = df.parse(event_new_fecha_inicio);
+            e.setFecha_inicio(startDate);
+            e.setFecha_fin(endDate);
+        } catch (ParseException excep) {
+
+        }
         e.setTitulo(event_new_titulo);
         e.setDescripcion(event_new_descripcion);
-        e.setFecha_inicio(startDate);
-        e.setFecha_fin(endDate);
+
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
         e.setLatitud(Double.parseDouble(event_new_latitud));
         e.setLongitud(Double.parseDouble(event_new_longitud));
-        
+
         System.out.println(event_new_latitud);
         System.out.println(event_new_longitud);
         System.out.println(e.getLatitud());
         System.out.println(e.getLongitud());
-        
+
         e.setDestacado(event_new_destacado);
 
         List<Destinatario> s = new ArrayList<>();
@@ -554,11 +574,11 @@ public class EventoBean implements Serializable {
         e.setImagen_url("default.png");
         e.setImagen_titulo(event_new_titulo.toLowerCase());
         e.setValoracion(event_new_rating);
-        
-        if(current_user.isUserRegistered()){
+
+        if (current_user.isUserRegistered()) {
             e.setVisible(false);
-            
-        }else{
+
+        } else {
             e.setVisible(true);
             e.setDestacado(event_new_destacado);
         }
@@ -576,10 +596,7 @@ public class EventoBean implements Serializable {
             business.createTask(t);
         }
         Redirect.redirectToEventInfo(e.getId_evento());
-        /*
-        System.out.println(e.getId_evento());
-        Redirect.redirectTo("/event/all");
-         */
+
     }
 
     public void changeImage(FileUploadEvent event) {
@@ -607,7 +624,7 @@ public class EventoBean implements Serializable {
                         Files.copy(input, nfile, StandardCopyOption.REPLACE_EXISTING);
 
                     } catch (IOException ex) {
-                        
+
                     }
                 }
 
@@ -753,13 +770,13 @@ public class EventoBean implements Serializable {
 
     public void onPointSelect(PointSelectEvent event) {
         LatLng latlng = event.getLatLng();
-        System.out.println("onclick lati "+event_new_latitud);
+        System.out.println("onclick lati " + event_new_latitud);
         System.out.println("onclick longi " + event_new_longitud);
         event_new_latitud = String.valueOf(latlng.getLat());
         event_new_longitud = String.valueOf(latlng.getLng());
 
-        System.out.println("onclick lati 2 " +event_new_latitud);
-        System.out.println("onclick longi 2 " +event_new_longitud);
+        System.out.println("onclick lati 2 " + event_new_latitud);
+        System.out.println("onclick longi 2 " + event_new_longitud);
     }
 
     public StreamedContent getImage() throws IOException {
@@ -786,42 +803,44 @@ public class EventoBean implements Serializable {
         Redirect.redirectToIndex();
     }
 
-    public void updateEvento() throws ParseException{
+    public void updateEvento() {
+
+        System.out.println("Deberia :" +updateTitulo);
+        System.out.println("Deberia :" +updateDescripcion);
+        
         Evento e = business.getEventById(eventId);
         System.out.println("existo?");
-        SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
-        Date endDate = df.parse(updateFechaFin);
-        Date startDate = df.parse(updateFechaInicio);
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+            Date endDate = df.parse(updateFechaFin);
+            Date startDate = df.parse(updateFechaInicio);
+            e.setFecha_inicio(startDate);
+            e.setFecha_fin(endDate);
+        } catch (ParseException excep) {
+            
+        }
         e.setTitulo(updateTitulo);
         e.setDescripcion(updateDescripcion);
-        
-        List<Destinatario> s = new ArrayList<>();
-        for (String str : updateDestinatario) {
-            s.add(business.getDestinatarioByDescripcion(str));
-        }
 
-        e.setDestinatario(s);
-        List<Etiqueta> etq = new ArrayList<>();
-        for (String etiqueta : updateEtiquetas) {
-            etq.add(business.getEtiquetaByName(etiqueta));
-        }
- 
-        e.setEtiqueta(etq);
-        e.setFecha_inicio(startDate);
-        e.setFecha_fin(endDate);
         e.setHorario(updateHorario);
         e.setPrecio(updatePrecio);
         e.setLocalidad(business.getLocalidadByName(updateLocalidad));
         System.out.println("hemos entrado?");
         System.out.println("Po");
         business.updateEvent2(e);
+        System.out.println(e.getId_evento());
         Redirect.redirectToEventInfo(e.getId_evento());
     }
-    
-    public void destacarEvento(){
+
+    public void destacarEvento() {
         Evento e = business.getEventById(eventId);
         e.setDestacado(!e.isDestacado());
         business.highlightEvent(e);
         Redirect.redirectToEventInfo(e.getId_evento());
+    }
+    
+    public void prueba(){
+        System.out.println("os vacilo");
+        
     }
 }
