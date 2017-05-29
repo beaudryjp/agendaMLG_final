@@ -29,7 +29,7 @@ public class Sendmail {
     public final static String username = "agendamlgsii@zoho.eu";
     private static final String password = "Q_Z!v#u@SrlO";
 
-    public static void mail(String destino, String not, String msg) throws AddressException {
+    public static void mail(String reciever, String subject, String msg) throws AddressException {
 
         Properties props = new Properties();
         // GMAIL
@@ -68,8 +68,8 @@ public class Sendmail {
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destino));
-            message.setSubject(not);
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(reciever));
+            message.setSubject(subject);
             
             message.setContent(msg, "text/html");
             message.setHeader("Content-Type", "text/html; charset=charset=iso-8859-1");
@@ -84,7 +84,7 @@ public class Sendmail {
         }
     }
     
-    public static void mailThread(final String d, final String s, final String m){
+    public static void mailThread(final String reciever, final String subject, final String message){
         try {
             Thread.sleep(3000);
         } catch (InterruptedException ex) {
@@ -95,7 +95,7 @@ public class Sendmail {
             public void run() {
 //                System.out.println(m);
                 try {
-                    Sendmail.mail(d, s, m);
+                    Sendmail.mail(reciever, subject, message);
                 } catch (AddressException ex) {
                     Logger.getLogger(Sendmail.class.getName()).log(Level.SEVERE, null, ex);
                 }

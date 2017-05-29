@@ -2,6 +2,8 @@ $(document).ready(function () {
     $(".searchBox").hide();
     $("#tab2-main").hide();
     $("#search_form_calendar").hide();
+    $("#followEvents").hide();
+    $("#likeEvents").hide();
     //$("#form_contactUs").validate();
 
     //Click event to scroll to top
@@ -39,5 +41,23 @@ $(document).ready(function () {
         $("#search_form_options").show('slow');
         $("#search_form_calendar").hide('slow');
         $("#tab1-main").show('slow');
+    });
+
+    $("#h2assist").click(function () {
+        $("#likeEvents").fadeOut();
+        $("#followEvents").fadeOut();
+        $("#assistEvents").fadeIn();
+    });
+
+    $("#h2like").click(function () {
+        $("#followEvents").fadeOut();
+        $("#assistEvents").fadeOut();
+        $("#likeEvents").fadeIn();
+    });
+
+    $("#h2follow").click(function () {
+        $("#likeEvents").fadeOut();
+        $("#assistEvents").fadeOut();
+        $("#followEvents").fadeIn();
     });
 });

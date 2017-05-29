@@ -804,7 +804,19 @@ public class EventoBean implements Serializable {
 
     public void deleteEvento() {
         System.out.println("deleteEvento(): entered");
-        business.deleteEvent(business.getEventById(eventId));
+        Evento e = business.getEventById(eventId);
+        Usuario u = current_user.getUsuario();
+        final StringBuilder m = new StringBuilder();
+        m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append(")</span></h2><p>")
+                .append("Se ha borrado el evento ")
+                .append(changeHtmlChars(e.getTitulo()))
+                .append("<b>\"</p><p style='font-size: 12px'>diariosur</p>");
+        business.deleteEvent(e);
+        if(u.isEmail_notifier()){
+            Sendmail.mailThread(u.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+        }
         Redirect.redirectToIndex();
     }
 

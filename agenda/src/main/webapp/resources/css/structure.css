@@ -536,3 +536,21 @@ header>.login-headerLogo {
 h2.eventsImportant{
     margin-top: 20px;
 }
+
+h2.profileEvent{
+    padding: 15px; 
+    -moz-box-shadow: inset 0 0 7px #363333;
+    -webkit-box-shadow: inset 0 0 7px #363333;
+    box-shadow: inset 0 0 7px #363333;
+    background-color:  #edeeef;
+}
+
+.panelProfile{
+    background: transparent; 
+    border: 0px; 
+}
+
+.tableProfile{
+    background-color: #fff; 
+    padding: 20px;
+}

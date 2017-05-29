@@ -12,7 +12,7 @@
             <p class="lead"><h1>eventos</h1></p>
             <p:dataTable value="#{eventoBean.eventoSearch}" var="evento" id="searchEvents" class="eventLists">
                 <ui:insert name="search-sidebar">
-                 <ui:include src = "/WEB-INF/templates/event.xhtml" />
+                    <ui:include src = "/WEB-INF/templates/event.xhtml" />
                 </ui:insert>
             </p:dataTable>
         </ui:define>

@@ -1583,8 +1583,8 @@ insert into evento(titulo, descripcion, fecha_inicio, fecha_fin, horario, precio
 
 insert into evento(titulo, descripcion, fecha_inicio, fecha_fin, horario, precio, latitud, longitud, imagen_url, imagen_titulo, destacado, localidad_id_localidad, propietario, valoracion, visible) values("Robotix", "ROBOTIX es una actividad innovadora para desarrollar las habilidades y competencias del siglo XXI, ""utilizando como plataforma la robótica de LEGO Education. Con más de 10 años de experiencia, LEGO Education ROBOTIX ""ofrece los mejores recursos educativos para crear experiencias de aprendizaje únicas con las que nuestros jóvenes ""desarrollarán las habilidades y competencias del S.XXI.","2017-06-20", "2017-06-20", "10:00 - 13:00", "gratis", 36.746682, -3.8804524,"robotix2.png", "robotix2",0, 228, 1, 5, 1);
 
-insert into evento(id_evento, titulo, descripcion, fecha_inicio, horario, precio, latitud, longitud, destacado, localidad_id_localidad, propietario, visible) values (500, "system","none","01-01-0001", "0", "inconmensurable", 0.0,0.0, 0, 221, 1, 0);
-	
+insert into evento(id_evento, titulo, descripcion, fecha_inicio, horario, precio, latitud, longitud, destacado, localidad_id_localidad, propietario, visible, imagen_url, imagen_titulo) values (500, "system","none","01-01-0001", "0", "inconmensurable", 0.0,0.0, 0, 221, 1, 0, "", "");
+
 insert into Evento_Destinatario(evento_id_evento, destinatario_id_destinatario) values(1, 4);
 
 insert into Evento_Destinatario(evento_id_evento, destinatario_id_destinatario) values(1, 5);
