@@ -75,5 +75,6 @@ public interface BusinessLocal {
     public void highlightEvent(Evento e);
 
     public Evento updateEvent2(Evento e);
+    public List<Usuario> getUsuariosByEvento(long evento);
 
 }

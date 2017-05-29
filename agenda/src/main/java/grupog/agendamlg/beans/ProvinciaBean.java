@@ -63,23 +63,20 @@ public class ProvinciaBean implements Serializable {
      */
 
     public void onCambioProvincia() {
-//        System.out.println("Provincia: " + provincia);
-//        System.out.println("Localidad: " + localidad);
-//        System.out.println();
-        localidad = provincia;
+
+//        localidad = provincia;
         if (provincia != null && !provincia.equals("")) {
-            //localidades = provincias.get(provincias.indexOf(provincia)).getLocalidades();
+           
             localidades = provinciaGetLocalidades(provincia);
-            // System.out.println("Lista llena de Localidades");
+            
         } else {
             localidades = new ArrayList<>();
-            // System.out.println("Lista Vacia de Localidades");
+            
         }
     }
 
     private List<Localidad> provinciaGetLocalidades(String provincia) {
-//        System.out.println("Provincia: " + provincia);
-//        System.out.println();
+
         localidades = business.getTowns(provincia);
 
         Collections.sort(localidades, new Comparator<Localidad>() {

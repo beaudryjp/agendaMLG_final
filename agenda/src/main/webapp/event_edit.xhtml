@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
 
       <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
@@ -65,7 +66,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText id="eventFechaIni" value="#{eventoBean.updateFechaInicio}">
-                                        <f:convertDateTime pattern="dd-mm-yyyy" />
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
                                     </p:inputText>
                                 </p:column>
                             </p:row>
@@ -76,7 +77,7 @@
                                 </p:column>
                                 <p:column>
                                     <p:inputText id="eventFechaFin" value="#{eventoBean.updateFechaFin}">
-                                        <f:convertDateTime pattern="dd-mm-yyyy" />
+                                        <f:convertDateTime pattern="dd-MM-yyyy" />
                                     </p:inputText>
 
                                 </p:column>
@@ -99,33 +100,24 @@
                             </p:row>
                             <p:row>
                                 <p:column>
-                                    Provincia
-                                </p:column>
-                                <p:column>
-                                    <h:selectOneMenu id="provincia" class="form-control">
-                                        <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
-                                        <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
-                                    </h:selectOneMenu>
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column>
                                     Localidad
                                 </p:column>
                                 <p:column>
                                     <h:selectOneMenu id="localidad"  class="form-control" value="#{eventoBean.updateLocalidad}" >
-                                        <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
+                                        <f:selectItems value="#{eventoBean.lista_localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                     </h:selectOneMenu>
                                 </p:column>
                             </p:row>
                             <p:row>
                                 <p:column colspan="2">
-                                    <h:link outcome="index" value="Cancelar" id="cancelSumit" styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
+                                    <pretty:link mappingId="infoEvent" class="cancelSumit btn btn-default btn-lg editButtons">
+                                            Cancelar
+                                            <f:param value="#{eventoBean.eventId}" />
+                                    </pretty:link>
+                                    
                                     <h:commandLink action="#{eventoBean.updateEvento()}" value="Editar" id="createSubmit"   styleClass="cancelSumit btn btn-default btn-lg editButtons"/>          
                                 </p:column>
                             </p:row>
-
-
                         </h:form>
                     </p:panelGrid>
                 </div>

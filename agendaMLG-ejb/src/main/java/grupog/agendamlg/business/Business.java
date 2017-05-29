@@ -189,50 +189,33 @@ public class Business implements BusinessLocal {
     @Override
     public Evento updateEvent2(Evento e) {
 
-        //Editando evento
         Evento original = em.find(Evento.class, e.getId_evento());
 
-        if (!original.equals(e)) {
-            if (!original.getEtiqueta().equals(e.getEtiqueta())) {
                 List<Etiqueta> eti = original.getEtiqueta();
                 for (Etiqueta et : eti) {
                     et.getEvento().remove(original);
+                    
                 }
+                em.merge(original);
                 original.setEtiqueta(e.getEtiqueta());
-            }
-            if (!original.getDestinatario().equals(e.getDestinatario())) {
+           
+            
                 List<Destinatario> di = original.getDestinatario();
                 for (Destinatario d : di) {
                     d.getEvento().remove(original);
+                   
                 }
+                em.merge(original);
                 original.setDestinatario(e.getDestinatario());
-            }
-
+ 
             e.setAsiste(original.getAsiste());
             e.setMegusta(original.getMegusta());
             e.setSigue(original.getSigue());
             e.setComentarios(original.getComentarios());
             e.setNotificaciones(original.getNotificaciones());
-
             em.merge(e);
             em.flush();
-        }
-
-        //Borrando evento
-//        System.out.println("existo?2");
-//        Evento original = getEventById(e.getId_evento().toString());
-//        List<Comentario> coOriginal = original.getComentarios();
-//        List<Usuario> megustaOriginal = original.getMegusta();
-//        List<Usuario> asisteOriginal = original.getAsiste();
-//        List<Usuario> sigueOriginal = original.getSigue();
-//        List<Notificacion> notiOriginal = original.getNotificaciones();
-//        deleteEvent(getEventById(e.getId_evento().toString()));
-//        e.setComentarios(coOriginal);
-//        e.setMegusta(megustaOriginal);
-//        e.setAsiste(asisteOriginal);
-//        e.setSigue(sigueOriginal);
-//        e.setNotificaciones(notiOriginal);
-//        createEvent(e);
+            
         return e;
     }
 
@@ -521,49 +504,6 @@ public class Business implements BusinessLocal {
             deleteComentario(c.getId_comentario());
         }
 
-        Evento system = getEventById("500");
-
-        List<Usuario> enviados = new ArrayList<>();
-        List<Usuario> usersList01 = e1.getAsiste();
-        for (Usuario u : usersList01) {
-            if (!enviados.contains(u)) {
-                Notificacion notiplana = new Notificacion();
-                notiplana.setEvento(system);
-                notiplana.setFecha_hora(LocalDateTime.now());
-                notiplana.setMensaje("El evento " + e1.getTitulo() + " ha sido suspendido");
-                notiplana.setUsuario(u);
-                setNotifications(notiplana);
-                enviados.add(u);
-            }
-
-        }
-
-        List<Usuario> usersList02 = e1.getMegusta();
-        for (Usuario u : usersList02) {
-            if (!enviados.contains(u)) {
-                Notificacion notiplana = new Notificacion();
-                notiplana.setEvento(system);
-                notiplana.setFecha_hora(LocalDateTime.now());
-                notiplana.setMensaje("El evento " + e1.getTitulo() + " ha sido suspendido");
-                notiplana.setUsuario(u);
-                setNotifications(notiplana);
-                enviados.add(u);
-            }
-        }
-
-        List<Usuario> usersList03 = e1.getSigue();
-        for (Usuario u : usersList03) {
-            if (!enviados.contains(u)) {
-                Notificacion notiplana = new Notificacion();
-                notiplana.setEvento(system);
-                notiplana.setFecha_hora(LocalDateTime.now());
-                notiplana.setMensaje("El evento " + e1.getTitulo() + " ha sido suspendido");
-                notiplana.setUsuario(u);
-                setNotifications(notiplana);
-                enviados.add(u);
-            }
-        }
-
         List<Usuario> usersList = e1.getAsiste();
         for (Usuario u : usersList) {
             u.getAsiste().remove(e1);
@@ -714,6 +654,35 @@ public class Business implements BusinessLocal {
     public void highlightEvent(Evento e
     ) {
         em.merge(e);
+    }
+
+    @Override
+    public List<Usuario> getUsuariosByEvento(long evento) {
+        
+        Evento e = em.find(Evento.class, evento);
+         List<Usuario> enviados = new ArrayList<>();
+        
+        for (Usuario usi : e.getAsiste()) {
+            if (!enviados.contains(usi)) {
+                enviados.add(usi);
+            }
+
+        }
+      
+        for (Usuario usi : e.getMegusta()) {
+            if (!enviados.contains(usi)) {
+                enviados.add(usi);
+            }
+
+        }
+        
+        for (Usuario usi : e.getSigue()) {
+            if (!enviados.contains(usi)) {
+                enviados.add(usi);
+            }
+
+        }
+        return enviados;
     }
 
 }
