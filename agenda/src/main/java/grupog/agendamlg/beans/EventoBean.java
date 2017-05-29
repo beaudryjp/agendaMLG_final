@@ -103,8 +103,8 @@ public class EventoBean implements Serializable {
     private String updateDescripcion;
     private List<String> updateEtiquetas;
     private List<String> updateDestinatario;
-    private String updateFechaInicio;
-    private String updateFechaFin;
+    private Date updateFechaInicio;
+    private Date updateFechaFin;
     private String updateHorario;
     private String updatePrecio;
     private String updateDestacado;
@@ -334,19 +334,19 @@ public class EventoBean implements Serializable {
         this.updateDestinatario = updateDestinatario;
     }
 
-    public String getUpdateFechaInicio() {
+    public Date getUpdateFechaInicio() {
         return updateFechaInicio;
     }
 
-    public void setUpdateFechaInicio(String updateFechaInicio) {
+    public void setUpdateFechaInicio(Date updateFechaInicio) {
         this.updateFechaInicio = updateFechaInicio;
     }
 
-    public String getUpdateFechaFin() {
+    public Date getUpdateFechaFin() {
         return updateFechaFin;
     }
 
-    public void setUpdateFechaFin(String updateFechaFin) {
+    public void setUpdateFechaFin(Date updateFechaFin) {
         this.updateFechaFin = updateFechaFin;
     }
 
@@ -508,8 +508,8 @@ public class EventoBean implements Serializable {
 
     public void onload2() {
 
-         System.out.println("Estoy en onload2");
-         
+        System.out.println("Estoy en onload2");
+
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
         Evento e = business.getEventById(eventId);
@@ -518,12 +518,17 @@ public class EventoBean implements Serializable {
         updateDescripcion = e.getDescripcion();
 
         SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
-        updateFechaInicio = df.format(e.getFecha_inicio());
-        updateFechaFin = df.format(e.getFecha_fin());
+        System.out.println("onload2() fecha inicio " + e.getFecha_inicio());
+        System.out.println("onload2() fecha fin" + e.getFecha_fin());
+        updateFechaInicio = e.getFecha_inicio();
+        updateFechaFin = e.getFecha_fin();
+        System.out.println("onload2() new fecha inicio " + updateFechaInicio);
+        System.out.println("onload2() new fecha fin" + updateFechaFin);
 
         updateHorario = e.getHorario();
 
         System.out.println("Imprimo " + eventId + " " + hsr.getParameter("id"));
+
     }
 
     public void tag_onLoad() {
@@ -805,20 +810,14 @@ public class EventoBean implements Serializable {
 
     public void updateEvento() {
 
-        System.out.println("Deberia :" +updateTitulo);
-        System.out.println("Deberia :" +updateDescripcion);
-        
+        System.out.println("Deberia :" + updateTitulo);
+        System.out.println("Deberia :" + updateDescripcion);
+
         Evento e = business.getEventById(eventId);
         System.out.println("existo?");
-        try {
-            SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
-            Date endDate = df.parse(updateFechaFin);
-            Date startDate = df.parse(updateFechaInicio);
-            e.setFecha_inicio(startDate);
-            e.setFecha_fin(endDate);
-        } catch (ParseException excep) {
-            
-        }
+        e.setFecha_inicio(updateFechaInicio);
+        e.setFecha_fin(updateFechaFin);
+
         e.setTitulo(updateTitulo);
         e.setDescripcion(updateDescripcion);
 
@@ -838,9 +837,8 @@ public class EventoBean implements Serializable {
         business.highlightEvent(e);
         Redirect.redirectToEventInfo(e.getId_evento());
     }
-    
-    public void prueba(){
+
+    public void prueba() {
         System.out.println("os vacilo");
-        
     }
 }
