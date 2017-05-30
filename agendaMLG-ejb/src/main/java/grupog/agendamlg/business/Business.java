@@ -579,15 +579,17 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public void createTask(Tarea t
-    ) {
+    public void createTask(Tarea t ) {
         em.persist(t);
     }
 
     @Override
-    public void deleteTask(long t
-    ) {
+    public void deleteTask(long t ) {
         Tarea tari = em.find(Tarea.class, t);
+        List<Usuario> users = tari.getRedactores();
+        for(Usuario x : users){
+            x.getTareas().remove(tari);
+        }
         em.remove(em.merge(tari));
     }
 

@@ -267,7 +267,7 @@ public class Usuario implements Serializable, Comparable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "id_usuario=" + id_usuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", pseudonimo=" + pseudonimo + ", email=" + email + ", email_notifier=" + email_notifier + ", password_hash=" + password_hash + ", sal=" + sal + ", rol=" + rol + ", comentarios=" + comentarios + ", notificaciones=" + notificaciones + ", megusta=" + megusta + ", sigue=" + sigue + ", asiste=" + asiste + '}';
+        return "Usuario{" + "id_usuario=" + id_usuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", pseudonimo=" + pseudonimo + ", email=" + email + ", email_notifier=" + email_notifier + ", password_hash=" + password_hash + ", sal=" + sal + ", rol=" + rol + '}';
     }
 
     

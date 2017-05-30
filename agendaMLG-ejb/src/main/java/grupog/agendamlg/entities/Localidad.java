@@ -75,8 +75,7 @@ public class Localidad implements Serializable, Comparable<Localidad> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id_localidad);
+        int hash = 3;
         hash = 59 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
@@ -96,15 +95,13 @@ public class Localidad implements Serializable, Comparable<Localidad> {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.id_localidad, other.id_localidad)) {
-            return false;
-        }
         return true;
     }
+    
 
     @Override
     public String toString() {
-        return "Localidad{" + "id_localidad=" + id_localidad + ", nombre=" + nombre + ", provincia=" + provincia + ", evento=" + evento + '}';
+        return "Localidad{" + "id_localidad=" + id_localidad + ", nombre=" + nombre + '}';
     }
 
     @Override

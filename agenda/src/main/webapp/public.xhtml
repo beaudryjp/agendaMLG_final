@@ -18,24 +18,22 @@
                                 <p:column colspan="2">
                                     <div id="event-goBack">
                                         <br/>
-                                        <h:link value="Volver" outcome="index" class="loginLink icon fa-chevron-left fa-2x"/>
+                                        <h:link value="Volver" outcome="index" class="linkBack icon fa-chevron-left fa-2x floatRight"/>
                                     </div>
                                     <h2 class="eventTitle">Crear un nuevo público</h2>
                                 </p:column>
                             </p:row>
                             <p:row>
+                                <p:column></p:column>
                                 <p:column>
-                                    Nombre
-                                </p:column>
-                                <p:column colspan="2">
                                     <p:inputText id="publicName" value="#{destinatarioBean.destinatarionew}" placeholder="Nombre" />
                                 </p:column>
                             </p:row>
 
                             <p:row>
                                 <p:column colspan="2">
-                                    <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
-                                    <p:commandButton action="#{destinatarioBean.createAudience()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons"/>
+                                    <h:link outcome="index" value="Cancelar" id="cancelSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons"/>
+                                    <p:commandLink action="#{destinatarioBean.createAudience()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -46,9 +44,9 @@
                             </p:row>
                             <p:row>
                                 <p:column>
-                                    <p:selectOneMenu id="search_public" class="form-control" value = "#{destinatarioBean.destinatario}">
+                                    <h:selectOneMenu id="search_public" class="form-control" value = "#{destinatarioBean.destinatario}">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
-                                        </p:selectOneMenu>
+                                        </h:selectOneMenu>
                                     
                                 </p:column>  
                                 <p:column colspan="2">
@@ -58,7 +56,7 @@
                             </p:row>
                             <p:row>
                                     <p:column colspan="2">
-                                   <p:commandButton action="#{destinatarioBean.updateAudience()}" value="Modificar" id="updateSubmit"  styleClass="updateSubmit btn btn-default btn-lg editButtons"/>
+                                   <p:commandLink action="#{destinatarioBean.updateAudience()}" value="Modificar" id="updateSubmit"  styleClass="updateSubmit btn btn-default btn-lg editButtons"/>
                                     </p:column>
                                 </p:row>
                             <p:row>
@@ -67,16 +65,16 @@
                                 </p:column>
                             </p:row>
                             <p:row>
-                               
+                                <p:column></p:column>
                                 <p:column>
-                                    <p:selectManyMenu id="search_public2" class="form-control" value="#{destinatarioBean.destinatariodel}" showCheckbox="true">
+                                    <p:selectManyMenu style="width: 100% !important; height: 100%" id="search_public2" class="form-control" value="#{destinatarioBean.destinatariodel}"  showCheckbox="true">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
                                     </p:selectManyMenu>
             
                                 </p:column>  
                                 <p:row>
                                     <p:column colspan="2">
-                                        <p:commandButton action="#{destinatarioBean.deleteAudience()}" value="Borrar" id="deleteSubmit"  styleClass="deleteSubmit btn btn-default btn-lg editButtons"/>
+                                        <p:commandLink action="#{destinatarioBean.deleteAudience()}" value="Borrar" id="deleteSubmit"  styleClass="deleteSubmit btn btn-default btn-lg editButtons"/>
                                     </p:column>
                                 </p:row>
                             </p:row>

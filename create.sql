@@ -40,7 +40,7 @@ create table Evento(
 	longitud double not null,
 	precio varchar(255) not null,
 	titulo varchar(255) not null,
-	valoracion int not null,
+	valoracion int null,
 	visible bit not null,
 	localidad_id_localidad bigint null,
 	propietario bigint null);
@@ -129,24 +129,13 @@ create table Tarea(
 	id_tarea bigint auto_increment
 		primary key,
 	fecha_hora datetime not null,
+	id_evento bigint null,
 	mensaje varchar(255) not null,
 	nombre varchar(255) not null,
 	creador_peticion_id_usuario bigint null);
 
 create index FKohs1nkl0d2n8co2qga7urk4bu
 	on Tarea (creador_peticion_id_usuario);
-
-create table Tarea_Usuario(
-	Tarea_id_tarea bigint not null,
-	redactores_id_usuario bigint not null,
-	constraint FKkohrninbwknkgftrc9npkp0qc
-		foreign key (Tarea_id_tarea) references agenda.Tarea (id_tarea));
-
-create index FKkohrninbwknkgftrc9npkp0qc
-	on Tarea_Usuario (Tarea_id_tarea);
-
-create index FKlioasj0rq5l96j3nn6kvxjl69
-	on Tarea_Usuario (redactores_id_usuario);
 
 create table Usuario(
 	id_usuario bigint auto_increment
@@ -178,9 +167,19 @@ alter table Tarea
 	add constraint FKohs1nkl0d2n8co2qga7urk4bu
 		foreign key (creador_peticion_id_usuario) references agenda.Usuario (id_usuario);
 
-alter table Tarea_Usuario
-	add constraint FKlioasj0rq5l96j3nn6kvxjl69
-		foreign key (redactores_id_usuario) references agenda.Usuario (id_usuario);
+create table Usuario_Tarea(
+	redactores_id_usuario bigint not null,
+	tareas_id_tarea bigint not null,
+	constraint FKh4g3703hkoiqwpcr7f7ln26pl
+		foreign key (redactores_id_usuario) references agenda.Usuario (id_usuario),
+	constraint FK7k6sygmrvjg0l5smp57afeq1u
+		foreign key (tareas_id_tarea) references agenda.Tarea (id_tarea));
+
+create index FK7k6sygmrvjg0l5smp57afeq1u
+	on Usuario_Tarea (tareas_id_tarea);
+
+create index FKh4g3703hkoiqwpcr7f7ln26pl
+	on Usuario_Tarea (redactores_id_usuario);
 
 create table jn_asiste_id(
 	id_usuario bigint not null,
@@ -223,17 +222,3 @@ create index FKb2vamopaeeuc2ifmrwhw7slhp
 
 create index FKs8kjpmi65fsicwu74lvpe5n83
 	on jn_sigue_id (id_evento);
-
-create table jn_tareas_id(
-	id_usuario bigint not null,
-	id_tarea bigint not null,
-	constraint FKnp7s4o36t5tm5jdinle87jowy
-		foreign key (id_usuario) references agenda.Usuario (id_usuario),
-	constraint FKlkwwot5xf63lsy9m1thrbt2pt
-		foreign key (id_tarea) references agenda.Tarea (id_tarea));
-
-create index FKlkwwot5xf63lsy9m1thrbt2pt
-	on jn_tareas_id (id_tarea);
-
-create index FKnp7s4o36t5tm5jdinle87jowy
-	on jn_tareas_id (id_usuario);

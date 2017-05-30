@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -65,9 +64,8 @@ public class Provincia implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.id_provincia);
-        hash = 71 * hash + Objects.hashCode(this.nombre);
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
@@ -86,15 +84,12 @@ public class Provincia implements Serializable {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.id_provincia, other.id_provincia)) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Provincia{" + "id_provincia=" + id_provincia + ", nombre=" + nombre + ", localidades=" + localidades + '}';
+        return "Provincia{" + "id_provincia=" + id_provincia + ", nombre=" + nombre +  '}';
     }
 
 }

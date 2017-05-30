@@ -97,7 +97,7 @@ public class Destinatario implements Serializable, Comparable<Destinatario> {
 
     @Override
     public String toString() {
-        return "Destinatario{" + "id_destinatario=" + id_destinatario + ", descripcion=" + descripcion + ", evento=" + evento + '}';
+        return "Destinatario{" + "id_destinatario=" + id_destinatario + ", descripcion=" + descripcion +  '}';
     }
 
     @Override

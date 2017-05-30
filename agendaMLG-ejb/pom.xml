@@ -72,11 +72,10 @@
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
                     <compilerArgs> 
-                        <arg>-verbose</arg> <!--Remove when we change to production-->
-                        <arg>-Xlint:unchecked</arg> <!--Remove when we change to production-->
                         <arg>-Xbootclasspath/p:${basedir}/target/classe‌​s/</arg>
                     </compilerArgs>
-                    <showDeprecation>true</showDeprecation>
+                    <showDeprecation>false</showDeprecation>
+                    <debug>false</debug>
                 </configuration>
             </plugin>
             <plugin>

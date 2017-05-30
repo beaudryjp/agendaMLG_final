@@ -107,7 +107,7 @@ public class Notificacion implements Serializable {
 
     @Override
     public String toString() {
-        return "Notificacion{" + "id_notificacion=" + id_notificacion + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", usuario=" + usuario + ", evento=" + evento + '}';
+        return "Notificacion{" + "id_notificacion=" + id_notificacion + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora +  '}';
     }
 
 }

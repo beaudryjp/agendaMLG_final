@@ -105,7 +105,7 @@ public class Comentario implements Serializable {
 
     @Override
     public String toString() {
-        return "Comentario{" + "id_comentario=" + id_comentario + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", evento=" + evento + ", usuario=" + usuario + '}';
+        return "Comentario{" + "id_comentario=" + id_comentario + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + '}';
     }
     
     

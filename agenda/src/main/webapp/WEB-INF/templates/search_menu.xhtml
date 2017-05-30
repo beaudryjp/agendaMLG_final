@@ -15,9 +15,9 @@
 
             <c:if test="#{ControlLog.isUserAdmin()}">
 
-                <h3 class="search-title createEventTitle"><h:link  outcome="tag" value="CREAR ETIQUETA" id="linkCreateTag"/></h3>
+                <h3 class="search-title createEventTitle"><h:link  outcome="tag" value="ETIQUETAS" id="linkCreateTag"/></h3>
 
-                <h3 class="search-title createEventTitle"><h:link  outcome="public" value="CREAR PÚBLICO" id="linkCreatePublic"/></h3>
+                <h3 class="search-title createEventTitle"><h:link  outcome="public" value="PÚBLICO" id="linkCreatePublic"/></h3>
             </c:if>
 
             <c:if test="#{ControlLog.isUserRegistered()}">
@@ -39,17 +39,17 @@
                                 </p:row>
                                 <p:row>
                                     <p:column>
-                                        <h:selectOneMenu id="provincia" class="form-control"  value="#{eventoBean.prov.provincia}" >
-                                            <p:ajax listener="#{eventoBean.prov.onCambioProvincia()}" update="localidad" />
+                                        <h:selectOneMenu id="provincia" class="form-control"  value="#{provinciaBean.provincia}" >
+                                            <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
                                             <!--<f:selectItem itemLabel="Provincia" itemValue="" noSelectionOption="true" />-->
-                                            <f:selectItems value="#{eventoBean.prov.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
+                                            <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
                                         </h:selectOneMenu>
                                     </p:column>
 
                                     <p:column>
-                                        <h:selectOneMenu id="localidad"  class="form-control" value="#{eventoBean.prov.localidad}" >
+                                        <h:selectOneMenu id="localidad"  class="form-control" value="#{provinciaBean.localidad}" >
                                             <!--<f:selectItem itemLabel="Localidad" itemValue="" noSelectionOption="true" />-->
-                                            <f:selectItems value="#{eventoBean.prov.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
+                                            <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                         </h:selectOneMenu>
                                     </p:column>
                                 </p:row>

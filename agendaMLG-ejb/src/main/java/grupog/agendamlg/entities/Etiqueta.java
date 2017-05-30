@@ -95,7 +95,7 @@ public class Etiqueta implements Serializable, Comparable<Etiqueta>  {
 
     @Override
     public String toString() {
-        return "Etiqueta{" + "id_etiqueta=" + id_etiqueta + ", nombre=" + nombre + ", evento=" + evento + '}';
+        return "Etiqueta{" + "id_etiqueta=" + id_etiqueta + ", nombre=" + nombre + '}';
     }
 
     @Override

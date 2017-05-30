@@ -64,7 +64,7 @@ public class ProvinciaBean implements Serializable {
 
     public void onCambioProvincia() {
 
-//        localidad = provincia;
+        localidad = provincia;
         if (provincia != null && !provincia.equals("")) {
            
             localidades = provinciaGetLocalidades(provincia);

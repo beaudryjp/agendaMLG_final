@@ -12,10 +12,10 @@
             <f:metadata>
                 <f:viewAction action="#{ControlLog.checkUserPrivileges()}" />
             </f:metadata>
+            <h:form id="evento">
+                <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
+                        <p:panelGrid id="eventCreate" class="eventCreate">
 
-            <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
-                    <p:panelGrid id="eventCreate" class="eventCreate">
-                        <h:form id="evento">
                             <p:messages id="errors" autoUpdate="true"/>
 
                             <p:row>
@@ -105,16 +105,6 @@
                                     <p:inputText id="precio" value="#{eventoBean.event_new_precio}"  placeholder="Precio"  required="true"/>
                                 </p:column>
                             </p:row>
-                           
-                            <p:row>
-                                <p:column>
-                                    Están son las coordenadas de su evento, introdúzcalas después del mapa
-                                </p:column>
-                                <p:column>
-                                    <p:inputText id="loquetuquieras" value="#{eventoBean.getEvent_new_latitud()}" readonly="true"/>
-                                    <p:inputText id="loquetuquieras2" value="#{eventoBean.getEvent_new_longitud()}" readonly="true" />     
-                                </p:column>
-                            </p:row>
                             <p:row>
                                 <p:column></p:column>
                                 <p:column>
@@ -122,16 +112,6 @@
                                         <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras"/>
                                         <p:ajax event="pointSelect" listener="#{eventoBean.onPointSelect}" update="loquetuquieras2"/>
                                     </p:gmap>
-
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column>
-                                    Coordenadas a rellenar
-                                </p:column>
-                                <p:column>
-                                    <p:inputText id='new_latitud' value="#{eventoBean.event_new_latitud}"  />
-                                    <p:inputText id='new_longitud' value="#{eventoBean.event_new_longitud}"  />     
 
                                 </p:column>
                             </p:row>
@@ -181,11 +161,14 @@
                                 </p:column>
                             </p:row>
 
-                        </h:form>
 
-                    </p:panelGrid>
+
+                        </p:panelGrid>
+                    </div>
                 </div>
-            </div>
+                <h:inputHidden id="loquetuquieras" value="#{eventoBean.event_new_latitud}" required="true"  requiredMessage="Seleccione la posición en el mapa"/>
+                <h:inputHidden id="loquetuquieras2" value="#{eventoBean.event_new_longitud}"/> 
+            </h:form>
             <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>
         </ui:define>
     </ui:composition>

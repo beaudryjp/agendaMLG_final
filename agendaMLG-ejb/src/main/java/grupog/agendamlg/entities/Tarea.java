@@ -137,7 +137,7 @@ public class Tarea implements Serializable {
 
     @Override
     public String toString() {
-        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", dador=" + redactores + ", beneficiario=" + creador_peticion + '}';
+        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + '}';
     }
     
     

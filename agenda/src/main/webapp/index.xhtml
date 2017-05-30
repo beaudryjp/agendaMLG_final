@@ -12,7 +12,7 @@
             </ui:insert>
             <c:choose>
                 <c:when test="#{!empty eventoBean.getEventos()}">
-                    <p class="lead"><h1>eventos proximos</h1></p>
+                    <p class="lead"><h1>Eventos proximos</h1></p>
                     <p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="eventsNext" styleClass="eventsNext">
                         <ui:insert name="search-sidebar">
                             <ui:include src = "/WEB-INF/templates/event.xhtml" />
@@ -27,7 +27,7 @@
                         </h5>
                     </p>
                     <c:if test="#{!empty eventoBean.eventosDestacados}">
-                        <p class="lead"><h1 class="eventsImportant">eventos destacados</h1></p>
+                        <p class="lead"><h1 class="eventsImportant">Eventos destacados</h1></p>
                         <p:dataTable value="#{eventoBean.eventosDestacados}" var="evento">
                             <ui:insert name="search-sidebar">
                                 <ui:include src = "/WEB-INF/templates/event.xhtml" />

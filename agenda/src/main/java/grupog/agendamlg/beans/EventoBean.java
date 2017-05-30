@@ -556,6 +556,8 @@ public class EventoBean implements Serializable {
 
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
+        System.out.println("createEvent() " + event_new_latitud);
+        System.out.println("createEvent() " + event_new_longitud);
         e.setLatitud(Double.parseDouble(event_new_latitud));
         e.setLongitud(Double.parseDouble(event_new_longitud));
 

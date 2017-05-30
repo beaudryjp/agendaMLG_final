@@ -1,7 +1,6 @@
 SET FOREIGN_KEY_CHECKS=0;
-TRUNCATE TABLE agenda.Tarea_Usuario;
+TRUNCATE TABLE agenda.Usuario_Tarea;
 TRUNCATE TABLE agenda.Notificacion;
-TRUNCATE TABLE agenda.jn_tareas_id;
 TRUNCATE TABLE agenda.jn_sigue_id;
 TRUNCATE TABLE agenda.jn_megusta_id;
 TRUNCATE TABLE agenda.jn_asiste_id;
