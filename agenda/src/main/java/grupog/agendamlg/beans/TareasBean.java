@@ -29,7 +29,7 @@ public class TareasBean implements Serializable {
     private ControlLog control;
 
     public List<Tarea> getPendiente() {
-        return business.getTasks(control.getUsuario());
+        return business.getTasks(control.getUsuario().getId_usuario());
     }
 
     public void setPendiente(List<Tarea> pendiente) {
@@ -42,8 +42,15 @@ public class TareasBean implements Serializable {
         newTask.setCreador_peticion(control.getUsuario());
         newTask.setNombre("Solicito validación");
         newTask.setMensaje(control.getUsuario().getPseudonimo()+" ha solicitado ser usuario");
-        newTask.setRedactores(business.getRedactores());
+        System.out.println("ajk");
         business.createTask(newTask);
+        for (Usuario u :business.getRedactores())
+            {
+                List<Tarea> l = business.getTasks(u.getId_usuario());
+                l.add(newTask);
+                u.setTareas(l);
+                business.updateUser(u);
+            }
         Redirect.redirectToProfile();
     }
     
@@ -60,7 +67,7 @@ public class TareasBean implements Serializable {
             usi.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
             business.updateUser(usi);
         }else{//Evento
-            Evento e = business.getEventById(t.getId_evento()+"");
+            Evento e = business.getEventById(t.getId_evento());
             e.setVisible(true);
             business.updateEvent(e);
         }
@@ -70,7 +77,7 @@ public class TareasBean implements Serializable {
     public void reject(Tarea t) {
         
         if(t.getId_evento()!= null){
-           business.deleteEvent(business.getEventById(String.valueOf(t.getId_evento()))); 
+           business.deleteEvent(t.getId_evento()); 
         }
         
         business.deleteTask(t.getId_tarea());

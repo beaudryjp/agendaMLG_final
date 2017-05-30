@@ -115,7 +115,7 @@ public class DestinatarioBean implements Serializable {
  
         for(String str : destinatariodel)
         {
-            business.deleteAudience(business.getDestinatarioByDescripcion(str));
+            business.deleteAudience(business.getDestinatarioByDescripcion(str).getId_destinatario());
  
         }
 

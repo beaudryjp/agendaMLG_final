@@ -86,41 +86,46 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Notificacion> getNotifications(Usuario u) {
-        TypedQuery<Notificacion> query = em.createNamedQuery("getNotifications", Notificacion.class)
-                .setParameter("id_usuario", u.getId_usuario());
-        //Query query = em.createNamedQuery("getNotifications").setParameter("id_usuario", u.getId_usuario());
-        return query.getResultList();
+    public List<Notificacion> getNotifications(long usuario) {
+        Usuario u = em.find(Usuario.class, usuario);
+        List<Notificacion> l = u.getNotificaciones();
+        boolean b = l.isEmpty();
+        return l;
     }
 
     @Override
-    public List<Tarea> getTasks(Usuario u) {
-
-        TypedQuery<Tarea> query = em.createNamedQuery("getTareas", Tarea.class)
-                .setParameter("id_usuario", u.getId_usuario());
-
-        return query.getResultList();
+    public List<Tarea> getTasks(long usuario) {
+        
+        System.out.println(usuario);
+        Usuario u = em.find(Usuario.class, usuario);
+        List<Tarea> l = u.getTareas();
+        boolean b = l.isEmpty();
+        System.out.println(b);
+        return l;
     }
 
     @Override
-    public List<Evento> getLike(Usuario u) {
-        TypedQuery<Evento> query = em.createNamedQuery("getUserLikes", Evento.class)
-                .setParameter("id", u.getId_usuario());
-        return query.getResultList();
+    public List<Evento> getLike(long usuario) {
+        Usuario u = em.find(Usuario.class, usuario);
+        List<Evento> l = u.getMegusta();
+        boolean b = l.isEmpty();
+        return l;
     }
 
     @Override
-    public List<Evento> getFollow(Usuario u) {
-        TypedQuery<Evento> query = em.createNamedQuery("getUserFollows", Evento.class)
-                .setParameter("id", u.getId_usuario());
-        return query.getResultList();
+    public List<Evento> getFollow(long usuario) {
+        Usuario u = em.find(Usuario.class, usuario);
+        List<Evento> l = u.getSigue();
+        boolean b = l.isEmpty();
+        return l;
     }
 
     @Override
-    public List<Evento> getAssist(Usuario u) {
-        TypedQuery<Evento> query = em.createNamedQuery("getUserAssists", Evento.class)
-                .setParameter("id", u.getId_usuario());
-        return query.getResultList();
+    public List<Evento> getAssist(long usuario) {
+        Usuario u = em.find(Usuario.class, usuario);
+        List<Evento> l = u.getAsiste();
+        boolean b = l.isEmpty();
+        return l;
     }
 
     @Override
@@ -164,17 +169,17 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Evento> getEventsByTag(String etiq) {
-        TypedQuery<Evento> query = em.createNamedQuery("getEventsByTag", Evento.class)
-                .setParameter("nombre", etiq);
-        return query.getResultList();
+    public List<Evento> getEventsByTag(long etiq) {
+        Etiqueta et = em.find(Etiqueta.class, etiq);
+        List<Evento> l = et.getEvento();
+        boolean b = l.isEmpty();
+        return l;
     }
 
     @Override
-    public List<Evento> getEventsByAudience(String audience) {
-        TypedQuery<Evento> query = em.createNamedQuery("getEventsByAudience", Evento.class)
-                .setParameter("descripcion", audience);
-        return query.getResultList();
+    public List<Evento> getEventsByAudience(long audience) {
+        Destinatario des = em.find(Destinatario.class, audience);
+        return des.getEvento();
     }
 
     @Override
@@ -262,14 +267,11 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public void deleteTag(Etiqueta e
+    public void deleteTag(long e
     ) {
 
-        List<Evento> event = getEventsByTag(e.getNombre());
-        for (Evento eti : event) {
-            eti.getEtiqueta().remove(e);
-        }
-        em.remove(em.merge(e));
+        Etiqueta et = em.find(Etiqueta.class, e);
+        em.remove(em.merge(et));
     }
 
     @Override
@@ -289,51 +291,44 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public void deleteAudience(Destinatario e
+    public void deleteAudience(long e
     ) {
 
-        List<Evento> event = getEventsByAudience(e.getDescripcion());
-        for (Evento doradita : event) {
-            doradita.getDestinatario().remove(e);
-        }
-        em.remove(em.merge(e));
+        Destinatario d = em.find(Destinatario.class, e);
+        em.remove(em.merge(d));
     }
 
     @Override
-    public void assist(Evento e, Usuario u
+    public void assist(long evento, long usuario
     ) {
-        TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
-                .setParameter("id_usuario", u.getId_usuario());
-
-        if (!checkAssist(e, u)) {
-            Usuario u2 = query.getResultList().get(0);
-            u2.getAsiste().add(e);
-            em.merge(u2);
+        Evento e = em.find(Evento.class, evento);
+        Usuario u = em.find(Usuario.class, usuario);
+        if (!checkAssist(e.getId_evento(), u.getId_usuario())) {
+            u.getAsiste().add(e);
+            em.merge(u);
         }
 
     }
 
     @Override
-    public void like(Evento e, Usuario u
+    public void like(long evento, long usuario
     ) {
-        TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
-                .setParameter("id_usuario", u.getId_usuario());
-        if (!checkLike(e, u)) {
-            Usuario u2 = query.getResultList().get(0);
-            u2.getMegusta().add(e);
-            em.merge(u2);
+        Evento e = em.find(Evento.class, evento);
+        Usuario u = em.find(Usuario.class, usuario);
+        if (!checkLike(e.getId_evento(), u.getId_usuario())) {
+            u.getMegusta().add(e);
+            em.merge(u);
         }
     }
 
     @Override
-    public void follow(Evento e, Usuario u
+    public void follow(long evento, long usuario
     ) {
-        TypedQuery<Usuario> query = em.createNamedQuery("getUser", Usuario.class)
-                .setParameter("id_usuario", u.getId_usuario());
-        if (!checkFollow(e, u)) {
-            Usuario u2 = query.getResultList().get(0);
-            u2.getSigue().add(e);
-            em.merge(u2);
+        Usuario u = em.find(Usuario.class, usuario);
+        Evento e = em.find(Evento.class, evento);
+        if (!checkFollow(e.getId_evento(), u.getId_usuario())) {
+            u.getSigue().add(e);
+            em.merge(u);
         }
     }
 
@@ -354,9 +349,7 @@ public class Business implements BusinessLocal {
     @Override
     public List<Localidad> getTowns(String prov
     ) {
-        //UserTransaction tx = cx.getUserTransaction();
 
-        //try{tx.begin();}catch(Exception e){};
         String a;
         List<Localidad> l = new ArrayList<>();
         for (Provincia p : getProvinces()) {
@@ -365,7 +358,7 @@ public class Business implements BusinessLocal {
                 l = p.getLocalidades();
             }
         }
-        //try{tx.commit();}catch(Exception e){};
+
         return l;
     }
 
@@ -376,11 +369,12 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Comentario> getComments(Evento e
+    public List<Comentario> getComments(long evento
     ) {
-        TypedQuery<Comentario> query = em.createNamedQuery("getAllCommentsFromEvent", Comentario.class)
-                .setParameter("evento", e.getId_evento());
-        return query.getResultList();
+        Evento e = em.find(Evento.class, evento);
+        List<Comentario> evs = e.getComentarios();
+        boolean b = evs.isEmpty();
+        return evs;
     }
 
     @Override
@@ -390,8 +384,8 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public Evento getEventById(String event) {
-        Evento e = em.find(Evento.class, Long.parseLong(event));
+    public Evento getEventById(long event) {
+        Evento e = em.find(Evento.class, event);
         return e;
     }
 
@@ -410,19 +404,17 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public Destinatario getAudienceById(Long audience
+    public Destinatario getAudienceById(long audience
     ) {
-        TypedQuery<Destinatario> query = em.createNamedQuery("getEventById", Destinatario.class)
-                .setParameter("destinatario", audience);
-        return query.getResultList().get(0);
+        Destinatario d = em.find(Destinatario.class, audience);
+        return d;
     }
 
     @Override
-    public Etiqueta getTagById(Long tag
+    public Etiqueta getTagById(long tag
     ) {
-        TypedQuery<Etiqueta> query = em.createNamedQuery("getEventById", Etiqueta.class)
-                .setParameter("etiqueta", tag);
-        return query.getResultList().get(0);
+        Etiqueta et = em.find(Etiqueta.class, tag);
+        return et;
     }
 
     @Override
@@ -464,27 +456,26 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Etiqueta> getAllTagsByEvent(String event
+    public List<Etiqueta> getAllTagsByEvent(long event
     ) {
-        TypedQuery<Etiqueta> query = em.createNamedQuery("getAllTagsByEventId", Etiqueta.class)
-                .setParameter("evento", Long.parseLong(event));
-        return query.getResultList();
+        Evento e = em.find(Evento.class, event);
+        List<Etiqueta> et = e.getEtiqueta();
+        boolean b = et.isEmpty();
+        return et;
     }
 
     @Override
-    public List<Destinatario> getAllAudiencesByEvent(String event
-    ) {
-        TypedQuery<Destinatario> query = em.createNamedQuery("getAllAudiencesByEventId", Destinatario.class)
-                .setParameter("evento", Long.parseLong(event));
-        return query.getResultList();
+    public List<Destinatario> getAllAudiencesByEvent(long event) {
+        Evento e = em.find(Evento.class, event);
+        List<Destinatario> d = e.getDestinatario();
+        boolean b = d.isEmpty();
+        return d;
     }
 
     @Override
-    public void deleteEvent(Evento e
+    public void deleteEvent(long e
     ) {
-        System.out.println(e.getId_evento() + " no revientes");
-        TypedQuery<Evento> nombreClaro = em.createNamedQuery("getEventById", Evento.class).setParameter("evento", e.getId_evento());
-        Evento e1 = nombreClaro.getResultList().get(0);
+        Evento e1 = em.find(Evento.class, e);
         System.out.println("deleteEvent(): entered");
         System.out.println("deleteEvent(): event " + e1.getTitulo());
 
@@ -532,71 +523,50 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public int numAssist(Evento e
+    public int numAssist(long evento
     ) {
-        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", e.getId_evento());
-        List<Evento> events = query.getResultList();
-        if (events.isEmpty()) {
-            return 0;
-        } else {
-            return events.get(0).getAsiste().size();
-        }
+        Evento e = em.find(Evento.class, evento);
+        return e.getAsiste().size();
     }
 
     @Override
-    public int numLike(Evento e
-    ) {
-        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", e.getId_evento());
-        List<Evento> events = query.getResultList();
-        if (events.isEmpty()) {
-            return 0;
-        } else {
-            return events.get(0).getMegusta().size();
-        }
+    public int numLike(long evento) {
+        Evento e = em.find(Evento.class, evento);
+        return e.getMegusta().size();
     }
 
     @Override
-    public int numFollow(Evento e
+    public int numFollow(long evento
     ) {
-        TypedQuery<Evento> query = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", e.getId_evento());
-        List<Evento> events = query.getResultList();
-        if (events.isEmpty()) {
-            return 0;
-        } else {
-            return events.get(0).getSigue().size();
-        }
+        Evento e = em.find(Evento.class, evento);
+        return e.getSigue().size();
     }
 
     @Override
-    public boolean checkAssist(Evento e, Usuario u
+    public boolean checkAssist(long evento, long usuario
     ) {
-        TypedQuery<Evento> query2 = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", e.getId_evento());
-        return query2.getResultList().get(0).getAsiste().contains(u);
+        Evento e = em.find(Evento.class, evento);
+        Usuario u = em.find(Usuario.class, usuario);
+        return e.getSigue().contains(u);
     }
 
     @Override
-    public boolean checkLike(Evento e, Usuario u
+    public boolean checkLike(long evento, long usuario
     ) {
-        TypedQuery<Evento> query2 = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", e.getId_evento());
-        return query2.getResultList().get(0).getMegusta().contains(u);
+        Evento e = em.find(Evento.class, evento);
+        Usuario u = em.find(Usuario.class, usuario);
+        return e.getMegusta().contains(u);
     }
 
     @Override
-    public boolean checkFollow(Evento e, Usuario u
-    ) {
-        TypedQuery<Evento> query2 = em.createNamedQuery("getEventById", Evento.class)
-                .setParameter("evento", e.getId_evento());
-        return query2.getResultList().get(0).getSigue().contains(u);
+    public boolean checkFollow(long evento, long usuario) {
+        Evento e = em.find(Evento.class, evento);
+        Usuario u = em.find(Usuario.class, usuario);
+        return e.getSigue().contains(u);
     }
 
     @Override
-    public void deleteNotificacion(Long id
-    ) {
+    public void deleteNotificacion(long id) {
         Notificacion noti = em.find(Notificacion.class, id);
         em.remove(em.merge(noti));
     }
@@ -615,23 +585,21 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public void deleteTask(Long t
+    public void deleteTask(long t
     ) {
         Tarea tari = em.find(Tarea.class, t);
         em.remove(em.merge(tari));
     }
 
     @Override
-    public List<Tarea> getPeticiones(Long id
-    ) {
+    public List<Tarea> getPeticiones(long id) {
         Usuario susi = em.find(Usuario.class, id);
         boolean p = susi.getPeticion().isEmpty();
         return susi.getPeticion();
     }
 
     @Override
-    public void deleteComentario(Long c
-    ) {
+    public void deleteComentario(long c) {
         Comentario co = em.find(Comentario.class, c);
         em.remove(em.merge(co));
     }
@@ -640,7 +608,7 @@ public class Business implements BusinessLocal {
     public List<Etiqueta> getTagsWithEvents() {
         List<Etiqueta> tags = new ArrayList<>();
         for (Etiqueta x : getTags()) {
-            if (getEventsByTag(x.getNombre()).size() > 0) {
+            if (getEventsByTag(x.getId_etiqueta()).size() > 0) {
                 tags.add(x);
             }
         }
@@ -649,9 +617,8 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public List<Evento> getUserEvents(Usuario u
-    ) {
-        return em.createNamedQuery("getUserEvents", Evento.class).setParameter("usuario", u.getId_usuario()).getResultList();
+    public List<Evento> getUserEvents(long usuario) {
+        return em.createNamedQuery("getUserEvents", Evento.class).setParameter("usuario", usuario).getResultList();
     }
 
     @Override

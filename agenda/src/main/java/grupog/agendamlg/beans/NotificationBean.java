@@ -37,7 +37,7 @@ public class NotificationBean implements Serializable {
     }
 
     public List<Notificacion> getNotificaciones() {
-        notificaciones = business.getNotifications(usuario.getUsuario());
+        notificaciones = business.getNotifications(usuario.getUsuario().getId_usuario());
         return notificaciones;
     }
 }

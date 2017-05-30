@@ -85,7 +85,7 @@ public class ControlLog implements Serializable {
         if (hsr.getParameterMap().containsKey("id")) {
             eventId = hsr.getParameter("id");
             if (eventId != null && !eventId.isEmpty()) {
-                if (business.getEventById(eventId) != null) {
+                if (business.getEventById(Long.parseLong(eventId)) != null) {
 
                 } else {
                     Redirect.redirectToIndex();
@@ -104,7 +104,7 @@ public class ControlLog implements Serializable {
         if (hsr.getParameterMap().containsKey("id")) {
             eventId = hsr.getParameter("id");
             if (eventId != null && !eventId.isEmpty()) {
-                Evento e = business.getEventById(eventId);
+                Evento e = business.getEventById(Long.parseLong(eventId));
                 if(!isUserAdmin() && !e.getVisible()){
                     Redirect.redirectToIndex();
                 }
@@ -149,7 +149,7 @@ public class ControlLog implements Serializable {
         HttpServletRequest hsr = Redirect.getRequest();
         if (hsr.getParameterMap().containsKey("id")) {
             if (!hsr.getParameter("id").isEmpty()) {
-                Evento e = business.getEventById(hsr.getParameter("id"));
+                Evento e = business.getEventById(Long.parseLong(hsr.getParameter("id")));
                 if (e != null && usuario != null) {
                     if (usuario.equals(e.getPropietario()) || usuario.getRol_usuario().equals(Usuario.Tipo_Rol.REDACTOR)) {
                         result = true;
@@ -167,7 +167,7 @@ public class ControlLog implements Serializable {
         HttpServletRequest hsr = Redirect.getRequest();
         if (hsr.getParameterMap().containsKey("id")) {
             if (!hsr.getParameter("id").isEmpty()) {
-                Evento e = business.getEventById(hsr.getParameter("id"));
+                Evento e = business.getEventById(Long.parseLong(hsr.getParameter("id")));
                 if (e != null && usuario != null) {
                     result = (e.getVisible() && this.isUserRegistered()) || (isUserOwnerOfEvent());
                 }
@@ -181,7 +181,7 @@ public class ControlLog implements Serializable {
         HttpServletRequest hsr = Redirect.getRequest();
         if (hsr.getParameterMap().containsKey("id")) {
             if (!hsr.getParameter("id").isEmpty()) {
-                Evento e = business.getEventById(hsr.getParameter("id"));
+                Evento e = business.getEventById(Long.parseLong(hsr.getParameter("id")));
                 if (e != null && usuario != null) {
                     result = e.isDestacado();
                 }

@@ -55,8 +55,9 @@ public class UsuarioBean implements Serializable {
     }
 
     public List<Evento> getGusta() {
-        List<Evento> e = business.getLike(ctrl.getUsuario());
+        List<Evento> e = business.getLike(ctrl.getUsuario().getId_usuario());
         if (!e.isEmpty() && e != null) {
+
             return e;
         } else {
             return new ArrayList<>();
@@ -64,7 +65,8 @@ public class UsuarioBean implements Serializable {
     }
 
     public List<Evento> getSigue() {
-        List<Evento> e = business.getFollow(ctrl.getUsuario());
+
+        List<Evento> e = business.getFollow(ctrl.getUsuario().getId_usuario());
         if (!e.isEmpty() && e != null) {
             return e;
         } else {
@@ -73,7 +75,8 @@ public class UsuarioBean implements Serializable {
     }
 
     public List<Evento> getAsiste() {
-        List<Evento> e = business.getAssist(ctrl.getUsuario());
+
+        List<Evento> e = business.getAssist(ctrl.getUsuario().getId_usuario());
         if (!e.isEmpty() && e != null) {
             return e;
         } else {

@@ -44,7 +44,7 @@ public class Tarea implements Serializable {
     @Column(nullable = true)
     private Long id_evento;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "tareas")
     private List <Usuario> redactores;
     @ManyToOne(optional=true)
     private Usuario creador_peticion;

@@ -82,7 +82,6 @@ public class Usuario implements Serializable, Comparable {
     private List<Evento> asiste;
     
     @ManyToMany
-    @JoinTable(name = "jn_tareas_id", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_tarea"))
     private List<Tarea> tareas;
     
     @OneToMany(mappedBy="creador_peticion",orphanRemoval=true)

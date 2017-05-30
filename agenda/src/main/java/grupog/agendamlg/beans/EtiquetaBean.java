@@ -92,7 +92,7 @@ public class EtiquetaBean implements Serializable {
         System.out.println("Estoy intentando delete Tags");
 
         for (String str : etiquetaDelete) {
-            business.deleteTag(business.getEtiquetaByName(str));
+            business.deleteTag(business.getEtiquetaByName(str).getId_etiqueta());
 
         }
         return "index?faces-redirect=true";
