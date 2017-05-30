@@ -3,11 +3,15 @@ package grupog.agendamlg.beans;
 
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Evento;
+import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.entities.Tarea;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Redirect;
+import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -41,7 +45,7 @@ public class TareasBean implements Serializable {
         newTask.setFecha_hora(LocalDateTime.now());
         newTask.setCreador_peticion(control.getUsuario());
         newTask.setNombre("Solicito validación");
-        newTask.setMensaje(control.getUsuario().getPseudonimo()+" ha solicitado ser usuario");
+        newTask.setMensaje(control.getUsuario().getPseudonimo()+" ha solicitado ser usuario validado");
         System.out.println("ajk");
         business.createTask(newTask);
         for (Usuario u :business.getRedactores())
@@ -53,12 +57,7 @@ public class TareasBean implements Serializable {
             }
         Redirect.redirectToProfile();
     }
-    
-    public void createTaskEvent(){
-         Tarea newTask = new Tarea();
-    }
-
-    
+  
     public void approve(Tarea t) {
         
         if(t.getId_evento()==null)//Usuario
@@ -71,14 +70,51 @@ public class TareasBean implements Serializable {
             e.setVisible(true);
             business.updateEvent(e);
         }
+        
+        final StringBuilder m = new StringBuilder();
+        m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append(")</span></h2><p>")
+                .append("Su solicitud ha sido aceptada")
+                .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
+                Sendmail.mailThread(t.getCreador_peticion().getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+          
+            Evento eve = business.getEventById(500);
+            Notificacion notiplana = new Notificacion();
+            notiplana.setEvento(eve);
+            notiplana.setFecha_hora(LocalDateTime.now());
+            notiplana.setMensaje("Su solicitud ha sido aceptada");
+            notiplana.setUsuario(t.getCreador_peticion());
+            business.setNotifications(notiplana);
+        
         business.deleteTask(t.getId_tarea());
     }
     
     public void reject(Tarea t) {
         
         if(t.getId_evento()!= null){
+            
            business.deleteEvent(t.getId_evento()); 
         }
+        
+         
+        final StringBuilder m = new StringBuilder();
+        m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append(")</span></h2><p>")
+                .append("Su solicitud ha sido rechazada")
+                .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
+                Sendmail.mailThread(t.getCreador_peticion().getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+          
+            Evento e = business.getEventById(500);
+            Notificacion notiplana = new Notificacion();
+            notiplana.setEvento(e);
+            notiplana.setFecha_hora(LocalDateTime.now());
+            notiplana.setMensaje("Su solicitud ha sido rechazada");
+            notiplana.setUsuario(t.getCreador_peticion());
+            business.setNotifications(notiplana);
+         
+        
         
         business.deleteTask(t.getId_tarea());
     }
