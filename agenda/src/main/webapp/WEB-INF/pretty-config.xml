@@ -81,13 +81,13 @@
     </url-mapping> 
 
     <url-mapping id="editPublic"> 
-        <pattern value="/public/edit/#{id}" /> 
-        <view-id value="/faces/public_edit.xhtml" />
+        <pattern value="/public}" /> 
+        <view-id value="/faces/public.xhtml" />
     </url-mapping> 
-    
-    <url-mapping id="infoPublic"> 
-        <pattern value="/public/show/#{id}" /> 
-        <view-id value="/faces/public_info.xhtml" />
+   
+    <url-mapping id="editTag"> 
+        <pattern value="/tag" /> 
+        <view-id value="/faces/tag.xhtml" />
     </url-mapping> 
     
 </pretty-config>

@@ -1,21 +1,29 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <ui:insert name="search-sidebar">
                 <ui:include src = "/WEB-INF/templates/search_menu.xhtml" />
             </ui:insert>
-            <p class="lead"><h1>eventos</h1></p>
-            <p:dataTable value="#{eventoBean.eventos}" var="evento" id="eventsAll" styleClass="eventLists">
-                <ui:insert name="search-sidebar">
-                 <ui:include src = "/WEB-INF/templates/event.xhtml" />
-                </ui:insert>
-            </p:dataTable>
+            <c:choose>
+                <c:when test="#{!empty eventoBean.eventos}">
+                    <p class="lead"><h2>Todos los eventos</h2></p>
+                    <p:dataTable value="#{eventoBean.eventos}" var="evento" id="eventsAll" styleClass="eventLists">
+                        <ui:insert name="search-sidebar">
+                            <ui:include src = "/WEB-INF/templates/event.xhtml" />
+                        </ui:insert>
+                    </p:dataTable>
+                </c:when>
+                <c:otherwise>
+                    <ui:insert name="search-sidebar">
+                        <ui:include src = "/WEB-INF/templates/search_noresult.xhtml" />
+                    </ui:insert>
+                </c:otherwise>
+            </c:choose>
         </ui:define>
-        <h:outputScript name="js/prime.js" />
     </ui:composition>
 </html>

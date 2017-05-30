@@ -2,7 +2,10 @@
 package grupog.agendamlg.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
@@ -100,6 +103,11 @@ public class Tarea implements Serializable {
 
     public void setCreador_peticion(Usuario creador_peticion) {
         this.creador_peticion = creador_peticion;
+    }
+    
+    public Date getFecha_hora_date() {
+        Instant instant = fecha_hora.atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
     }
 
     @Override

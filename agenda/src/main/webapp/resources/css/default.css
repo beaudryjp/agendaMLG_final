@@ -1,6 +1,8 @@
 @import url(font-awesome.min.css);
-@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');
-@import url('https://fonts.googleapis.com/css?family=Raleway');
+@font-face {
+  font-family: 'Kaushan Script';
+  src:  url('../fonts/KaushanScript-Regular.ttf') format('truetype');
+}
 
 @media (min-width: 400px) {
     #footer-services-1, #footer-services-2, #header-option-icons {
@@ -222,18 +224,26 @@ ul.icons a:hover {
     margin-right: 7px;
 }
 
+a.linkBack{
+    color: #262525;
+}
 
-.login a {
+a.linkBack:hover{
+    color: #504e4e;
+    text-decoration: none;
+}
+
+a.loginLink{
     color: #f1e9e9;
 }
 
-.login a:hover {
+a.loginLink:hover {
     color: #fff;
     text-decoration: none;
     border-bottom: 4px solid #ffde4f;
 }
 
-.login a.icon {
+a.loginLink.icon , a.linkBack{
     text-decoration: none;
     border: 0;
     padding-right: 20px;
@@ -268,7 +278,7 @@ h4.login-header4 {
     padding-top: 15px;
 }
 
-.login #login-goBack {
+.login #login-goBack, #loginLink {
     float: right;
     padding-bottom: 20px;
     font-size: 11px;
@@ -369,7 +379,7 @@ form .submitButtons{
 
 #search-sidebar h3{
     border-top:2px solid #FFCDCD;
-    font-family: 'Raleway', sans-serif;
+    /*font-family: 'Raleway', sans-serif;*/
 }
 
 
@@ -405,29 +415,33 @@ form .submitButtons{
     margin-bottom: -2px;
 }
 
-#search_form_calendar{
-    padding: 10px;
-}
-
-#search_form_options table{
+#search_form_options table, #search_form_calendar table{
     width: 100%;
 }
 
-#search_form_options tr,#search_form_options td,
-#search_form_options.ui-panelgrid .ui-panelgrid-cell {
+#search_form_options tr,
+#search_form_options td,
+#search_form_options.ui-panelgrid .ui-panelgrid-cell,
+#search_form_calendar tr, 
+#search_form_calendar td,
+#search_form_calendar.ui-panelgrid .ui-panelgrid-cell{
     border: none;
 }
 
-#search_form_options input, #search_form_options select, #search_form_options button{
+#search_form_calendar input,
+#search_form_calendar button,
+#search_form_options input, 
+#search_form_options select, 
+#search_form_options button{
     font-size: 12px;
 }
 
-#search_form_options button{
+#search_form_options button, #search_form_calendar button{
     float: right;
     padding: 7px;
 }
 
-#search_form_options td{
+#search_form_options td, #search_form_calendar td{
     padding: 5px 3px 5px 3px;
 }
 
@@ -648,4 +662,12 @@ p.showDate{
 
 .deleteEvent, .editEvent{
     float:right;
+}
+
+.dateBold{
+    font-weight: bold;
+}
+
+.eventDesc{
+    text-align: justify;
 }

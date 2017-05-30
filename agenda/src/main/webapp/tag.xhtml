@@ -13,12 +13,12 @@
 
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
                     <h:form>
-                        <p:panelGrid class="tagCreate">
+                        <p:panelGrid class="eventCreate">
                             <p:row>
                                 <p:column colspan="2">
                                     <div id="event-goBack">
                                         <br/>
-                                        <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
+                                        <h:link value="Volver" outcome="index" class="loginLink icon fa-chevron-left fa-2x"/>
                                     </div>
                                     <h2 class="eventTitle">Crear una nueva tag</h2>
                                 </p:column>
@@ -47,10 +47,10 @@
                             </p:row>
                              <p:row>
                                 <p:column>
-                                    <p:selectOneMenu id="search_tags" class="form-control" value = "#{etiquetaBean.etiquetaAnt}">
+                                    <h:selectOneMenu id="search_tags" class="form-control" value = "#{etiquetaBean.etiquetaAnt}">
                                             
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
-                                   </p:selectOneMenu>
+                                   </h:selectOneMenu>
                                     <p:column colspan="2">
                                         <p:inputText id="tagNameUpdate" value="#{etiquetaBean.etiquetaUpdate}" placeholder="Nuevo nombre" />
                                      </p:column>
@@ -69,10 +69,10 @@
                             <p:row>
                                 
                                 <p:column>
-                                    <p:selectManyMenu id="search_tags2" class="form-control" value="#{etiquetaBean.etiquetaDelete}" showCheckbox="true">
+                                    <h:selectManyMenu id="search_tags2" class="form-control" value="#{etiquetaBean.etiquetaDelete}">
                                             
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
-                                   </p:selectManyMenu>
+                                   </h:selectManyMenu>
                                     
                                 </p:column>  
                             </p:row>

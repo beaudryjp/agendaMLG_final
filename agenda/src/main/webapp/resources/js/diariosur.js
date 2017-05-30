@@ -31,33 +31,33 @@ $(document).ready(function () {
         $(this).hide("slow");
     });
     $("#tab2-header").click(function () {
-        $("#search_form_options").hide('slow');
-        $("#search_form_calendar").show('slow');
-        $("#tab1-main").hide('slow');
-        $("#tab2-main").show('slow');
+        $("#search_form_options").hide('fast');
+        $("#search_form_calendar").show('fast');
+        $("#tab1-main").hide('fast');
+        $("#tab2-main").show('fast');
     });
     $("#tab1-header").click(function () {
-        $("#tab2-main").hide('slow');
-        $("#search_form_options").show('slow');
-        $("#search_form_calendar").hide('slow');
-        $("#tab1-main").show('slow');
+        $("#tab2-main").hide('fast');
+        $("#search_form_options").show('fast');
+        $("#search_form_calendar").hide('fast');
+        $("#tab1-main").show('fast');
     });
 
     $("#h2assist").click(function () {
-        $("#likeEvents").fadeOut();
-        $("#followEvents").fadeOut();
-        $("#assistEvents").fadeIn();
+        $("#likeEvents").slideUp('fast');
+        $("#followEvents").slideUp('fast');
+        $("#assistEvents").slideDown('fast');
     });
 
     $("#h2like").click(function () {
-        $("#followEvents").fadeOut();
-        $("#assistEvents").fadeOut();
-        $("#likeEvents").fadeIn();
+        $("#followEvents").slideUp('fast');
+        $("#assistEvents").slideUp('fast');
+        $("#likeEvents").slideDown('fast');
     });
 
     $("#h2follow").click(function () {
-        $("#likeEvents").fadeOut();
-        $("#assistEvents").fadeOut();
-        $("#followEvents").fadeIn();
+        $("#likeEvents").slideUp('fast');
+        $("#assistEvents").slideUp('fast');
+        $("#followEvents").slideDown('fast');
     });
 });

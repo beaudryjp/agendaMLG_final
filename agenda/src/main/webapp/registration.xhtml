@@ -8,7 +8,7 @@
     <ui:composition template="/WEB-INF/templates/template_login.xhtml">
         <ui:define name="content">
             <h1>Regístrate</h1>
-            <h4>¿Dispones de una cuenta? Inicia sesión <h:link value="aquí" outcome="login" /></h4>
+            <h4>¿Dispones de una cuenta? Inicia sesión <h:link class="loginLink" value="aquí" outcome="login" /></h4>
             <h4 class="login-header4">Crea una nueva cuenta de Sur.es</h4>
             <hr />
             <h:form id="form_registration">
@@ -44,7 +44,7 @@
                             
                         
 
-                        <h:link value=" Acepta los términos y condiciones de uso." outcome="terms" />
+                        <h:link class="loginLink"  value=" Acepta los términos y condiciones de uso." outcome="terms" />
                     </div>
                     <p:commandButton value="Enviar"    id="registration_submit" action="#{registro.valido()}"
                                      styleClass="btn btn-default btn-lg submitButtons" />

@@ -142,9 +142,9 @@ public class Business implements BusinessLocal {
 //        for (Evento x : query.getResultList()) {
 //            System.out.println(x.getTitulo());
 //        }
-
+        List<Evento> ev = new ArrayList<>();
         if (!text.isEmpty() && !text.equals("")) {
-            List<Evento> ev = new ArrayList<>();
+
             //System.out.println("getEventsBySearch(): if text not empty");
             for (Evento e : query.getResultList()) {
                 if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {
@@ -155,7 +155,11 @@ public class Business implements BusinessLocal {
             return ev;
         } else {
             //System.out.println("getEventsBySearch(): text is empty");
-            return query.getResultList();
+            if (query.getResultList().isEmpty()) {
+                return new ArrayList<>();
+            } else {
+                return query.getResultList();
+            }
         }
     }
 
@@ -176,7 +180,8 @@ public class Business implements BusinessLocal {
     @Override
     public List<Evento> getEventsByDate(Date fecha) {
         TypedQuery<Evento> query = em.createNamedQuery("getEventsByDate", Evento.class)
-                .setParameter("fecha", fecha);
+                .setParameter("fecha", fecha)
+                .setParameter("fecha2", fecha);
         return query.getResultList();
     }
 
@@ -191,31 +196,30 @@ public class Business implements BusinessLocal {
 
         Evento original = em.find(Evento.class, e.getId_evento());
 
-                List<Etiqueta> eti = original.getEtiqueta();
-                for (Etiqueta et : eti) {
-                    et.getEvento().remove(original);
-                    
-                }
-                em.merge(original);
-                original.setEtiqueta(e.getEtiqueta());
-           
-            
-                List<Destinatario> di = original.getDestinatario();
-                for (Destinatario d : di) {
-                    d.getEvento().remove(original);
-                   
-                }
-                em.merge(original);
-                original.setDestinatario(e.getDestinatario());
- 
-            e.setAsiste(original.getAsiste());
-            e.setMegusta(original.getMegusta());
-            e.setSigue(original.getSigue());
-            e.setComentarios(original.getComentarios());
-            e.setNotificaciones(original.getNotificaciones());
-            em.merge(e);
-            em.flush();
-            
+        List<Etiqueta> eti = original.getEtiqueta();
+        for (Etiqueta et : eti) {
+            et.getEvento().remove(original);
+
+        }
+        em.merge(original);
+        original.setEtiqueta(e.getEtiqueta());
+
+        List<Destinatario> di = original.getDestinatario();
+        for (Destinatario d : di) {
+            d.getEvento().remove(original);
+
+        }
+        em.merge(original);
+        original.setDestinatario(e.getDestinatario());
+
+        e.setAsiste(original.getAsiste());
+        e.setMegusta(original.getMegusta());
+        e.setSigue(original.getSigue());
+        e.setComentarios(original.getComentarios());
+        e.setNotificaciones(original.getNotificaciones());
+        em.merge(e);
+        //em.flush();
+
         return e;
     }
 
@@ -658,24 +662,24 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Usuario> getUsuariosByEvento(long evento) {
-        
+
         Evento e = em.find(Evento.class, evento);
-         List<Usuario> enviados = new ArrayList<>();
-        
+        List<Usuario> enviados = new ArrayList<>();
+
         for (Usuario usi : e.getAsiste()) {
             if (!enviados.contains(usi)) {
                 enviados.add(usi);
             }
 
         }
-      
+
         for (Usuario usi : e.getMegusta()) {
             if (!enviados.contains(usi)) {
                 enviados.add(usi);
             }
 
         }
-        
+
         for (Usuario usi : e.getSigue()) {
             if (!enviados.contains(usi)) {
                 enviados.add(usi);

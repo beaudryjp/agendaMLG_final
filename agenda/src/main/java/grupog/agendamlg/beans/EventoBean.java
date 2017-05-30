@@ -112,7 +112,6 @@ public class EventoBean implements Serializable {
     private String updateLocalidad;
     private List<Localidad> lista_localidades;
 
-
     @PostConstruct
     public void init() {
         searchDestinatario = "Todos";
@@ -125,6 +124,8 @@ public class EventoBean implements Serializable {
 
     public List<Evento> getEventosProximos() {
         List<Evento> e = business.getEventsNearestByCurrentDate();
+        for(Evento x : e)
+            System.out.println(x.getTitulo());
         if (!e.isEmpty()) {
             if (e.size() > 2) {
                 return e.subList(0, 2);
@@ -151,21 +152,15 @@ public class EventoBean implements Serializable {
         return business.getEventsImportant();
     }
 
-    public List<Evento> getEventosByFecha() {
-        return business.getEventsByDate(dateSelected);
+    public void getEventosByFecha() {
+        if (dateSelected != null) {
+            eventoSearch = business.getEventsByDate(dateSelected);
+            Redirect.redirect2("events_search");
+        }
     }
 
     public void searchEvents() {
-//        System.out.println("searchEvents()");
-//        System.out.println("text: " + searchText);
-//        System.out.println("localidad: " + prov.getLocalidad());
-//        System.out.println("etiqueta: " + searchEtiqueta);
-//        System.out.println("destinatario: " + searchDestinatario);
         eventoSearch = business.getEventsBySearch(searchText, prov.getLocalidad(), searchEtiqueta, searchDestinatario);
-//        for (Evento x : eventoSearch) {
-//            System.out.println(x.getTitulo());
-//        }
-
         Redirect.redirect2("events_search");
     }
 
@@ -522,6 +517,11 @@ public class EventoBean implements Serializable {
 
         
         lista_localidades = business.getTowns(e.getLocalidad().getProvincia().getNombre());
+        prov.setLocalidades(lista_localidades);
+        for(Localidad localidad : lista_localidades){
+            if(localidad.equals(e.getLocalidad()))
+                updateLocalidad = localidad.getNombre();
+        }
         System.out.println("onload2() fecha inicio " + e.getFecha_inicio());
         System.out.println("onload2() fecha fin" + e.getFecha_fin());
         updateFechaInicio = e.getFecha_inicio();
@@ -543,14 +543,12 @@ public class EventoBean implements Serializable {
     public void createEvent() {
         Evento e = new Evento();
         try {
-            SimpleDateFormat df = new SimpleDateFormat("dd-mm-yyyy");
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             Date endDate = df.parse(event_new_fecha_fin);
             Date startDate = df.parse(event_new_fecha_inicio);
             e.setFecha_inicio(startDate);
             e.setFecha_fin(endDate);
-        } catch (ParseException excep) {
-
-        }
+        } catch (ParseException excep) {}
         e.setTitulo(event_new_titulo);
         e.setDescripcion(event_new_descripcion);
 
@@ -768,8 +766,6 @@ public class EventoBean implements Serializable {
     public void setLista_localidades(List<Localidad> lista_localidades) {
         this.lista_localidades = lista_localidades;
     }
-    
-    
 
     public List<Comentario> getEventComentarios() {
         return eventComentarios;
@@ -818,39 +814,60 @@ public class EventoBean implements Serializable {
 
     public void deleteEvento() {
         System.out.println("deleteEvento(): entered");
-
-        
-        Evento e = business.getEventById(eventId);
-        
-        Evento system = business.getEventById("500");
-        
-        List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
+        final Evento e = business.getEventById(eventId);
+        final Evento system = business.getEventById("500");
+        final List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
         final StringBuilder m = new StringBuilder();
         m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
                 .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
                 .append(")</span></h2><p>")
-                .append("Ha sido suspendido el evento ")
+                .append("Ha sido suspendido el evento <b>\"")
                 .append(changeHtmlChars(e.getTitulo()))
-                .append("<b>\"</p><p style='font-size: 12px'>diariosur</p>");
-        for(Usuario usi:u){
-            if(usi.isEmail_notifier()){
+                .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
+        for (Usuario usi : u) {
+            if (usi.isEmail_notifier()) {
                 System.out.println("funcionadelete?");
-            Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+                Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
             }
             Notificacion notiplana = new Notificacion();
-                notiplana.setEvento(system);
-                notiplana.setFecha_hora(LocalDateTime.now());
-                notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido suspendido");
-                notiplana.setUsuario(usi);
-                business.setNotifications(notiplana); 
-                 System.out.println("funcionadelete , si");
-        }
-        business.deleteEvent(business.getEventById(eventId));
+            notiplana.setEvento(system);
+            notiplana.setFecha_hora(LocalDateTime.now());
+            notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido suspendido");
+            notiplana.setUsuario(usi);
+            business.setNotifications(notiplana);
+            System.out.println("funcionadelete , si");
 
+        }
+
+        /* funciona
+        e.setVisible(false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                
+                for (Usuario usi : u) {
+                    if (usi.isEmail_notifier()) {
+                        System.out.println("funcionadelete?");
+                        Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+                    }
+                    Notificacion notiplana = new Notificacion();
+                    notiplana.setEvento(system);
+                    notiplana.setFecha_hora(LocalDateTime.now());
+                    notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido suspendido");
+                    notiplana.setUsuario(usi);
+                    business.setNotifications(notiplana);
+                    System.out.println("funcionadelete , si");
+
+                }
+                business.deleteEvent(business.getEventById(eventId));
+            }
+        }).start();
+         */
+        business.deleteEvent(business.getEventById(eventId));
         Redirect.redirectToIndex();
     }
 
-    public void updateEvento() {
+    public String updateEvento() {
 
         Evento e = business.getEventById(eventId);
 
@@ -863,51 +880,50 @@ public class EventoBean implements Serializable {
         e.setHorario(updateHorario);
         e.setPrecio(updatePrecio);
         e.setLocalidad(business.getLocalidadByName(updateLocalidad));
-        
+
         List<Etiqueta> nuevasEtiquetas = new ArrayList<>();
-        for(Etiqueta eti:business.getTags()){
-            if(updateEtiquetas.contains(eti.getNombre())){
-                 nuevasEtiquetas.add(eti);
+        for (Etiqueta eti : business.getTags()) {
+            if (updateEtiquetas.contains(eti.getNombre())) {
+                nuevasEtiquetas.add(eti);
             }
         }
         e.setEtiqueta(nuevasEtiquetas);
-        
-         List<Destinatario> nuevasDestinatario = new ArrayList<>();
-        for(Destinatario dest:business.getAudiences()){
-            if(updateDestinatario.contains(dest.getDescripcion())){
-                 nuevasDestinatario.add(dest);
+
+        List<Destinatario> nuevasDestinatario = new ArrayList<>();
+        for (Destinatario dest : business.getAudiences()) {
+            if (updateDestinatario.contains(dest.getDescripcion())) {
+                nuevasDestinatario.add(dest);
             }
         }
         e.setDestinatario(nuevasDestinatario);
-        
-        
+
         business.updateEvent2(e);
-      
-        
+
         List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
         final StringBuilder m = new StringBuilder();
         m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
                 .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
                 .append(")</span></h2><p>")
-                .append("Se ha actualizado el evento ")
+                .append("Ha sido actualizado el evento <b>\"")
                 .append(changeHtmlChars(e.getTitulo()))
-                .append("<b>\"</p><p style='font-size: 12px'>diariosur</p>");
-        for(Usuario usi:u){
-            
-            if(usi.isEmail_notifier()){
+                .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
+        for (Usuario usi : u) {
+
+            if (usi.isEmail_notifier()) {
                 System.out.println("funciona?");
-            Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+                Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
             }
             Notificacion notiplana = new Notificacion();
-                notiplana.setEvento(e);
-                notiplana.setFecha_hora(LocalDateTime.now());
-                notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido actualizado");
-                notiplana.setUsuario(usi);
-                business.setNotifications(notiplana); 
-                System.out.println("esto funciona");
+            notiplana.setEvento(e);
+            notiplana.setFecha_hora(LocalDateTime.now());
+            notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido actualizado");
+            notiplana.setUsuario(usi);
+            business.setNotifications(notiplana);
+            System.out.println("esto funciona");
         }
-    
-        Redirect.redirectToEventInfo(e.getId_evento());
+        return "event_info?id="+e.getId_evento()+"?faces-redirect=true";
+        //Redirect.redirectTo("/event/show/"+e.getId_evento());
+        //Redirect.redirectToEventInfo(e.getId_evento());
     }
 
     public void destacarEvento() {

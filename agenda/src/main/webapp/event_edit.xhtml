@@ -7,7 +7,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:pretty="http://ocpsoft.com/prettyfaces">
 
-      <ui:composition template="/WEB-INF/templates/template.xhtml">
+    <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
                 <f:viewAction action="#{ControlLog.checkEventParameter()}" />
@@ -16,11 +16,17 @@
                 <f:viewParam name="eventId" value="#{eventoBean.eventId}" />
             </f:metadata>
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
-                    <p:panelGrid id="eventEdit" class="eventCreate">
+
+                    <h:form id="editEvent">
                         <p:messages autoUpdate="true" />
-                        <h:form id="editEvent">
+                        <p:panelGrid id="eventEdit" class="eventCreate">
+
                             <p:row>
                                 <p:column colspan="2">
+                                    <pretty:link mappingId="infoEvent" class="icon fa-chevron-left">
+                                        Volver
+                                        <f:param value="#{eventoBean.eventId}" />
+                                    </pretty:link>
                                     <h2 class="eventTitle">Editar evento </h2>
                                 </p:column>
                             </p:row>
@@ -103,23 +109,26 @@
                                     Localidad
                                 </p:column>
                                 <p:column>
-                                    <h:selectOneMenu id="localidad"  class="form-control" value="#{eventoBean.updateLocalidad}" >
-                                        <f:selectItems value="#{eventoBean.lista_localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
+                                    <h:selectOneMenu id="localidad"  class="form-control" value="#{eventoBean.updateLocalidad}" required="false">
+                                        <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                     </h:selectOneMenu>
                                 </p:column>
                             </p:row>
                             <p:row>
                                 <p:column colspan="2">
                                     <pretty:link mappingId="infoEvent" class="cancelSumit btn btn-default btn-lg editButtons">
-                                            Cancelar
-                                            <f:param value="#{eventoBean.eventId}" />
+                                        Cancelar
+                                        <f:param value="#{eventoBean.eventId}" />
                                     </pretty:link>
-                                    
-                                    <h:commandLink action="#{eventoBean.updateEvento()}" value="Editar" id="createSubmit"   styleClass="cancelSumit btn btn-default btn-lg editButtons"/>          
+                                    <p:commandLink process="@form" update="editEvent" action="#{eventoBean.updateEvento()}" value="Editar" id="createSubmit"   styleClass="cancelSumit btn btn-default btn-lg editButtons"/>          
                                 </p:column>
                             </p:row>
-                        </h:form>
-                    </p:panelGrid>
+
+                        </p:panelGrid>
+                        <p:blockUI block=":entirePage" trigger="createSubmit" class="block-ui">
+                            <ui:include src = "/WEB-INF/templates/loader_dialog.xhtml" />
+                        </p:blockUI>
+                    </h:form>
                 </div>
             </div>
         </ui:define>

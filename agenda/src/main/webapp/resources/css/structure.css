@@ -1,7 +1,8 @@
 @import url(font-awesome.min.css);
-@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');
-@import url('https://fonts.googleapis.com/css?family=Raleway');
-
+@font-face {
+  font-family: 'Raleway';
+  src:  url('../fonts/Raleway-Regular.ttf') format('truetype');
+}
 /*
 margin - padding
 top right bottom left
@@ -553,4 +554,11 @@ h2.profileEvent{
 .tableProfile{
     background-color: #fff; 
     padding: 20px;
+}
+
+.srchEvents{
+    border: 0px; padding: 15px; 
+    -moz-box-shadow:  0 0 7px #363333;
+    -webkit-box-shadow:  0 0 7px #363333;
+    box-shadow:  0 0 7px #363333;
 }

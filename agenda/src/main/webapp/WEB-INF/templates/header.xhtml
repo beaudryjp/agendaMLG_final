@@ -4,8 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:pretty="http://ocpsoft.com/prettyfaces"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition> 
         <section id="header-logo">
             <h1>
@@ -15,7 +14,6 @@
             </h1>
         </section>
         <section id="header-page-phrase">
-            <!--<h4>La taquilla de los eventos</h4>-->
             <h4>La agenda de eventos de Andalucía</h4>
         </section>
         <section id="header-menu-side">
@@ -49,7 +47,7 @@
             <ul class="icons">
                 <c:choose>
                     <c:when test="#{ControlLog.userLoggedIn}">
-                        <li><h:link value="@#{ControlLog.usuario.pseudonimo}" outcome="profile"  class="icon fa-user-circle"/></li>               
+                        <li><h:link value="#{ControlLog.usuario.pseudonimo}" outcome="profile"  class="icon fa-at"/></li>               
                         <li><h:form><h:commandLink id="closeSession" value="Cerrar Sesión" action="#{ControlLog.logout}"  class="icon fa-sign-out"  /></h:form></li>  
                     </c:when>
                     <c:otherwise>

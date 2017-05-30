@@ -77,7 +77,7 @@
                     </div>
                     <div>
 
-                        <p class="eventDesc"><br/><h:outputText value="#{evento.descripcion}" /></p>
+                        <p class="eventDesc"><br/><h:outputText escape="false" value="#{evento.getDescripcionFormateado()}" /></p>
                         <p class="showDate"><i>
                                 Fecha
                                 <h:outputText value="#{evento.fecha_inicio}">

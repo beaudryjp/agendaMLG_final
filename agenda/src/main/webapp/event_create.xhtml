@@ -22,7 +22,7 @@
                                 <p:column colspan="2">
                                     <div id="event-goBack">
                                         <br/>
-                                        <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
+                                        <h:link value="Volver" outcome="index" class="loginBack icon fa-chevron-left fa-2x"/>
                                     </div>
                                     <h2 class="eventTitle">
                                         <c:choose>
@@ -111,7 +111,7 @@
                                     Están son las coordenadas de su evento, introdúzcalas después del mapa
                                 </p:column>
                                 <p:column>
-                                    <p:inputText id="loquetuquieras" value="#{eventoBean.getEvent_new_latitud()}" readonly="true" />
+                                    <p:inputText id="loquetuquieras" value="#{eventoBean.getEvent_new_latitud()}" readonly="true"/>
                                     <p:inputText id="loquetuquieras2" value="#{eventoBean.getEvent_new_longitud()}" readonly="true" />     
                                 </p:column>
                             </p:row>
@@ -130,8 +130,8 @@
                                     Coordenadas a rellenar
                                 </p:column>
                                 <p:column>
-                                    <p:inputText  value="#{eventoBean.event_new_latitud}"  />
-                                    <p:inputText value="#{eventoBean.event_new_longitud}"  />     
+                                    <p:inputText id='new_latitud' value="#{eventoBean.event_new_latitud}"  />
+                                    <p:inputText id='new_longitud' value="#{eventoBean.event_new_longitud}"  />     
 
                                 </p:column>
                             </p:row>

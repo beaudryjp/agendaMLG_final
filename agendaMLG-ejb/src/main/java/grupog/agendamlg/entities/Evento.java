@@ -27,29 +27,18 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "getAllEvents", query = "SELECT e from Evento e WHERE e.visible = true")
-    ,
-    @NamedQuery(name = "getEventById", query = "SELECT e from Evento e WHERE e.id_evento = :evento")
-    ,
-    @NamedQuery(name = "getEventsImportant", query = "SELECT e from Evento e WHERE e.destacado = true and e.visible = true")
-    ,
-    @NamedQuery(name = "getEventsByDate", query = "SELECT e from Evento e WHERE e.fecha_inicio = :fecha and e.visible = true ORDER BY e.fecha_inicio ASC")
-    ,
-    @NamedQuery(name = "getEventsNearestByDate", query = "SELECT e from Evento e WHERE e.fecha_inicio >= current_date() and e.visible = true ORDER BY e.fecha_inicio ASC")
-    ,
+    @NamedQuery(name = "getAllEvents", query = "SELECT e from Evento e WHERE e.visible = true") ,
+    @NamedQuery(name = "getEventById", query = "SELECT e from Evento e WHERE e.id_evento = :evento") ,
+    @NamedQuery(name = "getEventsImportant", query = "SELECT e from Evento e WHERE e.destacado = true and e.visible = true") ,
+    @NamedQuery(name = "getEventsByDate", query = "SELECT e from Evento e WHERE e.fecha_inicio <= :fecha and e.fecha_fin >= :fecha2 and e.visible = true ORDER BY e.fecha_inicio ASC") ,
+    @NamedQuery(name = "getEventsNearestByDate", query = "select e from Evento e where e.visible = true order by ABS(TIMESTAMPDIFF(SECOND, current_date(), fecha_inicio))") ,
     @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e inner join e.etiqueta et inner join e.destinatario d "
-            + "WHERE e.localidad.nombre = :localidad and "
-            + " et.nombre = :etiqueta and d.descripcion = :destinatario and e.visible = true"),
-    @NamedQuery(name = "getUserAssists", query = "select e from Evento e join fetch e.asiste a where a.id_usuario = :id")
-    ,
-    @NamedQuery(name = "getUserLikes", query = "select e from Evento e join fetch e.megusta a where a.id_usuario = :id")
-    ,
-    @NamedQuery(name = "getUserFollows", query = "select e from Evento e join fetch e.sigue a where a.id_usuario = :id")
-    ,
-    @NamedQuery(name = "getEventsByTag", query = "SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre and e.visible = true")
-    ,
-    @NamedQuery(name = "getEventsByAudience", query = "SELECT e from Evento e INNER JOIN e.destinatario de WHERE de.descripcion = :descripcion and e.visible = true")
-    ,
+            + "WHERE e.localidad.nombre = :localidad and et.nombre = :etiqueta and d.descripcion = :destinatario and e.visible = true"),
+    @NamedQuery(name = "getUserAssists", query = "select e from Evento e join fetch e.asiste a where a.id_usuario = :id") ,
+    @NamedQuery(name = "getUserLikes", query = "select e from Evento e join fetch e.megusta a where a.id_usuario = :id") ,
+    @NamedQuery(name = "getUserFollows", query = "select e from Evento e join fetch e.sigue a where a.id_usuario = :id") ,
+    @NamedQuery(name = "getEventsByTag", query = "SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre and e.visible = true") ,
+    @NamedQuery(name = "getEventsByAudience", query = "SELECT e from Evento e INNER JOIN e.destinatario de WHERE de.descripcion = :descripcion and e.visible = true") ,
     @NamedQuery(name = "getUserEvents", query = "SELECT e from Evento e inner join e.propietario u WHERE u.id_usuario = :usuario"),})
 
 public class Evento implements Serializable, Comparable {
@@ -293,6 +282,11 @@ public class Evento implements Serializable, Comparable {
 
     public void setVisible(Boolean visible) {
         this.visible = visible;
+    }
+    
+    public String getDescripcionFormateado(){
+        this.descripcion = descripcion.replaceAll("(\r\n|\n)", "<br />");
+        return this.descripcion;
     }
 
     @Override

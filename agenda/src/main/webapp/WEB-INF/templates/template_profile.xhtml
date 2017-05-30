@@ -12,7 +12,7 @@
         <h:outputStylesheet name="css/bootstrap.min.css"  />
         <h:outputStylesheet name="css/structure.css"  />
         <h:outputStylesheet name="css/default.css"  />
-        
+
         <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/resources/img/favicon.ico"/>
         <title>
             <ui:insert name="title">Agenda de Malaga, ¿que hacer hoy en Malaga? | SUR.es</ui:insert>
@@ -38,7 +38,7 @@
             </section>
             <section id="container-main">
                 <div id="container-sidebar">
-                   <ui:insert name="sidebar"></ui:insert> 
+                    <ui:insert name="sidebar"></ui:insert> 
                 </div>
                 <div id="main-left">
                     <ui:insert name="main-content"></ui:insert> 
@@ -54,8 +54,9 @@
         <ui:insert name="footer-links">
             <ui:include src = "/WEB-INF/templates/footer_links.xhtml" />
         </ui:insert>
-       <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
         <h:outputScript name="js/diariosur.js" />
+        <h:outputScript name="js/prime.js" />
     </h:body>
 </html>

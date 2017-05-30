@@ -14,10 +14,10 @@
             </c:if>
 
             <c:if test="#{ControlLog.isUserAdmin()}">
-                
-                <h3 class="search-title createEventTitle"><h:link  outcome="tag_create" value="CREAR ETIQUETA" id="linkCreateTag"/></h3>
-          
-                <h3 class="search-title createEventTitle"><h:link  outcome="public_create" value="CREAR PÚBLICO" id="linkCreatePublic"/></h3>
+
+                <h3 class="search-title createEventTitle"><h:link  outcome="tag" value="CREAR ETIQUETA" id="linkCreateTag"/></h3>
+
+                <h3 class="search-title createEventTitle"><h:link  outcome="public" value="CREAR PÚBLICO" id="linkCreatePublic"/></h3>
             </c:if>
 
             <c:if test="#{ControlLog.isUserRegistered()}">
@@ -69,11 +69,6 @@
 
                                 <p:row>
                                     <p:column colspan="2">
-                                        <!--
-                                        <pretty:link mappingId="searchEvent" id="searchEvent" styleClass="btn btn-default btn-lg floatRight">
-                                            Enviar
-                                        </pretty:link>
-                                        -->
                                         <h:commandButton action="#{eventoBean.searchEvents()}" value="Buscar" id="search_submit"  styleClass="btn btn-default btn-lg submitButtons"/>
                                     </p:column>
                                 </p:row>
@@ -86,10 +81,23 @@
                 <h4 id="tab2-header" class="tab-title">Calendario</h4>
                 <p id="tab2-main">
                     <h:form id="search_form_calendar">
-                        <p:growl id="growl" showDetail="true" />
-                        <p:calendar id="search_calendar" styleClass="ll-skin-melon" value="#{eventoBean.dateSelected}" mode="inline" locale="es">
-                            <p:ajax event="dateSelect" listener="#{eventoBean.eventosByFecha}" update="growl" />
-                        </p:calendar>
+                        <div class="form-group form-group-sm">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column style="border: none">
+                                        <p:calendar id="search_calendar" widgetVar="srcCalendar"
+                                                    mindate="srcCalendar.today()" class="ll-skin-melon" placeholder="Fecha"
+                                                    size="10" effect="clip"
+                                                    value="#{eventoBean.dateSelected}" locale="es" /> <br />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:commandButton action="#{eventoBean.getEventosByFecha()}" value="Buscar" id="calendar_submit" styleClass="btn btn-default btn-sm submitButtons"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </div>
                     </h:form>
                 </p>
             </div>

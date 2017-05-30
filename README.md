@@ -6,7 +6,7 @@ Seleccionar el proyecto agendaMLG_final y ir a Tools -> Open in terminal
 
 Ejecutar el comando cada vez que se quiera desplegar
 
-mvn clean install && cd agendaMLG-ear/ && mvn wildfly:deploy -X && cd ..
+mvn clean install; cd agendaMLG-ear/; mvn wildfly:deploy -X; cd ..
 
 # Importar datos
 Para importar datos hay que ejecutar el siguiente comando:

@@ -12,9 +12,10 @@
             <f:metadata>
                 <f:viewAction action="#{ControlLog.checkUserPrivileges()}" />
             </f:metadata>
+
             <div class="login-perfil">
                 <h:form id="profile">
-                    <p:tabView id="tabs" orientation="right" dynamic="true" cache="true" styleClass="panelusuario" >
+                    <p:tabView id="tabs" orientation="right" styleClass="panelusuario" >
                         <p:tab title="Mis Eventos" >
                             <p:panel id="basic" class="panelProfile">
                                 <c:choose>
@@ -91,88 +92,93 @@
 
 
                                 </table>
-                                <p:commandButton action ="#{usuario.modificar}" value ="Modificar Perfil" id="submit" oncomplete="window.location.reload();"
-                                                 styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
+                                <p:commandLink action ="#{usuario.modificar}" value ="Modificar Perfil" id="submit" oncomplete="window.location.reload();"
+                                               styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
 
                                 <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
                                     <c:if test="#{tareas.validado() == false}">
-                                        <p:commandButton id="solicitarValid" value="Solicitar validación" action="#{tareas.createTaskUser()}"/>
+                                        <p:commandLink id="solicitarValid" value="Solicitar validación" 
+                                                       action="#{tareas.createTaskUser()}" styleClass="btn btn-default btn-lg submitButtons" />
                                     </c:if>
                                 </c:if>
                             </h:panelGroup>
                         </p:tab>
-                        <p:tab title="Notificaciones">
-                            <p:panel id="panel-noti" class="panel-tareas">
-                                <c:forEach var="noti" items="#{notification.notificaciones}">
-                                    <p:panelGrid styleClass="mis_notificaciones" id="prueba" >
-                                        <p:row>
-                                            <p:column rowspan="2" id="columna1">
-                                                <p:graphicImage value="#{eventoBean.getImage()}" width="50px" height="50px">
-                                                    <f:param name="filename" value="#{noti.evento.imagen_url}" />
-                                                </p:graphicImage>
-                                            </p:column>
-                                            <p:column id="columna2">
-                                                <h:outputLabel  value="#{noti.mensaje}" />
-                                            </p:column>
-                                            <p:column rowspan="2" id="columna3">
-                                                <p class="notification-message-button"><p:commandButton action="#{notification.dissapear(noti)}" update="panel-noti" value="Leído" icon="ui-icon-check" /></p>
-                                            </p:column>
-                                        </p:row>
-                                        <p:row>
+                        <p:tab id="tabNotifications" title="Notificaciones">
+                            <p:panel id="panel-noti">
+                                <c:choose>
+                                    <c:when test="#{!empty notification.notificaciones}">
+                                        <h2 id="h2notifications" class="profileEvent">Mis Notificaciones</h2>
+                                        <p:dataTable value="#{notification.notificaciones}" id="notiTable" var="noti" styleClass="tableProfile eventLists">
                                             <p:column>
-                                                <h:outputLabel value="#{noti.fecha_hora_date}">
+                                                <h3 class="eventTitle"><h:outputText value="#{noti.mensaje}" /></h3>
+                                                <div class="imageEventList">
+                                                    <p:graphicImage value="#{eventoBean.getImage()}" width="50px" height="50px">
+                                                        <f:param name="filename" value="#{evento.imagen_url}" />
+                                                    </p:graphicImage>
+                                                </div>
+                                                <br/>
+                                                <h:outputText value="(#{noti.fecha_hora_date})">
                                                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
-                                                </h:outputLabel>
+                                                </h:outputText>
+                                                <p class="notification-message-button">
+                                                    <p:commandButton action="#{notification.dissapear(noti)}" update="notiTable" value="Leído" icon="ui-icon-check" />
+                                                </p>
                                             </p:column>
-                                        </p:row>
-                                    </p:panelGrid>
-                                </c:forEach>
+                                        </p:dataTable>
+                                    </c:when>
+                                    <c:otherwise><h2>No dispones de notificaciones</h2></c:otherwise>
+                                </c:choose>
                             </p:panel>
                         </p:tab>
                         <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR'}">
                             <p:tab title="Tareas" id="tarea">
-                                <p:panel id="pan" class="panel-tareas">
-                                    <c:forEach var="item" items="#{tareas.pendiente}" id="for-tar">
-                                        <p:panelGrid styleClass="mis-tareas"  id="panel-tar">
-                                            <p:row>
-                                                <p:column rowspan="2">
-                                                    <p:graphicImage class="event-image" name="img/eventos/default.png" width="50px" height="50px"/>
-                                                </p:column>
+                                <p:panel id="pan">
+                                    <c:choose>
+                                        <c:when test="#{!empty tareas.pendiente}">
+                                            <h2 id="h2tasks" class="profileEvent">Mis Tareas</h2>
+                                            <p:dataTable id="tasktable" var="item" value="#{tareas.pendiente}" class="eventLists" styleClass="tableProfile eventLists">
                                                 <p:column>
-                                                    <c:choose>
-                                                        <c:when test="#{not empty item.id_evento}">
-                                                            <pretty:link mappingId="infoEvent">
-                                                                #{item.nombre}
-                                                                <f:param value="#{item.id_evento}" />
-                                                            </pretty:link>
-                                                        </c:when>
+                                                    
+                                                    <h3 class="eventTitle">
+                                                        <c:choose>
+                                                            <c:when test="#{!empty item.id_evento}">
+                                                                <pretty:link mappingId="infoEvent">
+                                                                    #{item.nombre}
+                                                                    <f:param value="#{item.id_evento}" />
+                                                                </pretty:link>
+                                                            </c:when>
 
-                                                        <c:otherwise>
-                                                            <h:outputLabel  value="#{item.nombre}" />
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </p:column>
-                                                <p:column>
-                                                    <p class="notification-message-button"><p:commandButton action="#{tareas.approve(item)}" value ="Aprobar" icon="ui-icon-check" update="pan"/> </p>
-                                                </p:column>
-                                            </p:row>
-                                            <p:row>
-                                                <p:column>
+                                                            <c:otherwise>
+                                                                <h:outputLabel  value="#{item.nombre}" />
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </h3>
+                                                    <div class="imageEventList">
+                                                        <p:graphicImage class="event-image" name="img/eventos/default.png" width="50px" height="50px"/>
+                                                    </div>
                                                     <h:outputLabel value="#{item.mensaje}" />
+                                                    <br/>
+                                                    <h:outputText value="(#{item.fecha_hora_date})">
+                                                        <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                                    </h:outputText>
+                                                    <p class="notification-message-button">
+                                                        <p:commandButton action="#{tareas.approve(item)}" value ="Aprobar" icon="ui-icon-check" update="tasktable"/> 
+                                                    </p>
+                                                    <p class="notification-message-button"> 
+                                                        <p:commandButton action="#{tareas.reject(item)}" value ="Denegar" icon="ui-icon-close" update="tasktable"/> 
+                                                    </p>
+
                                                 </p:column>
-                                                <p:column>
-                                                    <p class="notification-message-button"> <p:commandButton action="#{tareas.reject(item)}" value ="Denegar" icon="ui-icon-close" update="pan"/> </p>
-                                                </p:column>
-                                            </p:row>
-                                        </p:panelGrid>
-                                    </c:forEach>
+                                            </p:dataTable>
+                                        </c:when>
+                                        <c:otherwise><h2>No dispones de tareas</h2></c:otherwise>
+                                    </c:choose>
                                 </p:panel>
                             </p:tab>
                         </c:if>
                     </p:tabView>
                 </h:form>
             </div>
-            <h:outputScript name="js/prime.js" />
         </ui:define>
     </ui:composition>
 </html>

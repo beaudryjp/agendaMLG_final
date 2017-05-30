@@ -7,40 +7,35 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="/WEB-INF/templates/template_login.xhtml">
         <ui:define name="content">
-
             <h1>Contacta con nosotros</h1>
             <hr />
-
             <h:form id="form_contactUs" >
-                <p:panel id="test" styleClass="contactPanel">
-                    <!--<p:growl id="growl" life="2000" sticky="true"/>-->
-                    <div class="form-group form-group-lg">
-                        <p:messages id="contact_messages" autoUpdate="true"/>
-                        <p:inputText value="#{contactarBean.nombre}" class="form-control"  id="contact_name"  placeholder="Nombre"
-                                     required="true"
-                                     requiredMessage="Introduce tu nombre" />
-                        <p:inputText  value="#{contactarBean.apellidos}"  class="form-control"  id="contact_surname"  placeholder="Apellidos"
-                                      required="true"
-                                      requiredMessage="Introduce tus apellidos"/>
-                        <p:inputText  value="#{contactarBean.email}" id="contact_email"  class="form-control"  placeholder="Correo eléctronico"
-                                      required="true"
-                                      requiredMessage="Introduce tu correo"
-                                      validatorMessage="Correo invalido">
-                            <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                <!--<p:growl id="growl" life="2000" sticky="true"/>-->
+                <div class="form-group form-group-lg">
+                    <p:messages id="contact_messages" autoUpdate="true"/>
+                    <p:inputText value="#{contactarBean.nombre}" class="form-control"  id="contact_name"  placeholder="Nombre"
+                                 required="true"
+                                 requiredMessage="Introduce tu nombre" />
+                    <p:inputText  value="#{contactarBean.apellidos}"  class="form-control"  id="contact_surname"  placeholder="Apellidos"
+                                  required="true"
+                                  requiredMessage="Introduce tus apellidos"/>
+                    <p:inputText  value="#{contactarBean.email}" id="contact_email"  class="form-control"  placeholder="Correo eléctronico"
+                                  required="true"
+                                  requiredMessage="Introduce tu correo"
+                                  validatorMessage="Correo invalido">
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 
-                        </p:inputText>
-                        <p:inputTextarea  value="#{contactarBean.mensaje}" id="contact_message"  class="form-control"  rows="7"  cols="60"  placeholder="Mensaje"
-                                          required="true"
-                                          requiredMessage="Introduce tu mensaje"/><br />
-                        <p:commandButton  process="@form" update="test"  value="Enviar"  validateClient="true"  id="contact_submit"  action="#{contactarBean.submit()}"
-                                          styleClass="btn btn-default btn-lg submitButtons">
-                            <!--<f:ajax execute="@form" render="@form" />-->
-                        </p:commandButton>
-                    </div>
-                    <p:blockUI block=":entirePage" trigger="contact_submit" class="block-ui">
-                        <ui:include src = "/WEB-INF/templates/loader_dialog.xhtml" />
-                    </p:blockUI>
-                </p:panel>
+                    </p:inputText>
+                    <p:inputTextarea  value="#{contactarBean.mensaje}" id="contact_message"  class="form-control"  rows="7"  cols="60"  placeholder="Mensaje"
+                                      required="true"
+                                      requiredMessage="Introduce tu mensaje"/><br />
+                    <p:commandLink  process="@form" update="form_contactUs"  value="Enviar"  validateClient="true"  id="contact_submit"  action="#{contactarBean.submit()}"
+                                    styleClass="btn btn-default btn-lg submitButtons" />
+                    <!--<f:ajax execute="@form" render="@form" />-->
+                </div>
+                <p:blockUI block=":entirePage" trigger="contact_submit" class="block-ui">
+                    <ui:include src = "/WEB-INF/templates/loader_dialog.xhtml" />
+                </p:blockUI>
             </h:form>
 
         </ui:define>
