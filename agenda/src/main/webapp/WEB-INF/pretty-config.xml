@@ -81,7 +81,7 @@
     </url-mapping> 
 
     <url-mapping id="editPublic"> 
-        <pattern value="/public}" /> 
+        <pattern value="/public" /> 
         <view-id value="/faces/public.xhtml" />
     </url-mapping> 
    
