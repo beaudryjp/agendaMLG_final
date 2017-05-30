@@ -833,6 +833,7 @@ public class EventoBean implements Serializable {
                 .append("Ha sido suspendido el evento <b>\"")
                 .append(changeHtmlChars(e.getTitulo()))
                 .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
+        /*
         for (Usuario usi : u) {
             if (usi.isEmail_notifier()) {
                 System.out.println("funcionadelete?");
@@ -847,8 +848,7 @@ public class EventoBean implements Serializable {
             System.out.println("funcionadelete , si");
 
         }
-
-        /* funciona
+        */
         e.setVisible(false);
         new Thread(new Runnable() {
             @Override
@@ -868,10 +868,9 @@ public class EventoBean implements Serializable {
                     System.out.println("funcionadelete , si");
 
                 }
-                business.deleteEvent(business.getEventById(eventId));
             }
         }).start();
-         */
+        
         business.deleteEvent(Long.parseLong(eventId));
 
         Redirect.redirectToIndex();
