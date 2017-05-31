@@ -100,10 +100,9 @@
                             </h:panelGroup>
                         </p:tab>
                         <p:tab id="tabNotifications" title="Notificaciones">
-
-                            <c:choose>
-                                <c:when test="#{!empty notification.notificaciones}">
-                                    <p:panel id="panel-noti">
+                            <p:panel id="panel-noti">
+                                <c:choose>
+                                    <c:when test="#{!empty notification.notificaciones}">
                                         <h2 id="h2notifications" class="profileEvent">Mis Notificaciones</h2>
                                         <p:dataTable value="#{notification.notificaciones}" id="notiTable" var="noti" styleClass="tableProfile eventLists">
                                             <p:column>
@@ -118,32 +117,31 @@
                                                     <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                                                 </h:outputText>
                                                 <p class="notification-message-button">
-                                                    <p:commandButton action="#{notification.dissapear(noti)}" update=":profile:tabs" value="Leído" icon="ui-icon-check" />
+                                                    <p:commandButton action="#{notification.dissapear(noti)}" update="notiTable" value="Leído" icon="ui-icon-check" />
                                                 </p>
                                             </p:column>
                                         </p:dataTable>
-                                    </p:panel>
-                                </c:when>
-                                <c:otherwise><h2>No dispones de notificaciones</h2></c:otherwise>
-                            </c:choose>
-
+                                    </c:when>
+                                    <c:otherwise><h2 class="no-notifications">No dispones de notificaciones</h2></c:otherwise>
+                                </c:choose>
+                            </p:panel>
                         </p:tab>
                         <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR'}">
-                            <p:tab title="Tareas" id="tarea">
+                             <p:tab title="Tareas" id="tarea">
                                 <p:panel id="pan">
                                     <c:choose>
                                         <c:when test="#{!empty tareas.pendiente}">
                                             <h2 id="h2tasks" class="profileEvent">Mis Tareas</h2>
                                             <p:dataTable id="tasktable" var="item" value="#{tareas.pendiente}" class="eventLists" styleClass="tableProfile eventLists">
                                                 <p:column>
-
+                                                    
                                                     <h3 class="eventTitle">
                                                         <c:choose>
                                                             <c:when test="#{!empty item.id_evento}">
-                                                                "<pretty:link mappingId="infoEvent">
+                                                                <pretty:link mappingId="infoEvent">
                                                                     #{item.nombre}
                                                                     <f:param value="#{item.id_evento}" />
-                                                                </pretty:link>"
+                                                                </pretty:link>
                                                             </c:when>
 
                                                             <c:otherwise>
@@ -151,26 +149,25 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </h3>
-                                                    <h:outputLabel value="#{item.mensaje}" />
                                                     <div class="imageEventList">
                                                         <p:graphicImage class="event-image" name="img/eventos/default.png" width="50px" height="50px"/>
                                                     </div>
-
+                                                    <h:outputLabel value="#{item.mensaje}" />
                                                     <br/>
                                                     <h:outputText value="(#{item.fecha_hora_date})">
                                                         <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
                                                     </h:outputText>
                                                     <p class="notification-message-button">
-                                                        <p:commandButton action="#{tareas.approve(item)}" value ="Aprobar" icon="ui-icon-check" update=":profile:tabs"/> 
+                                                        <p:commandButton action="#{tareas.approve(item)}" value ="Aprobar" icon="ui-icon-check" update="tasktable"/> 
                                                     </p>
                                                     <p class="notification-message-button"> 
-                                                        <p:commandButton action="#{tareas.reject(item)}" value ="Denegar" icon="ui-icon-close" update=":profile:tabs"/> 
+                                                        <p:commandButton action="#{tareas.reject(item)}" value ="Denegar" icon="ui-icon-close" update="tasktable"/> 
                                                     </p>
 
                                                 </p:column>
                                             </p:dataTable>
                                         </c:when>
-                                        <c:otherwise><h2>No dispones de tareas</h2></c:otherwise>
+                                        <c:otherwise><h2 class="no-notifications">No dispones de tareas</h2></c:otherwise>
                                     </c:choose>
                                 </p:panel>
                             </p:tab>
