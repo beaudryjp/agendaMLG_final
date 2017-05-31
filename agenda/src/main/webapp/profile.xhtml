@@ -29,13 +29,13 @@
                                             </p:dataTable>
                                         </div>
                                     </c:when>
-                                    <c:otherwise><h2>No hay eventos que estés asistiendo.</h2></c:otherwise>
+                                    <c:otherwise><h2 class="text-profile" >No vas a asistir a ningun evento.</h2></c:otherwise>
                                 </c:choose>
                             </p:panel>
                             <p:panel id="basic2" class="panelProfile">
                                 <c:choose>
                                     <c:when test="#{!empty usuario.sigue}">
-                                        <h2 id="h2follow" class="profileEvent">Eventos que estas siguiendo</h2>
+                                        <h2 id="h2follow" class="profileEvent">Eventos que estas siguiendo.</h2>
                                         <div id="followEvents">
                                             <p:dataTable var="evento" value="#{usuario.sigue}" styleClass="tableProfile eventLists">
                                                 <ui:insert name="search-sidebar">
@@ -44,13 +44,13 @@
                                             </p:dataTable>
                                         </div>
                                     </c:when>
-                                    <c:otherwise><h2>No hay eventos que estés siguiendo.</h2></c:otherwise>
+                                    <c:otherwise><h2 class="text-profile">No estas siguiendo ningun evento.</h2></c:otherwise>
                                 </c:choose>
                             </p:panel>
                             <p:panel id="basic3" class="panelProfile">
                                 <c:choose>
                                     <c:when test="#{!empty usuario.gusta}">
-                                        <h2 id="h2like" class="profileEvent">Eventos que estas gustando</h2>
+                                        <h2 id="h2like" class="profileEvent">Eventos que te gustan.</h2>
                                         <div id="likeEvents">
                                             <p:dataTable var="evento" value="#{usuario.gusta}" styleClass="tableProfile eventLists">
                                                 <ui:insert name="search-sidebar">
@@ -59,7 +59,7 @@
                                             </p:dataTable>
                                         </div>
                                     </c:when>
-                                    <c:otherwise><h2>No hay eventos que estés gustando.</h2></c:otherwise>
+                                    <c:otherwise><h2 class="text-profile">No hay eventos que te gusten.</h2></c:otherwise>
                                 </c:choose>
                             </p:panel>
                         </p:tab>
@@ -69,7 +69,7 @@
                                 <table >
 
                                     <tr>
-                                        <td><p:outputLabel value="Introduzca nuevo email: " /> </td>
+                                        <td><p:outputLabel class="text-profile" value="Introduzca nuevo email: " /> </td>
                                         <td><p:inputText value="#{usuario.emailLogueado}"
                                                          validatorMessage="Email no válido">
                                                 <f:validateRegex pattern="(^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$){0,1}" />
@@ -78,15 +78,15 @@
 
                                     <tr>
                                         <p:messages id="correo-messages" autoUpdate="true"/>
-                                        <td><p:outputLabel value="Introduzca nueva contraseña: " /> </td>
+                                        <td><p:outputLabel class="text-profile" value="Introduzca nueva contraseña: " /> </td>
                                         <td><p:password id="pass1" match="pass2" value="#{usuario.contraseniaLogueado}" validatorMessage="Las contraseñas no coinciden"/></td>
                                     </tr>
                                     <tr>
-                                        <td><p:outputLabel value="Confirmar contraseña: " /> </td>
+                                        <td><p:outputLabel class="text-profile" value="Confirmar contraseña: " /> </td>
                                         <td><p:password id="pass2" value="#{usuario.contrasenia2Logueado}" /></td>
                                     </tr>
                                     <tr>
-                                        <td><p:outputLabel value="Notificacion vía email " /></td>
+                                        <td><p:outputLabel class="text-profile" value="Notificacion vía email " /></td>
                                         <td><p:selectBooleanCheckbox value="#{usuario.emailNotifier}" /></td>
                                     </tr>
 

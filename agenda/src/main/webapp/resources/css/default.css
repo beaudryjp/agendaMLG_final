@@ -377,10 +377,6 @@ form .submitButtons{
     text-align: right;
 }
 
-#search-sidebar h3{
-    border-top:2px solid #FFCDCD;
-    /*font-family: 'Raleway', sans-serif;*/
-}
 
 
 .search-option{
@@ -410,9 +406,11 @@ form .submitButtons{
 }
 
 .search-title{
-    background-color: #262525;
+    background-color: #393947;
     padding: 10px;
     margin-bottom: -2px;
+    width: 100%;
+    
 }
 
 #search_form_options table, #search_form_calendar table{
@@ -529,8 +527,10 @@ ul#headerTags{
     margin:0 auto;
     font-size: 13px;
     text-transform: lowercase;
-    background-color: #888;
+    background-color: #66667f;
     color: #ccc;
+    box-shadow: 0px 0px 20px #444455;
+    border-radius: 5px;
 }
 
 h5.h5bold{
@@ -671,3 +671,11 @@ p.showDate{
 .eventDesc{
     text-align: justify;
 }
+
+.ui-panel#panel-noti {
+    background-color: #66667f;
+    box-shadow: 0px 0px 20px #444455;
+    color: white;
+    border-radius: 5px;
+}
+
