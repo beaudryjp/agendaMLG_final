@@ -31,9 +31,10 @@
             <p:dataTable value="#{eventoBean.getEvento()}" var="evento" id="eventInfo">
 
                 <p:column>
-                    <div id="event-goBack">
-                        <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
-                    </div>
+                    <ui:insert name="go-back">
+                        <ui:include src = "/WEB-INF/templates/go_back.xhtml" />
+                    </ui:insert>
+                    <br/><br/>
                     <div class="floatRight">
                         <div class="rating">
                             <p:rating value="#{evento.valoracion}" readonly="true" />
@@ -70,7 +71,7 @@
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
                     <div class="imageEvent">
-                        
+
                         <p:graphicImage value="#{eventoBean.getImage()}" width="500px" height="300px">
                             <f:param name="filename" value="#{evento.imagen_url}" />
                         </p:graphicImage>
@@ -184,7 +185,7 @@
                                 <p:commandLink id="destacarEvento" action="#{eventoBean.destacarEvento()}" value="Destacar evento" styleClass="editEvent btn btn-default btn-lg"/>
                             </c:otherwise>
                         </c:choose>
-                        
+
                         <p:commandLink id="changeImage" onclick="PF('dlg_change').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
                     </c:if>
                 </p:column>

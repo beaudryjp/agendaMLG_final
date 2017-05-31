@@ -653,6 +653,10 @@ p.showDate{
     margin-right: 10px;
 }
 
+.cancelSumit{
+    font-size: 15px;
+}
+
 .addComment, .deleteEvent, .editEvent{
     font-size:15px;
 }

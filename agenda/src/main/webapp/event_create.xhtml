@@ -15,15 +15,15 @@
             <h:form id="evento">
                 <div class=" ui-datatable ui-widget">
                     <div class="ui-datatable-tablewrapper">
-                        <p:panelGrid id="eventCreate" class="eventCreate" styleClass="ui-fluid">
+                        <p:panelGrid id="eventCreate" styleClass="eventCreate ui-fluid">
                             <p:messages id="errors" autoUpdate="true"/>
 
                             <p:row>
                                 <p:column colspan="3">
-                                    <div id="event-goBack">
-                                        <br/>
-                                        <h:link value="Volver" outcome="index" class="loginBack icon fa-chevron-left fa-2x"/>
-                                    </div>
+                                    <br/>
+                                    <ui:insert name="go-back">
+                                        <ui:include src = "/WEB-INF/templates/go_back.xhtml" />
+                                    </ui:insert>
                                     <h2 class="eventTitle">
                                         <c:choose>
                                             <c:when test="#{ControlLog.userRegistered}">

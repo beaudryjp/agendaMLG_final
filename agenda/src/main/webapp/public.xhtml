@@ -4,7 +4,8 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
@@ -13,13 +14,13 @@
 
             <div class=" ui-datatable ui-widget"><div class="ui-datatable-tablewrapper">
                     <h:form>
-                        <p:panelGrid class="eventCreate">
+                        <p:panelGrid  styleClass="eventCreate ui-fluid">
                             <p:row>
                                 <p:column colspan="2">
-                                    <div id="event-goBack">
-                                        <br/>
-                                        <h:link value="Volver" outcome="index" class="loginLink icon fa-chevron-left fa-2x"/>
-                                    </div>
+                                    <br/>
+                                    <ui:insert name="go-back">
+                                        <ui:include src = "/WEB-INF/templates/go_back.xhtml" />
+                                    </ui:insert>
                                     <h2 class="eventTitle">Crear un nuevo público</h2>
                                 </p:column>
                             </p:row>
@@ -34,8 +35,8 @@
 
                             <p:row>
                                 <p:column colspan="2">
-                                    <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
-                                    <p:commandButton action="#{destinatarioBean.createAudience()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons"/>
+                                    <h:link value="Cancelar" outcome="index" class="btn btn-default btn-lg editButtons cancelSumit"/>
+                                    <p:commandLink action="#{destinatarioBean.createAudience()}" value="Crear" id="createSubmit" styleClass="btn btn-default btn-lg editButtons"/>&nbsp;&nbsp;
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -46,37 +47,37 @@
                             </p:row>
                             <p:row>
                                 <p:column>
-                                    <p:selectOneMenu id="search_public" class="form-control" value = "#{destinatarioBean.destinatario}">
+                                    <p:selectOneMenu id="search_public" class="form-control" value = "#{destinatarioBean.destinatario}"  styleClass="select-style">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
-                                        </p:selectOneMenu>
-                                    
+                                    </p:selectOneMenu>
+
                                 </p:column>  
                                 <p:column colspan="2">
                                     <p:inputText id="publicNameUpdate" value="#{destinatarioBean.destinatarioup}" placeholder="Nuevo nombre" />
                                 </p:column>
-                                
+
                             </p:row>
                             <p:row>
-                                    <p:column colspan="2">
-                                   <p:commandButton action="#{destinatarioBean.updateAudience()}" value="Modificar" id="updateSubmit"  styleClass="updateSubmit btn btn-default btn-lg editButtons"/>
-                                    </p:column>
-                                </p:row>
+                                <p:column colspan="2">
+                                    <p:commandLink action="#{destinatarioBean.updateAudience()}" value="Modificar" id="updateSubmit"  styleClass="updateSubmit btn btn-default btn-lg editButtons"/>
+                                </p:column>
+                            </p:row>
                             <p:row>
-                                 <p:column colspan="2">
+                                <p:column colspan="2">
                                     <h2 class="eventTitle">Eliminar un público</h2>
                                 </p:column>
                             </p:row>
                             <p:row>
-                               
+
                                 <p:column colspan="2">
-                                    <p:selectManyMenu id="search_public2" class="form-control" value="#{destinatarioBean.destinatariodel}" showCheckbox="true">
+                                    <p:selectManyMenu id="search_public2" class="form-control" value="#{destinatarioBean.destinatariodel}" showCheckbox="true" styleClass="select-style">
                                         <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
                                     </p:selectManyMenu>
-            
+
                                 </p:column>  
                                 <p:row>
                                     <p:column colspan="2">
-                                        <p:commandButton action="#{destinatarioBean.deleteAudience()}" value="Borrar" id="deleteSubmit"  styleClass="deleteSubmit btn btn-default btn-lg editButtons"/>
+                                        <p:commandLink action="#{destinatarioBean.deleteAudience()}" value="Borrar" id="deleteSubmit"  styleClass="deleteSubmit btn btn-default btn-lg editButtons"/>
                                     </p:column>
                                 </p:row>
                             </p:row>
