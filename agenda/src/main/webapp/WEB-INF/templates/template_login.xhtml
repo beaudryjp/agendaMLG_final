@@ -21,14 +21,13 @@
             <header>
                 <section class="login-headerLogo">
                     <center>
-                        <h1>
-                            <h:link outcome="index" >
-                                <h:graphicImage name="img/logo_inv.png" />
-                            </h:link>
-                        </h1>
+                        <ui:insert name="logo">
+                            <ui:include src = "/WEB-INF/templates/logo.xhtml" />
+                        </ui:insert>
                     </center>
                 </section>
             </header>
+            <div class="spacer2"></div>
             <section id="main-area" class="container">
                 <div id="main-left" class="login">
                     <div id="login-goBack">
@@ -49,6 +48,6 @@
         <!--
         <h:outputScript name="js/jquery.validate.min.js" />
         <h:outputScript name="js/additional-methods.min.js" />
-       -->
+        -->
     </h:body>
 </html>

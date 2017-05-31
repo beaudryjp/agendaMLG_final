@@ -7,11 +7,9 @@
       xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition> 
         <section id="header-logo">
-            <h1>
-                <h:link outcome="index" >
-                    <h:graphicImage name="img/logo_inv.png" />
-                </h:link>
-            </h1>
+            <ui:insert name="logo">
+                <ui:include src = "/WEB-INF/templates/logo.xhtml" />
+            </ui:insert>
         </section>
         <section id="header-page-phrase">
             <h4>La agenda de eventos de Andalucía</h4>

@@ -35,6 +35,7 @@ import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -580,7 +581,9 @@ public class EventoBean implements Serializable {
         }
 
         e.setEtiqueta(etq);
-        e.setLocalidad(business.getLocalidadByName(prov.getLocalidad()));
+        System.out.println("createEvent() provincia: " + prov.getProvincia());
+        System.out.println("createEvent() localidad: " + prov.getLoca().getNombre());
+        e.setLocalidad(business.getLocalidadByName(prov.getLoca().getNombre()));
 
         e.setImagen_url("default.png");
         e.setImagen_titulo(event_new_titulo.toLowerCase());
@@ -798,7 +801,10 @@ public class EventoBean implements Serializable {
         System.out.println("onclick longi " + event_new_longitud);
         event_new_latitud = String.valueOf(latlng.getLat());
         event_new_longitud = String.valueOf(latlng.getLng());
-
+        /*
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Coordinates", "Las coordendadas son: " + event_new_latitud + ", " + event_new_longitud);
+        RequestContext.getCurrentInstance().showMessageInDialog(message);
+         */
         System.out.println("onclick lati 2 " + event_new_latitud);
         System.out.println("onclick longi 2 " + event_new_longitud);
     }
@@ -848,12 +854,12 @@ public class EventoBean implements Serializable {
             System.out.println("funcionadelete , si");
 
         }
-        */
+         */
         e.setVisible(false);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                
+
                 for (Usuario usi : u) {
                     if (usi.isEmail_notifier()) {
                         System.out.println("funcionadelete?");
@@ -870,7 +876,7 @@ public class EventoBean implements Serializable {
                 }
             }
         }).start();
-        
+
         business.deleteEvent(Long.parseLong(eventId));
 
         Redirect.redirectToIndex();

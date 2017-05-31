@@ -1,7 +1,7 @@
 @import url(font-awesome.min.css);
 @font-face {
-  font-family: 'Kaushan Script';
-  src:  url('../fonts/KaushanScript-Regular.ttf') format('truetype');
+    font-family: 'Kaushan Script';
+    src:  url('../fonts/KaushanScript-Regular.ttf') format('truetype');
 }
 
 @media (min-width: 400px) {
@@ -411,7 +411,7 @@ form .submitButtons{
     padding: 10px;
     margin-bottom: -2px;
     width: 100%;
-    
+
 }
 
 #search_form_options table, #search_form_calendar table{
@@ -564,7 +564,7 @@ ul.publico{
 .eventCreate.ui-panelgrid td, .ui-panelgrid tr{
     border-style: none !important;
     width: 100%;
-    padding: 10px;
+    padding: 15px;
 }
 
 .ui-panelgrid input, .ui-panelgrid input{
@@ -680,3 +680,42 @@ p.showDate{
     border-radius: 5px;
 }
 
+.icon {
+    margin-left: 5px !important;
+}
+
+.ui-selectonemenu-list, .ui-selectonemenu-panel{
+    max-height:50% !important;
+    overflow: scroll;
+}
+
+.ui-selectonemenu-items-wrapper{
+    height:100% !important;
+    overflow: scroll;
+}
+
+.ui-selectonemenu-label{
+    width:100% !important;
+}
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("data:image/png;base64,R0lGODlhDwAUAIABAAAAAP///yH5BAEAAAEALAAAAAAPABQAAAIXjI+py+0Po5wH2HsXzmw//lHiSJZmUAAAOw==") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}

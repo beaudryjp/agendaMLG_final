@@ -4,8 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:pretty="http://ocpsoft.com/prettyfaces">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <f:metadata>
@@ -19,7 +18,7 @@
                                 <p:column colspan="2">
                                     <div id="event-goBack">
                                         <br/>
-                                        <h:link value="Volver" outcome="index" class="linkBack icon fa-chevron-left fa-2x floatRight"/>
+                                        <h:link value="Volver" outcome="index" class="loginLink icon fa-chevron-left fa-2x"/>
                                     </div>
                                     <h2 class="eventTitle">Crear una nueva tag</h2>
                                 </p:column>
@@ -32,35 +31,34 @@
                                     <p:inputText id="tagName" value="#{etiquetaBean.etiquetaCreate}" placeholder="Nombre"/>
                                 </p:column>
                             </p:row>
-
+                        
                             <p:row>
                                 <p:column colspan="2">
-                                    <pretty:link mappingId="index" class="createSubmit btn btn-default btn-lg editButtons" >Cancelar</pretty:link>
-                                    <h:link outcome="index" value="Cancelar" id="cancelSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons"/>
-                                    <p:commandLink action="#{etiquetaBean.createTag()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons"/>
+                                    <h:link outcome="index" value="Cancelar" id="cancelSumit"  styleClass="cancelSumit btn btn-default btn-lg editButtons"/>
+                                    <p:commandButton action="#{etiquetaBean.createTag()}" value="Crear" id="createSubmit"  styleClass="createSubmit btn btn-default btn-lg editButtons"/>
                                 </p:column>
                             </p:row>
-
+                            
                             <p:row>
                                 <p:column colspan="2">
                                     <h2 class="eventTitle">Modificar una etiqueta</h2>
                                 </p:column>
 
                             </p:row>
-                            <p:row>
+                             <p:row>
                                 <p:column>
                                     <h:selectOneMenu id="search_tags" class="form-control" value = "#{etiquetaBean.etiquetaAnt}">
-
+                                            
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
-                                    </h:selectOneMenu>
+                                   </h:selectOneMenu>
                                     <p:column colspan="2">
                                         <p:inputText id="tagNameUpdate" value="#{etiquetaBean.etiquetaUpdate}" placeholder="Nuevo nombre" />
-                                    </p:column>
+                                     </p:column>
                                 </p:column>  
                             </p:row>
                             <p:row>
-                                <p:column colspan="2">
-                                    <p:commandLink action="#{etiquetaBean.updateTag()}" value="Modificar" id="updateSubmit"  styleClass="updateSubmit btn btn-default btn-lg editButtons"/>
+                                <p:column colspan="3">
+                                    <p:commandButton action="#{etiquetaBean.updateTag()}" value="Modificar" id="updateSubmit"  styleClass="updateSubmit btn btn-default btn-lg editButtons"/>
                                 </p:column>
                             </p:row>
                             <p:row>
@@ -69,21 +67,19 @@
                                 </p:column>
                             </p:row>
                             <p:row>
-                                <p:column></p:column>
-                                <p:column>
-                                    <p:selectManyMenu  style="width: 100% !important; height: 100%" id="search_tags2" class="form-control" value="#{etiquetaBean.etiquetaDelete}" showCheckbox="true">
+                                
+                                <p:column colspan="2">
+                                    <h:selectManyMenu id="search_tags2" class="form-control" value="#{etiquetaBean.etiquetaDelete}">
+                                            
                                         <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
-                                    </p:selectManyMenu>
-
+                                   </h:selectManyMenu>
+                                    
                                 </p:column>  
                             </p:row>
                             <p:row>
-                                <p:column>
-                                    <p:commandLink action="#{etiquetaBean.deleteTag()}" value="Borrar" id="deleteSubmit"  styleClass="deleteSubmit btn btn-default btn-lg editButtons"/>
+                                <p:column colspan="3">
+                                     <p:commandButton action="#{etiquetaBean.deleteTag()}" value="Borrar" id="deleteSubmit"  styleClass="deleteSubmit btn btn-default btn-lg editButtons"/>
                                 </p:column>
-                            </p:row>
-                            <p:row>
-
                             </p:row>
                         </p:panelGrid>
                     </h:form>

@@ -29,7 +29,7 @@
 
                             <p:password value = "#{usuario.contrasenia}" id="login_password"   placeholder="Introduce tu contraseña"  class="form-control"  redisplay="true"  />
                             <div id="login-rememberForgot">
-                                <h:link class="loginLink" value="He olvidado mi contraseña" outcome="reset_password" />
+                                <h:link class="loginLink floatRight" value="He olvidado mi contraseña" outcome="reset_password"/>
                             </div>
                             <h:commandButton action="#{usuario.autenticar()}" value="Iniciar sesión"  id="login_submit"  
                                              styleClass="btn btn-default btn-lg submitButtons"/>

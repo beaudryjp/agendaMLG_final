@@ -65,42 +65,38 @@
                         </p:tab>
                         <p:tab title="Configuración de cuenta">
                             <h:panelGroup id="conf-panel">
+                                <div class="form-group form-group-lg" style="width: 300px">
+                                    <p:messages id="correo-messages" autoUpdate="true"/>
+                                    <div class="form-inline">
+                                        <p:outputLabel class="text-profile" value="Introduzca nuevo email: " />&nbsp;&nbsp;
+                                        <p:inputText value="#{usuario.emailLogueado}" styleClass="form-control" size="50"
+                                                     validatorMessage="Email no válido">
+                                            <f:validateRegex pattern="(^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$){0,1}" />
+                                        </p:inputText>
+                                    </div>
+                                    <br/>
 
-                                <table >
+                                    <p:outputLabel class="text-profile" value="Introduzca nueva contraseña: " /> &nbsp;&nbsp;
+                                    <p:password id="pass1" size="30"  styleClass="form-control" match="pass2" value="#{usuario.contraseniaLogueado}" validatorMessage="Las contraseñas no coinciden"/>
 
-                                    <tr>
-                                        <td><p:outputLabel class="text-profile" value="Introduzca nuevo email: " /> </td>
-                                        <td><p:inputText value="#{usuario.emailLogueado}"
-                                                         validatorMessage="Email no válido">
-                                                <f:validateRegex pattern="(^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$){0,1}" />
-                                            </p:inputText></td>
-                                    </tr>
+                                    <br/>
+                                    <p:outputLabel class="text-profile" value="Confirmar contraseña: " /> &nbsp;&nbsp;
+                                    <p:password id="pass2" size="30" styleClass="form-control" value="#{usuario.contrasenia2Logueado}" />
 
-                                    <tr>
-                                        <p:messages id="correo-messages" autoUpdate="true"/>
-                                        <td><p:outputLabel class="text-profile" value="Introduzca nueva contraseña: " /> </td>
-                                        <td><p:password id="pass1" match="pass2" value="#{usuario.contraseniaLogueado}" validatorMessage="Las contraseñas no coinciden"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td><p:outputLabel class="text-profile" value="Confirmar contraseña: " /> </td>
-                                        <td><p:password id="pass2" value="#{usuario.contrasenia2Logueado}" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td><p:outputLabel class="text-profile" value="Notificacion vía email " /></td>
-                                        <td><p:selectBooleanCheckbox value="#{usuario.emailNotifier}" /></td>
-                                    </tr>
+                                    <br/>
+                                    <p:outputLabel class="text-profile" value="Notificacion vía email " />&nbsp;&nbsp;
+                                    <p:selectBooleanCheckbox value="#{usuario.emailNotifier}" />
+                                    <br/>
+                                    <p:commandLink action ="#{usuario.modificar}" value ="Modificar Perfil" id="submit" oncomplete="window.location.reload();"
+                                                   styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
 
-
-                                </table>
-                                <p:commandLink action ="#{usuario.modificar}" value ="Modificar Perfil" id="submit" oncomplete="window.location.reload();"
-                                               styleClass="btn btn-default btn-lg submitButtons" update="conf-panel"/>
-
-                                <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
-                                    <c:if test="#{tareas.validado() == false}">
-                                        <p:commandLink id="solicitarValid" value="Solicitar validación" 
-                                                       action="#{tareas.createTaskUser()}" styleClass="btn btn-default btn-lg submitButtons" />
+                                    <c:if test="#{ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
+                                        <c:if test="#{tareas.validado() == false}">
+                                            <p:commandLink id="solicitarValid" value="Solicitar validación" 
+                                                           action="#{tareas.createTaskUser()}" styleClass="btn btn-default btn-lg submitButtons" />
+                                        </c:if>
                                     </c:if>
-                                </c:if>
+                                </div>
                             </h:panelGroup>
                         </p:tab>
                         <p:tab id="tabNotifications" title="Notificaciones">

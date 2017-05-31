@@ -28,6 +28,7 @@ public class ProvinciaBean implements Serializable {
     private List<Localidad> localidades;
     private String provincia;
     private String localidad;
+    private Localidad loca;
     @EJB
     private Business business;
 
@@ -50,20 +51,7 @@ public class ProvinciaBean implements Serializable {
         return provincias;
     }
 
-    /*
-    public List<Localidad> getLocalidades() {
-        Collections.sort(localidades, new Comparator<Localidad>() {
-            @Override
-            public int compare(Localidad o1, Localidad o2) {
-                return o1.getNombre().compareTo(o2.getNombre());
-            }
-        });
-        return localidades;
-    }
-     */
-
     public void onCambioProvincia() {
-
         localidad = provincia;
         if (provincia != null && !provincia.equals("")) {
            
@@ -120,4 +108,13 @@ public class ProvinciaBean implements Serializable {
         this.localidades = localidades;
     }
 
+    public Localidad getLoca() {
+        return loca;
+    }
+
+    public void setLoca(Localidad loca) {
+        this.loca = loca;
+    }
+
+    
 }
