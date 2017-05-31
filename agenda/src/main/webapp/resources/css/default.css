@@ -679,3 +679,6 @@ p.showDate{
     border-radius: 5px;
 }
 
+.icon {
+    margin-left: 5px !important;
+}

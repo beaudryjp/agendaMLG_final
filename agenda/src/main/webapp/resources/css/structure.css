@@ -593,3 +593,6 @@ h2.profileEvent{
     color: white;
 }
 
+.ui-selectonemenu {
+    position: static !important;
+}
