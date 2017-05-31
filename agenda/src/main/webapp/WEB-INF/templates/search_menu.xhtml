@@ -5,8 +5,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:pretty="http://ocpsoft.com/prettyfaces">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition>
         <div id="search-sidebar">
             <h:outputScript name="js/prime.js" />
@@ -15,8 +14,10 @@
             </c:if>
 
             <c:if test="#{ControlLog.isUserAdmin()}">
-                <h3 class="search-title createEventTitle"><h:link  outcome="tag_create" value="CREAR ETIQUETA" id="linkCreateTag"/></h3>
-                <h3 class="search-title createEventTitle"><h:link  outcome="public_create" value="CREAR PÚBLICO" id="linkCreatePublic"/></h3>
+
+                <h3 class="search-title createEventTitle"><h:link  outcome="tag" value="ETIQUETAS" id="linkCreateTag"/></h3>
+
+                <h3 class="search-title createEventTitle"><h:link  outcome="public" value="PÚBLICO" id="linkCreatePublic"/></h3>
             </c:if>
 
             <c:if test="#{ControlLog.isUserRegistered()}">
@@ -33,7 +34,7 @@
                             <p:panelGrid>
                                 <p:row>
                                     <p:column colspan="2">
-                                        <p:inputText class="form-control" id="search_text" placeholder="Introduzca un término de búsqueda"/>
+                                        <p:inputText class="form-control" id="search_text" placeholder="Introduzca un término de búsqueda" value="#{eventoBean.searchText}"/>
                                     </p:column>
                                 </p:row>
                                 <p:row>
@@ -54,12 +55,12 @@
                                 </p:row>
                                 <p:row>
                                     <p:column>
-                                        <h:selectOneMenu id="search_public" class="form-control" value="#{destinatarioBean.destinatario}">
+                                        <h:selectOneMenu id="search_public" class="form-control" value="#{eventoBean.searchDestinatario}">
                                             <f:selectItems value="#{destinatarioBean.destinatarios}" var="pub" itemLabel="#{pub.descripcion}" itemValue="#{pub.descripcion}" />
                                         </h:selectOneMenu>
                                     </p:column>
                                     <p:column>
-                                        <h:selectOneMenu id="search_tags" class="form-control" value="#{etiquetaBean.etiqueta}">
+                                        <h:selectOneMenu id="search_tags" class="form-control" value="#{eventoBean.searchEtiqueta}">
                                             <!--<f:selectItem itemLabel="Todos" itemValue="Todos"/>-->
                                             <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
                                         </h:selectOneMenu>
@@ -68,10 +69,7 @@
 
                                 <p:row>
                                     <p:column colspan="2">
-                                        <pretty:link mappingId="searchEvent" id="searchEvent" styleClass="btn btn-default btn-lg floatRight">
-                                            Enviar
-                                        </pretty:link>
-                                        <!--<p:commandButton action="events" value="Enviar" id="search_submit"  styleClass="btn btn-default btn-lg"/>-->
+                                        <h:commandButton action="#{eventoBean.searchEvents()}" value="Buscar" id="search_submit"  styleClass="btn btn-default btn-lg submitButtons"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>
@@ -83,16 +81,23 @@
                 <h4 id="tab2-header" class="tab-title">Calendario</h4>
                 <p id="tab2-main">
                     <h:form id="search_form_calendar">
-
-                        <p:growl id="growl" showDetail="true" />
-                        <p:calendar id="search_calendar" styleClass="ll-skin-melon" value="#{eventoBean.dateSelected}" mode="inline" locale="es">
-                            <p:ajax event="dateSelect" listener="#{eventoBean.eventosByFecha}" update="growl" />
-                        </p:calendar>
-
-                        <!--
-                        <p:calendar id="popup" value="#{eventoBean.fecha}"  styleClass="ll-skin-melon" locale="es" />
-                        -->
-                        <!--<p:commandButton  action="events"  value="Enviar"  id="search_submit"  styleClass="btn btn-default btn-lg"/>-->
+                        <div class="form-group form-group-sm">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column style="border: none">
+                                        <p:calendar id="search_calendar" widgetVar="srcCalendar"
+                                                    mindate="srcCalendar.today()" class="ll-skin-melon" placeholder="Fecha"
+                                                    size="10" effect="clip"
+                                                    value="#{eventoBean.dateSelected}" locale="es" /> <br />
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column>
+                                        <h:commandButton action="#{eventoBean.getEventosByFecha()}" value="Buscar" id="calendar_submit" styleClass="btn btn-default btn-sm submitButtons"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </div>
                     </h:form>
                 </p>
             </div>

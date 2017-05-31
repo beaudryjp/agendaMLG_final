@@ -1,16 +1,30 @@
 # agendaMLG
 La aplicación Java EE (JPA + JSF) de la aplicación agendaMLG para el Diario Sur - SII
 
-# Error de memoria al compilar
-Si sale el error al desplegar el ear de agendaMLG: 
+# Comando para hacer clean, build y deploy (es necesario tener instalado maven en el pc)
+Seleccionar el proyecto agendaMLG_final y ir a Tools -> Open in terminal
 
-[ERROR] Failed to execute goal org.wildfly.plugins:wildfly-maven-plugin:1.1.0.Alpha6:deploy (default-cli) on project agendaMLG-ear: Error executing FORCE_DEPLOY: java.util.concurrent.ExecutionException: Operation failed: java.lang.OutOfMemoryError:Java heap space -> [Help 1]
+Ejecutar el comando cada vez que se quiera desplegar
 
-1. Comprobar que tengais arrancado el servidor mysql
+mvn clean install; cd agendaMLG-ear/; mvn wildfly:deploy -X; cd ..
 
-2. Hay un ear que se ha desplegado mal, teneis que ir a donde tengais instalado el servidor wildfly, ir a la carpeta standalone, ir a deployments y borrar todos los ficheros referentes a agendaMLG.
+# Importar datos
+Para importar datos hay que ejecutar el siguiente comando:
 
-3. Existe un problema en la configuración de wildfly, teneis que ir a donde tengais instalado el servidor, ir a la carpeta standalone, ir a configuration y abrir los ficheros standalone.xml y standalone.xml, ir al final del documento y en el apartado de deployments borrar el deployment donde haga referencia a agendaMLG.
+mysql -u root -p agenda < data.sql 
+
+Es posible que no salgan los acentos y caracteres especiales, en este caso en la consola mysql ejecutar:
+ALTER DATABASE agenda CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
+# Usuarios
+
+jeanpaul.beaudry@gmail.com - redactor
+
+Poppo@gmail.com - registrado
+
+Pepe@patata.com - validado
+
+todos tienen la misma contraseña (123456)
 
 # Base de datos
 ### En esta practica hay que añadir una base de datos externa(mysql) ya que no se puede utiliza JavaDB.

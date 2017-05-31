@@ -17,3 +17,12 @@ PrimeFaces.locales['es'] = {
     showMonthAfterYear: false,
     yearSuffix: ""
 };
+$(document).ready(function () {
+    $('.eventLists table').DataTable({
+        'sPaginationType': 'full_numbers',
+        'aLengthMenu': [[3, 6], [3, 6]],
+        'iDisplayLength': 3,
+        "bAutoWidth": true
+
+    });
+});

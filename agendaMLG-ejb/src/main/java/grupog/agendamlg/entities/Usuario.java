@@ -5,7 +5,6 @@ import com.google.common.collect.ComparisonChain;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -34,7 +33,8 @@ import javax.persistence.UniqueConstraint;
     @NamedQuery(name="checkEmail", query="SELECT u from Usuario u WHERE u.email = :uemail"),
     @NamedQuery(name="checkUsername", query="SELECT u from Usuario u WHERE u.pseudonimo = :upseudonimo"),
     @NamedQuery(name="getAllUsers", query="SELECT u from Usuario u"),
-    @NamedQuery(name="getUser", query="SELECT u from Usuario u WHERE u.id_usuario = :id_usuario")
+    @NamedQuery(name="getUser", query="SELECT u from Usuario u WHERE u.id_usuario = :id_usuario"),
+    @NamedQuery(name="getRedactores", query="SELECT u from Usuario u WHERE u.rol = :rol"),
 })
 public class Usuario implements Serializable, Comparable {
     
@@ -45,50 +45,51 @@ public class Usuario implements Serializable, Comparable {
     }
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_usuario;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
-    @Column(name="apellidos", nullable=false)
+    @Column(nullable=false)
     private String apellidos;
-    @Column(name="pseudonimo", nullable=false)
+    @Column(nullable=false)
     private String pseudonimo;
 
-    @Column(name="email", nullable=false)
+    @Column(nullable=false)
     private String email;
-    @Column(name="email_notifier", nullable=false, columnDefinition="TINYINT", length = 1)  
-    private boolean email_notifier;
-    @Column(name="password_hash", nullable=false)
+    @Column(nullable=false)  
+    private Boolean email_notifier;
+    @Column(nullable=false)
     private String password_hash;
-    @Column(name="sal", nullable=false)
+    @Column(nullable=false)
     private String sal;
     @Enumerated(EnumType.STRING)
     private Tipo_Rol rol;
     
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="usuario")
     private List<Comentario> comentarios;
-    @OneToMany(cascade=CascadeType.ALL)
+    
+    @OneToMany(orphanRemoval = true, mappedBy="usuario")
     private List <Notificacion> notificaciones;
-    @ManyToMany(cascade=CascadeType.ALL)
+    
+    @ManyToMany
     @JoinTable(name="jn_megusta_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> megusta;
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name="jn_sigue_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> sigue;
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name="jn_asiste_id",joinColumns=@JoinColumn(name="id_usuario"),inverseJoinColumns=@JoinColumn(name="id_evento"))
     private List<Evento> asiste;
+    
     @ManyToMany
-    @JoinTable(name = "jn_tareas_id", joinColumns = @JoinColumn(name = "id_usuario"), inverseJoinColumns = @JoinColumn(name = "id_tarea"))
     private List<Tarea> tareas;
-    @OneToMany(mappedBy="creador_peticion",cascade=CascadeType.ALL)
+    
+    @OneToMany(mappedBy="creador_peticion",orphanRemoval=true)
     private List<Tarea> peticion;
-
-    public Usuario(String nombre, String apellidos, String email) {
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.email = email;
-    }
+    
+    @OneToMany
+    @JoinColumn(name="propietario")
+    private List<Evento> misEventos;
     
     public Usuario(){
     }
@@ -221,6 +222,14 @@ public class Usuario implements Serializable, Comparable {
         this.peticion = peticion;
     }
 
+    public List<Evento> getMisEventos() {
+        return misEventos;
+    }
+
+    public void setMisEventos(List<Evento> misEventos) {
+        this.misEventos = misEventos;
+    }
+
     
     
     @Override
@@ -258,7 +267,7 @@ public class Usuario implements Serializable, Comparable {
 
     @Override
     public String toString() {
-        return "Usuario{" + "id_usuario=" + id_usuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", pseudonimo=" + pseudonimo + ", email=" + email + ", email_notifier=" + email_notifier + ", password_hash=" + password_hash + ", sal=" + sal + ", rol=" + rol + ", comentarios=" + comentarios + ", notificaciones=" + notificaciones + ", megusta=" + megusta + ", sigue=" + sigue + ", asiste=" + asiste + '}';
+        return "Usuario{" + "id_usuario=" + id_usuario + ", nombre=" + nombre + ", apellidos=" + apellidos + ", pseudonimo=" + pseudonimo + ", email=" + email + ", email_notifier=" + email_notifier + ", password_hash=" + password_hash + ", sal=" + sal + ", rol=" + rol + '}';
     }
 
     

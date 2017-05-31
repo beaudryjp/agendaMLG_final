@@ -7,7 +7,12 @@ import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.business.Business;
+import grupog.agendamlg.entities.Localidad;
+import grupog.agendamlg.entities.Tarea;
+import grupog.agendamlg.general.Redirect;
 import grupog.agendamlg.general.Sendmail;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -15,24 +20,33 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.PhaseId;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.map.PointSelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.map.LatLng;
 import org.primefaces.model.tagcloud.DefaultTagCloudItem;
 import org.primefaces.model.tagcloud.DefaultTagCloudModel;
 import org.primefaces.model.tagcloud.TagCloudModel;
@@ -49,51 +63,75 @@ public class EventoBean implements Serializable {
     private Business business;
     @Inject
     private ControlLog current_user;
+    @Inject
+    private ProvinciaBean prov;
+
     private TagCloudModel model;
     private List<Evento> eventos;
     private List<Evento> evento_asiste;
     private List<Evento> evento_gusta;
     private List<Evento> evento_sigue;
     private List<Evento> evento_etiquetas;
-    private List<Etiqueta> etiquetas;
-    private List<Destinatario> destinatarios;
-    private List<Destinatario> publico_evento;
-    private List<Destinatario> publico_evento2;
-    private List<Destinatario> publico_evento3;
-    private List<Destinatario> publico_evento4;
-    private List<Comentario> comentarios;
-    private String searchProvincia;
+    private List<Evento> eventoSearch;
+    private List<String> etiquetas;
+    private List<String> destinatarios;
+    private List<Destinatario> eventDestinatarios;
+    private List<Comentario> eventComentarios;
+    private List<Etiqueta> eventoEtiquetas;
+    private String eventNewComment;
     private String searchLocalidad;
     private String searchDestinatario;
     private String searchEtiqueta;
     private String searchText;
     private String tag;
     private String eventId;
-    private LocalDate dateSelected;
+    private Date dateSelected;
     private String event_new_titulo;
     private String event_new_descripcion;
-    private Date event_new_fecha_inicio;
-    private Date event_new_fecha_fin;
+    private String event_new_fecha_inicio;
+    private String event_new_fecha_fin;
     private String event_new_horario;
     private String event_new_precio;
-    private double event_new_longitud;
-    private double event_new_latitud;
+    private String event_new_latitud;
+    private String event_new_longitud;
     private boolean event_new_destacado;
-    private UploadedFile event_new_imagen_url;
-    private String event_new_imagen_titulo;
+    private Integer event_new_rating;
+    private String event_new_imagen_url;
+    private int numAssists;
+    private int numLikes;
+    private int numFollows;
+    private String updateTitulo;
+    private String updateDescripcion;
+    private List<String> updateEtiquetas;
+    private List<String> updateDestinatario;
+    private Date updateFechaInicio;
+    private Date updateFechaFin;
+    private String updateHorario;
+    private String updatePrecio;
+    private String updateDestacado;
+    private String updateLocalidad;
+    private List<Localidad> lista_localidades;
+
+    @PostConstruct
+    public void init() {
+        searchDestinatario = "Todos";
+        searchEtiqueta = "Todos";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-YYYY");
+        LocalDate localDate = LocalDate.now();
+        event_new_fecha_inicio = dtf.format(localDate);
+        event_new_fecha_fin = dtf.format(localDate.plusDays(1));
+    }
 
     public List<Evento> getEventosProximos() {
-        List<Evento> e = business.getEvents();
+        List<Evento> e = business.getEventsNearestByCurrentDate();
         if (!e.isEmpty()) {
-            Collections.sort(e, new Comparator<Evento>() {
-                @Override
-                public int compare(Evento o1, Evento o2) {
-                    return o1.getFecha_inicio().compareTo(o2.getFecha_inicio());
-                }
-            });
-            return e.subList(0, 2);
+            if (e.size() > 2) {
+                return e.subList(0, 2);
+            } else {
+                return e;
+            }
         } else {
-            return null;
+            return new ArrayList<>();
         }
     }
 
@@ -112,36 +150,26 @@ public class EventoBean implements Serializable {
         return business.getEventsImportant();
     }
 
-    public List<Evento> getEventosByFecha() {
-        return business.getEventsByDate(dateSelected);
+    public void getEventosByFecha() {
+        if (dateSelected != null) {
+            eventoSearch = business.getEventsByDate(dateSelected);
+            Redirect.redirect2("events_search");
+        }
     }
 
-    public List<Evento> getSearchEventos() {
-        return business.getEventsBySearch(searchText, searchProvincia, searchLocalidad, searchEtiqueta, searchDestinatario);
+    public void searchEvents() {
+        eventoSearch = business.getEventsBySearch(searchText, prov.getLocalidad(), searchEtiqueta, searchDestinatario);
+        Redirect.redirect2("events_search");
     }
 
     public List<Evento> getSearchEventosEtiquetas() {
-        List<Evento> s = new ArrayList<>();
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
-        return business.getEventsByTag(hsr.getParameter("tag"));
+        return business.getEventsByTag(business.getEtiquetaByName(hsr.getParameter("tag")).getId_etiqueta());
     }
 
     public Evento getEvento() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        try {
-            return business.getEvent(Integer.parseInt(hsr.getParameter("id")));
-        } catch (NumberFormatException n) {
-            return null;
-        }
-    }
-
-    public String getSearchProvincia() {
-        return searchProvincia;
-    }
-
-    public void setSearchProvincia(String searchProvincia) {
-        this.searchProvincia = searchProvincia;
+        return business.getEventById(Long.parseLong(hsr.getParameter("id")));
     }
 
     public String getSearchLocalidad() {
@@ -184,33 +212,54 @@ public class EventoBean implements Serializable {
         this.tag = tag;
     }
 
-    public TagCloudModel getModel(String e) {
-        Random r = new Random(0);
+    public TagCloudModel getModelTags() {
         TagCloudModel s = new DefaultTagCloudModel();
-        for (Evento x : business.getEvents()) {
-            if (x.getId_evento() == Integer.parseInt(e)) {
-                for (Etiqueta et : x.getEtiqueta()) {
-                    s.addTag(new DefaultTagCloudItem(et.getNombre(), "/event/tag/" + et.getNombre(), r.nextInt(4) + 1));
-                }
+        Random r = new Random(0);
+        Evento x = business.getEventById(Long.parseLong(eventId));
+        if (x != null) {
+            for (Etiqueta et : business.getAllTagsByEvent(Long.parseLong(eventId))) {
+                s.addTag(new DefaultTagCloudItem(et.getNombre(), "/event/tag/" + et.getNombre(), r.nextInt(4) + 1));
             }
         }
         return s;
     }
 
+    public TagCloudModel getModel() {
+        return model;
+    }
+
     public void sendNotificationLike(ActionEvent e) {
-        sendMailSocial("Has pinchado like en el evento");
+        Evento evento = business.getEventById(Long.parseLong(eventId));
+        if (!business.checkLike(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
+            sendMailSocial("Has pinchado like en el evento");
+            business.like(evento.getId_evento(), current_user.getUsuario().getId_usuario());
+        } else {
+            Redirect.redirectToEventInfo(evento.getId_evento());
+        }
     }
 
     public void sendNotificationAssist(ActionEvent e) {
-        sendMailSocial("Has indicado que vas a asistir al evento");
+        Evento evento = business.getEventById(Long.parseLong(eventId));
+        if (!business.checkAssist(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
+            sendMailSocial("Has indicado que vas a asistir al evento");
+            business.assist(evento.getId_evento(), current_user.getUsuario().getId_usuario());
+        } else {
+            Redirect.redirectToEventInfo(evento.getId_evento());
+        }
     }
 
     public void sendNotificationFollow(ActionEvent e) {
-        sendMailSocial("Has indicado que quieres seguir el evento");
+        Evento evento = business.getEventById(Long.parseLong(eventId));
+        if (!business.checkFollow(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
+            sendMailSocial("Has indicado que quieres seguir el evento");
+            business.follow(evento.getId_evento(), current_user.getUsuario().getId_usuario());
+        } else {
+            Redirect.redirectToEventInfo(evento.getId_evento());
+        }
     }
 
     private void sendMailSocial(String msg) {
-        Evento ev = business.getEvent(Integer.parseInt(eventId));
+        Evento ev = business.getEventById(Long.parseLong(eventId));
         final Usuario u = current_user.getUsuario();
         final StringBuilder m = new StringBuilder();
         String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
@@ -233,7 +282,9 @@ public class EventoBean implements Serializable {
         n.setEvento(ev);
         n.setUsuario(u);
         n.setMensaje(msg);
+        n.setFecha_hora(LocalDateTime.now());
         business.setNotifications(n);
+        Redirect.redirectToEventInfo(ev.getId_evento());
     }
 
     private String changeHtmlChars(String m) {
@@ -247,6 +298,86 @@ public class EventoBean implements Serializable {
         return m;
     }
 
+    public String getUpdateTitulo() {
+        return updateTitulo;
+    }
+
+    public void setUpdateTitulo(String updateTitulo) {
+        this.updateTitulo = updateTitulo;
+    }
+
+    public String getUpdateDescripcion() {
+        return updateDescripcion;
+    }
+
+    public void setUpdateDescripcion(String updateDescripcion) {
+        this.updateDescripcion = updateDescripcion;
+    }
+
+    public List<String> getUpdateEtiquetas() {
+        return updateEtiquetas;
+    }
+
+    public void setUpdateEtiquetas(List<String> updateEtiquetas) {
+        this.updateEtiquetas = updateEtiquetas;
+    }
+
+    public List<String> getUpdateDestinatario() {
+        return updateDestinatario;
+    }
+
+    public void setUpdateDestinatario(List<String> updateDestinatario) {
+        this.updateDestinatario = updateDestinatario;
+    }
+
+    public Date getUpdateFechaInicio() {
+        return updateFechaInicio;
+    }
+
+    public void setUpdateFechaInicio(Date updateFechaInicio) {
+        this.updateFechaInicio = updateFechaInicio;
+    }
+
+    public Date getUpdateFechaFin() {
+        return updateFechaFin;
+    }
+
+    public void setUpdateFechaFin(Date updateFechaFin) {
+        this.updateFechaFin = updateFechaFin;
+    }
+
+    public String getUpdateHorario() {
+        return updateHorario;
+    }
+
+    public void setUpdateHorario(String updateHorario) {
+        this.updateHorario = updateHorario;
+    }
+
+    public String getUpdatePrecio() {
+        return updatePrecio;
+    }
+
+    public void setUpdatePrecio(String updatePrecio) {
+        this.updatePrecio = updatePrecio;
+    }
+
+    public String getUpdateDestacado() {
+        return updateDestacado;
+    }
+
+    public void setUpdateDestacado(String updateDestacado) {
+        this.updateDestacado = updateDestacado;
+    }
+
+    public String getUpdateLocalidad() {
+        return updateLocalidad;
+    }
+
+    public void setUpdateLocalidad(String updateLocalidad) {
+        this.updateLocalidad = updateLocalidad;
+    }
+
     public String getEventId() {
         return eventId;
     }
@@ -255,19 +386,15 @@ public class EventoBean implements Serializable {
         this.eventId = eventId;
     }
 
-    public TagCloudModel getModel() {
-        return model;
-    }
-
     public void setModel(TagCloudModel model) {
         this.model = model;
     }
 
-    public LocalDate getDateSelected() {
+    public Date getDateSelected() {
         return dateSelected;
     }
 
-    public void setDateSelected(LocalDate dateSelected) {
+    public void setDateSelected(Date dateSelected) {
         this.dateSelected = dateSelected;
     }
 
@@ -287,19 +414,19 @@ public class EventoBean implements Serializable {
         this.event_new_descripcion = event_new_descripcion;
     }
 
-    public Date getEvent_new_fecha_inicio() {
+    public String getEvent_new_fecha_inicio() {
         return event_new_fecha_inicio;
     }
 
-    public void setEvent_new_fecha_inicio(Date event_new_fecha_inicio) {
+    public void setEvent_new_fecha_inicio(String event_new_fecha_inicio) {
         this.event_new_fecha_inicio = event_new_fecha_inicio;
     }
 
-    public Date getEvent_new_fecha_fin() {
+    public String getEvent_new_fecha_fin() {
         return event_new_fecha_fin;
     }
 
-    public void setEvent_new_fecha_fin(Date event_new_fecha_fin) {
+    public void setEvent_new_fecha_fin(String event_new_fecha_fin) {
         this.event_new_fecha_fin = event_new_fecha_fin;
     }
 
@@ -319,20 +446,20 @@ public class EventoBean implements Serializable {
         this.event_new_precio = event_new_precio;
     }
 
-    public double getEvent_new_longitud() {
-        return event_new_longitud;
-    }
-
-    public void setEvent_new_longitud(double event_new_longitud) {
-        this.event_new_longitud = event_new_longitud;
-    }
-
-    public double getEvent_new_latitud() {
+    public String getEvent_new_latitud() {
         return event_new_latitud;
     }
 
-    public void setEvent_new_latitud(double event_new_latitud) {
+    public void setEvent_new_latitud(String event_new_latitud) {
         this.event_new_latitud = event_new_latitud;
+    }
+
+    public String getEvent_new_longitud() {
+        return event_new_longitud;
+    }
+
+    public void setEvent_new_longitud(String event_new_longitud) {
+        this.event_new_longitud = event_new_longitud;
     }
 
     public boolean isEvent_new_destacado() {
@@ -343,25 +470,52 @@ public class EventoBean implements Serializable {
         this.event_new_destacado = event_new_destacado;
     }
 
-    public UploadedFile getEvent_new_imagen_url() {
-        return event_new_imagen_url;
+    public Integer getEvent_new_rating() {
+        return event_new_rating;
     }
 
-    public void setEvent_new_imagen_url(UploadedFile event_new_imagen_url) {
-        this.event_new_imagen_url = event_new_imagen_url;
+    public void setEvent_new_rating(Integer event_new_rating) {
+        this.event_new_rating = event_new_rating;
     }
 
-    public String getEvent_new_imagen_titulo() {
-        return event_new_imagen_titulo;
+    public List<Destinatario> getEventDestinatarios() {
+        return eventDestinatarios;
     }
 
-    public void setEvent_new_imagen_titulo(String event_new_imagen_titulo) {
-        this.event_new_imagen_titulo = event_new_imagen_titulo;
+    public void setEventDestinatarios(List<Destinatario> eventDestinatarios) {
+        this.eventDestinatarios = eventDestinatarios;
     }
 
     public void onload() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
+        model = getModelTags();
+        Evento e = business.getEventById(Long.parseLong(eventId));
+        eventDestinatarios = business.getAllAudiencesByEvent(Long.parseLong(eventId));
+        eventComentarios = business.getComments(e.getId_evento());
+        numAssists = business.numAssist(e.getId_evento());
+        numLikes = business.numLike(e.getId_evento());
+        numFollows = business.numFollow(e.getId_evento());
+    }
+
+    public void onload2() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        this.setEventId(hsr.getParameter("id"));
+        Evento e = business.getEventById(Long.parseLong(eventId));
+        updateTitulo = e.getTitulo();
+        updatePrecio = e.getPrecio();
+        updateDescripcion = e.getDescripcion();
+
+        lista_localidades = business.getTowns(e.getLocalidad().getProvincia().getNombre());
+        prov.setLocalidades(lista_localidades);
+        for (Localidad localidad : lista_localidades) {
+            if (localidad.equals(e.getLocalidad())) {
+                updateLocalidad = localidad.getNombre();
+            }
+        }
+        updateFechaInicio = e.getFecha_inicio();
+        updateFechaFin = e.getFecha_fin();
+        updateHorario = e.getHorario();
     }
 
     public void tag_onLoad() {
@@ -369,63 +523,136 @@ public class EventoBean implements Serializable {
         this.setTag(hsr.getParameter("tag"));
     }
 
-    public void createEvent() throws IOException{
-        
-//        Path folder = Paths.get("/path/to/uploads");
-//        String filename = FilenameUtils.getBaseName(event_new_imagen_url.getFileName());
-//        String extension = FilenameUtils.getExtension(event_new_imagen_url.getFileName());
-//        Path file = Files.createTempFile(folder, filename + "-", "." + extension);
-//        try (InputStream input = event_new_imagen_url.getInputstream()) {
-//            Files.copy(input, file, StandardCopyOption.REPLACE_EXISTING);
-//        }
-     
-        
+    public void createEvent() {
         Evento e = new Evento();
+        try {
+            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            Date endDate = df.parse(event_new_fecha_fin);
+            Date startDate = df.parse(event_new_fecha_inicio);
+            e.setFecha_inicio(startDate);
+            e.setFecha_fin(endDate);
+        } catch (ParseException excep) {
+        }
         e.setTitulo(event_new_titulo);
         e.setDescripcion(event_new_descripcion);
-        e.setFecha_inicio(event_new_fecha_inicio);
-        e.setFecha_fin(event_new_fecha_fin);
+
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
-        e.setLongitud(event_new_longitud);
-        e.setLatitud(event_new_latitud);
+        e.setLatitud(Double.parseDouble(event_new_latitud));
+        e.setLongitud(Double.parseDouble(event_new_longitud));
+
         e.setDestacado(event_new_destacado);
-       // e.setImagen_url(event_new_imagen_url.getFileName());
-       // e.setImagen_titulo(event_new_imagen_titulo);
+
+        List<Destinatario> s = new ArrayList<>();
+        for (String str : destinatarios) {
+            s.add(business.getDestinatarioByDescripcion(str));
+        }
+
+        e.setDestinatario(s);
+        List<Etiqueta> etq = new ArrayList<>();
+        for (String etiqueta : etiquetas) {
+            etq.add(business.getEtiquetaByName(etiqueta));
+        }
+
+        e.setEtiqueta(etq);
+        e.setLocalidad(business.getLocalidadByName(prov.getLoca().getNombre()));
+
+        e.setImagen_url("default.png");
+        e.setImagen_titulo(event_new_titulo.toLowerCase());
+        e.setValoracion(event_new_rating);
+
+        if (current_user.isUserRegistered()) {
+            e.setVisible(false);
+
+        } else {
+            e.setVisible(true);
+            e.setDestacado(event_new_destacado);
+        }
+
+        e.setPropietario(business.getUserByEmail(current_user.getUsuario().getEmail()).get(0));
         business.createEvent(e);
+        if (current_user.isUserRegistered()) {
+            Tarea t = new Tarea();
+            t.setCreador_peticion(current_user.getUsuario());
+            t.setFecha_hora(LocalDateTime.now());
+            t.setId_evento(e.getId_evento());
+            t.setMensaje(current_user.getUsuario().getPseudonimo() + " desea crear un evento");
+            t.setNombre("Propuesta de evento");
+            business.createTask(t);
+            for (Usuario u : business.getRedactores()) {
+                List<Tarea> l = business.getTasks(u.getId_usuario());
+                l.add(t);
+                u.setTareas(l);
+                business.updateUser(u);
+            }
+        }
+        Redirect.redirectToEventInfo(e.getId_evento());
+
     }
 
-    public int numAssists() {
-        System.out.println(business.getEventById(Integer.parseInt(eventId)).getAsiste().size());
-        return business.getEventById(Integer.parseInt(eventId)).getAsiste().size();
+    public void changeImage(FileUploadEvent event) {
+        HttpServletRequest hsr = Redirect.getRequest();
+        if (event.getFile() != null) {
+            if (hsr.getParameterMap().containsKey("id")) {
+                if (!hsr.getParameter("id").isEmpty()) {
+
+                    try (InputStream input = event.getFile().getInputstream()) {
+
+                        Evento e = business.getEventById(Long.parseLong(hsr.getParameter("id")));
+                        Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
+                        String filename = FilenameUtils.getBaseName(event.getFile().getFileName()) + "." + FilenameUtils.getExtension(event.getFile().getFileName());
+
+                        //update event
+                        e.setImagen_url(filename);
+                        business.updateEvent(e);
+
+                        //create file
+                        File newFile = new File(path.toString() + "/" + filename);
+                        Path nfile = Files.createFile(newFile.toPath());
+                        Files.copy(input, nfile, StandardCopyOption.REPLACE_EXISTING);
+
+                    } catch (IOException ex) {
+
+                    }
+                }
+
+            }
+        }
     }
 
-    public int numLikes() {
-        return business.getEventById(Integer.parseInt(eventId)).getMegusta().size();
+    public void createComment() {
+        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String id = hsr.getParameter("id");
+        Evento e = business.getEventById(Long.parseLong(id));
+        Comentario c = new Comentario();
+        c.setEvento(e);
+        c.setUsuario(current_user.getUsuario());
+        c.setFecha_hora(LocalDateTime.now());
+        c.setMensaje(eventNewComment);
+        business.createComment(c);
+        Redirect.redirectToEventInfo(e.getId_evento());
     }
 
-    public int numFollows() {
-        return business.getEventById(Integer.parseInt(eventId)).getSigue().size();
+    public void deleteComment(ActionEvent e) {
+        String comment = e.getComponent().getAttributes().get( "comment" ).toString();
+        System.out.println(comment);
+        business.deleteComentario(Long.parseLong(comment));
+        //Redirect.redirectToEventInfo(c.getEvento().getId_evento());
     }
 
-    // verify if these are necessary
-    public List<Comentario> getComentarios() {
-        return comentarios;
-    }
-
-    public List<Destinatario> getDestinatarios() {
+    public List<String> getDestinatarios() {
         return destinatarios;
     }
 
-    public void setComentarios(List<Comentario> comentarios) {
-        this.comentarios = comentarios;
+    public void setDestinatarios(List<String> d) {
+        this.destinatarios = d;
     }
 
-    public List<Etiqueta> getEtiquetas() {
+    public List<String> getEtiquetas() {
         return etiquetas;
     }
 
-    public void setEtiquetas(List<Etiqueta> etiquetas) {
+    public void setEtiquetas(List<String> etiquetas) {
         this.etiquetas = etiquetas;
     }
 
@@ -459,6 +686,205 @@ public class EventoBean implements Serializable {
 
     public void setEvento_sigue(List<Evento> evento_sigue) {
         this.evento_sigue = evento_sigue;
+    }
+
+    public int getNumAssists() {
+        return numAssists;
+    }
+
+    public int getNumLikes() {
+        return numLikes;
+    }
+
+    public int getNumFollows() {
+        return numFollows;
+    }
+
+    public void setNumAssists(int numAssists) {
+        int n = business.getEventById(Long.parseLong(eventId)).getAsiste().size();
+        this.numAssists = numAssists;
+    }
+
+    public void setNumLikes(int numLikes) {
+        int n = business.getEventById(Long.parseLong(eventId)).getMegusta().size();
+        this.numLikes = n;
+    }
+
+    public void setNumFollows(int numFollows) {
+        int n = business.getEventById(Long.parseLong(eventId)).getSigue().size();
+        this.numFollows = n;
+    }
+
+    public ProvinciaBean getProv() {
+        return prov;
+    }
+
+    public void setProv(ProvinciaBean prov) {
+        this.prov = prov;
+    }
+
+    public List<Evento> getEventoSearch() {
+        return eventoSearch;
+    }
+
+    public void setEventoSearch(List<Evento> eventoSearch) {
+        this.eventoSearch = eventoSearch;
+    }
+
+    public List<Etiqueta> getEventoEtiquetas() {
+        return eventoEtiquetas;
+    }
+
+    public void setEventoEtiquetas(List<Etiqueta> eventoEtiquetas) {
+        this.eventoEtiquetas = eventoEtiquetas;
+    }
+
+    public String getEventNewComment() {
+        return eventNewComment;
+    }
+
+    public void setEventNewComment(String eventNewComment) {
+        this.eventNewComment = eventNewComment;
+    }
+
+    public List<Localidad> getLista_localidades() {
+        return lista_localidades;
+    }
+
+    public void setLista_localidades(List<Localidad> lista_localidades) {
+        this.lista_localidades = lista_localidades;
+    }
+
+    public List<Comentario> getEventComentarios() {
+        return eventComentarios;
+    }
+
+    public void setEventComentarios(List<Comentario> eventComentarios) {
+        this.eventComentarios = eventComentarios;
+    }
+
+    public String getEvent_new_imagen_url() {
+        return event_new_imagen_url;
+    }
+
+    public void setEvent_new_imagen_url(String event_new_imagen_url) {
+        this.event_new_imagen_url = event_new_imagen_url;
+    }
+
+    public void onPointSelect(PointSelectEvent event) {
+        LatLng latlng = event.getLatLng();
+        event_new_latitud = String.valueOf(latlng.getLat());
+        event_new_longitud = String.valueOf(latlng.getLng());
+    }
+
+    public StreamedContent getImage() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
+            return new DefaultStreamedContent();
+        } else {
+            String filename = context.getExternalContext().getRequestParameterMap().get("filename");
+            Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
+            if (filename.isEmpty()) {
+                filename = "default.png";
+            }
+            return new DefaultStreamedContent(new FileInputStream(new File(path.toString(), filename)));
+        }
+    }
+
+    public void deleteEvento() {
+        final Evento e = business.getEventById(Long.parseLong(eventId));
+        final Evento system = business.getEventById(500);
+        final List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
+        final StringBuilder m = new StringBuilder();
+        m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append(")</span></h2><p>")
+                .append("Ha sido suspendido el evento <b>\"")
+                .append(changeHtmlChars(e.getTitulo()))
+                .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
+        e.setVisible(false);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                for (Usuario usi : u) {
+                    if (usi.isEmail_notifier()) {
+                        Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+                    }
+                    Notificacion notiplana = new Notificacion();
+                    notiplana.setEvento(system);
+                    notiplana.setFecha_hora(LocalDateTime.now());
+                    notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido suspendido");
+                    notiplana.setUsuario(usi);
+                    business.setNotifications(notiplana);
+                }
+            }
+        }).start();
+
+        business.deleteEvent(Long.parseLong(eventId));
+
+        Redirect.redirectToIndex();
+    }
+
+    public String updateEvento() {
+
+        Evento e = business.getEventById(Long.parseLong(eventId));
+
+        e.setFecha_inicio(updateFechaInicio);
+        e.setFecha_fin(updateFechaFin);
+
+        e.setTitulo(updateTitulo);
+        e.setDescripcion(updateDescripcion);
+
+        e.setHorario(updateHorario);
+        e.setPrecio(updatePrecio);
+        e.setLocalidad(business.getLocalidadByName(updateLocalidad));
+
+        List<Etiqueta> nuevasEtiquetas = new ArrayList<>();
+        for (Etiqueta eti : business.getTags()) {
+            if (updateEtiquetas.contains(eti.getNombre())) {
+                nuevasEtiquetas.add(eti);
+            }
+        }
+        e.setEtiqueta(nuevasEtiquetas);
+
+        List<Destinatario> nuevasDestinatario = new ArrayList<>();
+        for (Destinatario dest : business.getAudiences()) {
+            if (updateDestinatario.contains(dest.getDescripcion())) {
+                nuevasDestinatario.add(dest);
+            }
+        }
+        e.setDestinatario(nuevasDestinatario);
+
+        business.updateEvent2(e);
+
+        List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
+        final StringBuilder m = new StringBuilder();
+        m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
+                .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                .append(")</span></h2><p>")
+                .append("Ha sido actualizado el evento <b>\"")
+                .append(changeHtmlChars(e.getTitulo()))
+                .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
+        for (Usuario usi : u) {
+            if (usi.isEmail_notifier()) {
+                Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
+            }
+            Notificacion notiplana = new Notificacion();
+            notiplana.setEvento(e);
+            notiplana.setFecha_hora(LocalDateTime.now());
+            notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido actualizado");
+            notiplana.setUsuario(usi);
+            business.setNotifications(notiplana);
+        }
+        return "event_info?id=" + e.getId_evento() + "?faces-redirect=true";
+    }
+
+    public void destacarEvento() {
+        Evento e = business.getEventById(Long.parseLong(eventId));
+        e.setDestacado(!e.isDestacado());
+        business.highlightEvent(e);
+        Redirect.redirectToEventInfo(e.getId_evento());
     }
 
 }

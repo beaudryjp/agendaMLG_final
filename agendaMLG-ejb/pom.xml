@@ -20,9 +20,10 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.6</version>
+            <groupId>org.primefaces</groupId>
+            <artifactId>primefaces</artifactId>
+            <version>6.1</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -48,6 +49,21 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.2.10.Final</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>dom4j</groupId>
+                    <artifactId>dom4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>antlr</groupId>
+                    <artifactId>antlr</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.passay</groupId>
             <artifactId>passay</artifactId>
             <version>1.2.0</version>
@@ -67,11 +83,10 @@
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
                     <compilerArgs> 
-                        <arg>-verbose</arg>
-                        <arg>-Xlint:unchecked</arg>
                         <arg>-Xbootclasspath/p:${basedir}/target/classe‌​s/</arg>
                     </compilerArgs>
-                    <showDeprecation>true</showDeprecation>
+                    <showDeprecation>false</showDeprecation>
+                    <debug>false</debug>
                 </configuration>
             </plugin>
             <plugin>

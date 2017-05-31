@@ -3,36 +3,45 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pretty="http://ocpsoft.com/prettyfaces">
+      xmlns:pretty="http://ocpsoft.com/prettyfaces"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:composition template="/WEB-INF/templates/template.xhtml">
         <ui:define name="main-content">
             <ui:insert name="search-sidebar">
                 <ui:include src = "/WEB-INF/templates/search_menu.xhtml" />
             </ui:insert>
-            <p class="lead"><h2>eventos proximos</h2></p>
-            <!--<p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="events" class="eventLists" paginator="true" rows="1">-->
-            <p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="eventsNext" styleClass="eventsNext">
-                <ui:insert name="search-sidebar">
-                    <ui:include src = "/WEB-INF/templates/event.xhtml" />
-                </ui:insert>
-            </p:dataTable>
+            <c:choose>
+                <c:when test="#{!empty eventoBean.getEventos()}">
+                    <p class="lead"><h1>Eventos proximos</h1></p>
+                    <p:dataTable value="#{eventoBean.getEventosProximos()}" var="evento" id="eventsNext" styleClass="eventsNext">
+                        <ui:insert name="search-sidebar">
+                            <ui:include src = "/WEB-INF/templates/event.xhtml" />
+                        </ui:insert>
+                    </p:dataTable>
 
-            <p class="lead">
-                <div id="login-goBack">
+                    <p class="lead">
+                        <h5 class="moreEvents">
+                            <pretty:link mappingId="allEvents" id="allEvents" styleClass="icon fa-chevron-right fa-2x">
+                                más eventos
+                            </pretty:link>
+                        </h5>
+                    </p>
+                    <c:if test="#{!empty eventoBean.eventosDestacados}">
+                        <p class="lead"><h1 class="eventsImportant">Eventos destacados</h1></p>
+                        <p:dataTable value="#{eventoBean.eventosDestacados}" var="evento">
+                            <ui:insert name="search-sidebar">
+                                <ui:include src = "/WEB-INF/templates/event.xhtml" />
+                            </ui:insert>
+                        </p:dataTable>
+                    </c:if>
+                </c:when>
+                <c:otherwise>
+                    <ui:insert name="search-sidebar">
+                        <ui:include src = "/WEB-INF/templates/search_noevents.xhtml" />
+                    </ui:insert>
+                </c:otherwise>
+            </c:choose>
 
-                </div>
-                <h5 class="moreEvents">
-                    <pretty:link mappingId="allEvents" id="allEvents" styleClass="icon fa-chevron-right fa-2x">
-                            más eventos
-                    </pretty:link>
-                </h5>
-            </p>
-            <p class="lead"><h2 class="eventsImportant">eventos destacados</h2></p>
-            <p:dataTable value="#{eventoBean.eventosDestacados}" var="evento">
-                <ui:insert name="search-sidebar">
-                    <ui:include src = "/WEB-INF/templates/event.xhtml" />
-                </ui:insert>
-            </p:dataTable>
         </ui:define>
     </ui:composition>
 </html>

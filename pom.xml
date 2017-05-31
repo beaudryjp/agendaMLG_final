@@ -6,6 +6,18 @@
     <version>1.0</version>
     <packaging>pom</packaging>
     <name>agendaMLG_final</name>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <debug>false</debug>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <modules>
         <module>agendaMLG-ear</module>
         <module>agenda</module>

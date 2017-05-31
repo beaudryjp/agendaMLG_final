@@ -4,13 +4,14 @@ package grupog.agendamlg.entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -23,28 +24,21 @@ import javax.persistence.UniqueConstraint;
 */
 @Entity
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"nombre"}))
-
+@NamedQueries({
+    @NamedQuery(name = "getLocalidadByName", query = "Select l from Localidad l where l.nombre = :nombre")
+})
 public class Localidad implements Serializable, Comparable<Localidad> {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="id_localidad")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_localidad;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
     @ManyToOne
     private Provincia provincia;
     @OneToMany(mappedBy="localidad")
     private List<Evento> evento;
-
-    public Localidad(String nombre, Provincia provincia) {
-        this.nombre = nombre;
-        this.provincia = provincia;
-    }
-    
-    public Localidad(){
-    }
     
     public List<Evento> getEvento() {
         return evento;
@@ -81,8 +75,7 @@ public class Localidad implements Serializable, Comparable<Localidad> {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 59 * hash + Objects.hashCode(this.id_localidad);
+        int hash = 3;
         hash = 59 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
@@ -102,15 +95,13 @@ public class Localidad implements Serializable, Comparable<Localidad> {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.id_localidad, other.id_localidad)) {
-            return false;
-        }
         return true;
     }
+    
 
     @Override
     public String toString() {
-        return "Localidad{" + "id_localidad=" + id_localidad + ", nombre=" + nombre + ", provincia=" + provincia + ", evento=" + evento + '}';
+        return "Localidad{" + "id_localidad=" + id_localidad + ", nombre=" + nombre + '}';
     }
 
     @Override

@@ -1,7 +1,8 @@
 @import url(font-awesome.min.css);
-@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');
-@import url('https://fonts.googleapis.com/css?family=Raleway');
-
+@font-face {
+    font-family: 'Raleway';
+    src:  url('../fonts/Raleway-Regular.ttf') format('truetype');
+}
 /*
 margin - padding
 top right bottom left
@@ -18,33 +19,7 @@ body {
     position: relative;
     margin: 0;
     min-height: 100%;
-    /*
-    background: url("../img/concerts_top.jpg") no-repeat center center fixed;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    background-color: transparent;
-    */
-    /*
-    background: #283048;
-    background: -webkit-linear-gradient(to right, #859398, #283048);
-    background: linear-gradient(to right, #859398, #283048);
-    */
-    /*
-    background: #1D4350;
-    background: -webkit-linear-gradient(to left, #A43931, #1D4350);
-    background: linear-gradient(to left, #A43931, #1D4350);
-    */
-    /*
-    background: #D66D75;
-background: -webkit-linear-gradient(to right, #E29587, #D66D75);
-background: linear-gradient(to right, #E29587, #D66D75);
-    */
-    background: #616161;
-    background: -webkit-linear-gradient(to right, #9bc5c3, #616161);
-    background: linear-gradient(to right, #9bc5c3, #616161);
-
+    background-color: #515165;
 }
 
 header {
@@ -273,7 +248,7 @@ header>.login-headerLogo {
     width: 100%;
     padding: 40px;
     margin: 0 auto;
-    margin-top: 30px;
+    margin-top: 10px;
 
 }
 
@@ -488,14 +463,69 @@ header>.login-headerLogo {
 
 }
 
-.panelusuario, .panelusuario td {
+.panelusuario {
     border-style: none;
-    background: transparent !important;
+    background-color: #5b5b71;
+    box-shadow: 0px 0px 20px #444455;
+}
+
+.panelusuario td {
+    border-style: none;
+    background-color: #5b5b71;
+}
+
+.ui-tabs-nav{
+    margin-top: 10px;
 }
 
 .ui-tabs.ui-tabs-right > .ui-tabs-nav {
     background: transparent !important;
 }
+
+.ui-tabs.ui-tabs-right > .ui-tabs-nav li {
+    border: none;
+    border-radius: 5px;
+}
+
+.ui-tabs .ui-tabs-nav .ui-tabs-selected {
+    background: #66667f;
+}
+
+.ui-state-default.ui-corner-right {
+    background: #515165;
+    border: 1px solid #515165 !important;
+}
+
+.ui-state-default li {
+    border: none !important;
+}
+
+.ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited {
+    color: white;
+    text-decoration: none;
+}
+
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited {
+    color: white;
+}
+
+.ui-state-hover {
+    box-shadow: 0px 0px 5px #444455;
+}
+
+.ui-state-hover a, .ui-state-hover a:link, .ui-state-hover a:visited {
+    color: white;
+    font-weight: bold;
+}
+
+
+.ui-widget-content .panelProfile {
+    background-color: #66667f;
+    color: white;
+    box-shadow: 0px 0px 10px #515165;
+    margin-bottom: 20px;
+}
+
 
 .panel-tareas {
     background: transparent !important;
@@ -535,4 +565,72 @@ header>.login-headerLogo {
 
 h2.eventsImportant{
     margin-top: 20px;
+}
+
+h2.profileEvent{
+    padding: 15px; 
+    background-color:  #515165;
+    color: white;
+}
+
+.panelProfile{
+    background: transparent; 
+    border: 0px; 
+}
+
+.tableProfile{
+    background-color: #fff; 
+    padding: 20px;
+}
+
+.srchEvents{
+    border: 0px; padding: 15px; 
+    -moz-box-shadow:  0 0 7px #444455;
+    -webkit-box-shadow:  0 0 7px #444455;
+    box-shadow:  0 0 7px #444455;
+}
+
+.text-profile {
+    color: white;
+}
+
+.ui-selectonemenu {
+    position: static !important;
+}
+
+.ui-datatable-data.ui-widget-content td {
+    background-color: white;
+}
+
+
+.sorting_1 {
+    width: auto;
+}
+
+form[name="profile"] .ui-widget-content {
+    background: #5b5b71;
+    border: none;
+}
+
+form[name="profile"] .ui-panel-content.ui-widget-content {
+    background: #66667f !important;
+}
+
+form[name="profile"].ui-panel-content.ui-widget-content .ui-datatable.ui-widget {
+    color: #5b5b71;
+}
+
+
+form[name="profile"] .ui-panel-content.ui-widget-content > h2 {
+    color: white; 
+}
+
+form[name="profile"] .ui-panelgrid.ui-widget td {
+    
+}
+
+.ui-tagcloud.ui-widget.ui-widget-content.ui-corner-all a {
+    background: white !important;
+    color: #413d3d;
+    margin: 5px;
 }

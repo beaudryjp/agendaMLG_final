@@ -2,18 +2,21 @@
 package grupog.agendamlg.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -23,23 +26,37 @@ import javax.persistence.ManyToOne;
 * @author Jean Paul Beaudry
 */
 @Entity
-
+@NamedQueries({
+    @NamedQuery(name="getTareas", query="SELECT t from Tarea t join fetch t.redactores algo WHERE algo.id_usuario = :id_usuario"),
+})
 public class Tarea implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_tarea;
+    @Column(nullable = false)
     private String nombre;
+    @Column(nullable = false)
     private String mensaje;
-    private boolean aceptado;
+    @Column(nullable = false)
     private LocalDateTime fecha_hora;
-    @ManyToMany
+    @Column(nullable = true)
+    private Long id_evento;
+
+    @ManyToMany(mappedBy = "tareas")
     private List <Usuario> redactores;
     @ManyToOne(optional=true)
-    @JoinTable(name = "jn_etiqueta_id", joinColumns = @JoinColumn(name = "id_tarea"), inverseJoinColumns = @JoinColumn(name = "id_usuario"))
     private Usuario creador_peticion;
 
+    public Long getId_evento() {
+        return id_evento;
+    }
+
+    public void setId_evento(Long id_evento) {
+        this.id_evento = id_evento;
+    }
+    
     public Long getId_tarea() {
         return id_tarea;
     }
@@ -63,15 +80,7 @@ public class Tarea implements Serializable {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
-    public boolean isAceptado() {
-        return aceptado;
-    }
-
-    public void setAceptado(boolean aceptado) {
-        this.aceptado = aceptado;
-    }
-
+    
     public LocalDateTime getFecha_hora() {
         return fecha_hora;
     }
@@ -94,6 +103,11 @@ public class Tarea implements Serializable {
 
     public void setCreador_peticion(Usuario creador_peticion) {
         this.creador_peticion = creador_peticion;
+    }
+    
+    public Date getFecha_hora_date() {
+        Instant instant = fecha_hora.atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
     }
 
     @Override
@@ -123,7 +137,7 @@ public class Tarea implements Serializable {
 
     @Override
     public String toString() {
-        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", aceptado=" + aceptado + ", fecha_hora=" + fecha_hora + ", dador=" + redactores + ", beneficiario=" + creador_peticion + '}';
+        return "Tarea{" + "id_tarea=" + id_tarea + ", nombre=" + nombre + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + '}';
     }
     
     

@@ -4,6 +4,7 @@ package grupog.agendamlg.entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,26 +26,20 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
     @NamedQuery(name="getAllAudience", query="SELECT d from Destinatario d"),
     @NamedQuery(name="getAudienceById", query="SELECT d from Destinatario d WHERE d.id_destinatario = :destinatario"),
+    @NamedQuery(name="getAudienceByDescription", query="SELECT d from Destinatario d WHERE d.descripcion = :descripcion"),
+    @NamedQuery(name="getAllAudiencesByEventId", query="SELECT d from Destinatario d inner join d.evento e WHERE e.id_evento = :evento"),    
 })
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"descripcion"}))
 public class Destinatario implements Serializable, Comparable<Destinatario> {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_destinatario;
-    @Column(name="descripcion", nullable=false)
+    @Column(nullable=false)
     private String descripcion;
     @ManyToMany(mappedBy="destinatario")
     private List<Evento> evento;
-    
-    public Destinatario(){
-    }
-    
-    public Destinatario(String descripcion) {
-        this.descripcion = descripcion;
-    }
-    
 
     public List<Evento> getEvento() {
         return evento;
@@ -102,7 +97,7 @@ public class Destinatario implements Serializable, Comparable<Destinatario> {
 
     @Override
     public String toString() {
-        return "Destinatario{" + "id_destinatario=" + id_destinatario + ", descripcion=" + descripcion + ", evento=" + evento + '}';
+        return "Destinatario{" + "id_destinatario=" + id_destinatario + ", descripcion=" + descripcion +  '}';
     }
 
     @Override

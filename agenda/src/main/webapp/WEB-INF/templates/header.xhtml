@@ -4,18 +4,14 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
-      xmlns:pretty="http://ocpsoft.com/prettyfaces"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:pretty="http://ocpsoft.com/prettyfaces">
     <ui:composition> 
         <section id="header-logo">
-            <h1>
-                <h:link outcome="index" >
-                    <h:graphicImage name="img/logo_inv.png" />
-                </h:link>
-            </h1>
+            <ui:insert name="logo">
+                <ui:include src = "/WEB-INF/templates/logo.xhtml" />
+            </ui:insert>
         </section>
         <section id="header-page-phrase">
-            <!--<h4>La taquilla de los eventos</h4>-->
             <h4>La agenda de eventos de Andalucía</h4>
         </section>
         <section id="header-menu-side">
@@ -26,7 +22,11 @@
         <div class="topnav" id="myTopnav">
             <h:form>
                 <h2>MENU</h2>
-                <h3><h:link value="Eventos" outcome="events_tags.xhtml?tag=Todos" /></h3>
+                <h3>
+                    <li>
+                        <pretty:link mappingId="allEvents"> Eventos </pretty:link>
+                    </li>
+                </h3>
                 <c:choose>
                     <c:when test="#{empty ControlLog.usuario}">
                         <h3><h:link value="Iniciar sesión" outcome="login"/></h3>
@@ -43,21 +43,18 @@
         <!--Normal  menu, big screen-->
         <section id="header-option-icons">
             <ul class="icons">
-                <li>
-                    <pretty:link mappingId="tag" class="icon fa-calendar">
-                        Eventos
-                        <f:param value="Todos" />
-                    </pretty:link></li>
                 <c:choose>
-                    <c:when test="#{ControlLog.usuario.getRol_usuario() == 'REDACTOR' || ControlLog.usuario.getRol_usuario() == 'VALIDADO'  || ControlLog.usuario.getRol_usuario() == 'REGISTRADO'}">
-                        <li><h:link value="Perfil" outcome="profile"  class="icon fa-user-circle"/></li>               
-                        <li><h:form><h:commandLink id="closeSession" value="Cerrar Sesión" action="#{ControlLog.logout}"  class="icon fa-user-circle"  /></h:form></li>  
+                    <c:when test="#{ControlLog.userLoggedIn}">
+                        <li><h:link value="#{ControlLog.usuario.pseudonimo}" outcome="profile"  class="icon fa-at"/></li>               
+                        <li><h:form><h:commandLink id="closeSession" value="Cerrar Sesión" action="#{ControlLog.logout}"  class="icon fa-sign-out"  /></h:form></li>  
                     </c:when>
                     <c:otherwise>
-                        <li><h:link value="Iniciar sesión" outcome="login"  class="icon fa-user-circle"/></li>
+                        <li><h:link value="Iniciar sesión" outcome="login"  class="icon fa-sign-in"/></li>
                     </c:otherwise>
                 </c:choose>
-
+                <li>
+                    <pretty:link mappingId="allEvents" class="icon fa-calendar"> Eventos </pretty:link>
+                </li>
 
                 <li><a href="https://twitter.com/diariosur?lang=es" class="fa-twitter header-sn"></a></li>
                 <li><a href="https://es-es.facebook.com/diariosur/" class=" fa-facebook header-sn"></a></li>

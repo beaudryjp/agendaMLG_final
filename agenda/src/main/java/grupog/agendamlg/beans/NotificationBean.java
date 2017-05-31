@@ -33,18 +33,11 @@ public class NotificationBean implements Serializable {
     }
 
     public void dissapear(Notificacion not) {
-        notificaciones.remove(not);
+        business.deleteNotificacion(not.getId_notificacion());
     }
 
     public List<Notificacion> getNotificaciones() {
-        notificaciones = business.getNotifications(usuario.getUsuario());
+        notificaciones = business.getNotifications(usuario.getUsuario().getId_usuario());
         return notificaciones;
     }
-
-    /*
-    public void addNotificacion(Notificacion n){
-        n.setUsuario(usuario.getUsuario());
-        business.setNotifications(n);
-    }
-    */
 }

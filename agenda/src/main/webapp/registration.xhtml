@@ -8,7 +8,7 @@
     <ui:composition template="/WEB-INF/templates/template_login.xhtml">
         <ui:define name="content">
             <h1>Regístrate</h1>
-            <h4>¿Dispones de una cuenta? Inicia sesión <h:link value="aquí" outcome="login" /></h4>
+            <h4>¿Dispones de una cuenta? Inicia sesión <h:link class="loginLink" value="aquí" outcome="login" /></h4>
             <h4 class="login-header4">Crea una nueva cuenta de Sur.es</h4>
             <hr />
             <h:form id="form_registration">
@@ -35,8 +35,8 @@
                     <input type="hidden" class="latitude" id="registration_latitude" />
                     <input type="hidden" class="longitude" id="registration_longitude" />
                     -->
-                    <p:password id="registration_pwd1" value="#{registro.contrasenia}"  match="registration_pwd2" placeholder="Contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden"/>
-                    <p:password id="registration_pwd2" value="#{registro.contrasenia2}" match="registration_pwd2"  placeholder="Repite la contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden"/>
+                    <p:password id="registration_pwd1" value="#{registro.contrasenia}"  match="registration_pwd2" placeholder="Contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden" requiredMessage="Debe introducir contraseña en campo 1" />
+                    <p:password id="registration_pwd2" value="#{registro.contrasenia2}" match="registration_pwd2"  placeholder="Repite la contraseña"  required="true"  class="form-control" validatorMessage="Las contraseñas no coinciden" requiredMessage="Debe introducir contraseña en campo 2" />
                     <div id="login-rememberForgot">
                         <p:selectBooleanCheckbox id="registration_notifications" value="#{registro.email_notifier}"/>
                         <h:outputText value=" Desea recibir notificaciones por email." /><br/>
@@ -44,7 +44,7 @@
                             
                         
 
-                        <h:link value=" Acepta los términos y condiciones de uso." outcome="terms" />
+                        <h:link class="loginLink"  value=" Acepta los términos y condiciones de uso." outcome="terms" />
                     </div>
                     <p:commandButton value="Enviar"    id="registration_submit" action="#{registro.valido()}"
                                      styleClass="btn btn-default btn-lg submitButtons" />

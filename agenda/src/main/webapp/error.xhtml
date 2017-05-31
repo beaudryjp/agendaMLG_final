@@ -7,11 +7,12 @@
         <ui:define name="main-content">
             <div id="main-left" class="login errorPage">
                 <div id="login-goBack">
-                    <h:link value="Volver a la página principal" outcome="index" class="icon fa-chevron-left fa-2x"/>
+                    <h:link value="Volver a la página principal" outcome="index" class="loginLink icon fa-chevron-left fa-2x"/>
                 </div>
                 <!-- Show minimal error information -->
 
-                <p class="lead"><h2>Error #{errorHandler.statusCode}</h2>
+                <p class="lead"><h2>Error</h2>
+                <!--<p class="lead"><h2>Error #{errorHandler.statusCode}</h2>-->
                     <h4>Ha aparecido un error en la página web, por favor vuelva al Inicio.</h4>
                 </p>
 

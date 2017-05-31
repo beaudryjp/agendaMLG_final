@@ -9,8 +9,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -20,8 +18,23 @@ import javax.servlet.http.HttpServletRequest;
 @SessionScoped
 public class DestinatarioBean implements Serializable {
 
-    private List<Destinatario> destinatarios;
+    private List<String> destinatarios;
+    
     private String destinatario;
+    private String destinatarionew;
+    private List<String> destinatariodel;
+
+    public List<String> getDestinatariodel() {
+        return destinatariodel;
+    }
+
+    public void setDestinatariodel(List<String> destinatariodel) {
+        this.destinatariodel = destinatariodel;
+    }
+    
+    
+    private String destinatarioup;
+    
     @EJB
     private Business business;
 
@@ -43,6 +56,7 @@ public class DestinatarioBean implements Serializable {
         }
     }
 
+   
     public String getDestinatario() {
         return destinatario;
     }
@@ -51,12 +65,43 @@ public class DestinatarioBean implements Serializable {
         this.destinatario = destinatario;
     }
 
-    public Destinatario getSpecificDestinatario() {
-        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        try {
-            return destinatarios.get(Integer.parseInt(hsr.getParameter("id")));
-        } catch (NumberFormatException n) {
-            return null;
+    public String getDestinatarionew() {
+        return destinatarionew;
+    }
+
+    public void setDestinatarionew(String destinatarionew) {
+        this.destinatarionew = destinatarionew;
+    }
+
+
+    public String getDestinatarioup() {
+        return destinatarioup;
+    }
+
+    public void setDestinatarioup(String destinatarioup) {
+        this.destinatarioup = destinatarioup;
+    }
+    
+     public String createAudience(){
+        Destinatario d = new Destinatario();
+        d.setDescripcion(destinatarionew);
+        business.createAudience(d);
+        return "index?faces-redirect=true";
+    }
+     
+    public String updateAudience(){
+        Destinatario a = business.getDestinatarioByDescripcion(destinatario);
+        a.setDescripcion(destinatarioup);
+        business.updateAudience(a);
+        return "index?faces-redirect=true";
+    }
+   
+    public String deleteAudience() { 
+        for(String str : destinatariodel) {
+            business.deleteAudience(business.getDestinatarioByDescripcion(str).getId_destinatario());
         }
+
+    
+        return "index?faces-redirect=true";
     }
 }

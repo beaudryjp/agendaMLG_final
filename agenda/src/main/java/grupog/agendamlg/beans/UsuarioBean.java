@@ -6,12 +6,14 @@
 package grupog.agendamlg.beans;
 
 import grupog.agendamlg.business.Business;
+import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
 import grupog.agendamlg.general.Sendmail;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -34,16 +36,53 @@ public class UsuarioBean implements Serializable {
     private String email;
     private String email2;
     private String contrasenia;
-   
+
     private String emailLogueado;
     private String contraseniaLogueado;
     private String contrasenia2Logueado;
-    private boolean emailNotifier= true;
-    
+    private boolean emailNotifier = true;
+
     @Inject
     private ControlLog ctrl;
     @EJB
     private Business business;
+
+    @PostConstruct
+    public void init() {
+        if (ctrl.getUsuario() != null) {
+            emailNotifier = ctrl.getUsuario().isEmail_notifier();
+        }
+    }
+
+    public List<Evento> getGusta() {
+        List<Evento> e = business.getLike(ctrl.getUsuario().getId_usuario());
+        if (!e.isEmpty() && e != null) {
+
+            return e;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Evento> getSigue() {
+
+        List<Evento> e = business.getFollow(ctrl.getUsuario().getId_usuario());
+        if (!e.isEmpty() && e != null) {
+            return e;
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    public List<Evento> getAsiste() {
+
+        List<Evento> e = business.getAssist(ctrl.getUsuario().getId_usuario());
+        if (!e.isEmpty() && e != null) {
+            return e;
+        } else {
+            return new ArrayList<>();
+        }
+    }
 
     public String getEmail() {
         return email;
@@ -76,7 +115,7 @@ public class UsuarioBean implements Serializable {
     public void setEmailLogueado(String emailLogueado) {
         this.emailLogueado = emailLogueado;
     }
-    
+
     public String getContraseniaLogueado() {
         return contraseniaLogueado;
     }
@@ -92,31 +131,24 @@ public class UsuarioBean implements Serializable {
     public void setContrasenia2Logueado(String contrasenia2Logueado) {
         this.contrasenia2Logueado = contrasenia2Logueado;
     }
-    
-    public void setControl(ControlLog con){
+
+    public void setControl(ControlLog con) {
         ctrl = con;
     }
-    @PostConstruct
-    public void init(){
-        if(ctrl.getUsuario()!=null)
-            emailNotifier=ctrl.getUsuario().isEmail_notifier();
-    }
+
     public boolean isEmailNotifier() {
-        return emailNotifier;
+        return ctrl.getUsuario().isEmail_notifier();
     }
 
     public void setEmailNotifier(boolean emailNotifier) {
         this.emailNotifier = emailNotifier;
     }
 
-    
-
-    public String autenticar() {
+    public void autenticar() {
         char[] password;
         byte[] hash;
         byte[] sal;
         byte[] expected_hash;
-        String authentication_result_site = "login?faces-redirect=true";
         for (Usuario index_user : business.getUsers()) {
             if (index_user.getEmail().equals(email)) {
                 //Convert string password to char[]
@@ -131,20 +163,17 @@ public class UsuarioBean implements Serializable {
                 //Check if they are same hashed password
                 if (Arrays.equals(hash, expected_hash)) {
                     ctrl.setUsuario(index_user);
-                    authentication_result_site = ctrl.home();
-                }
-                else{
+                    ctrl.home();
+
+                } else {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario o contraseña incorrecto."));
                 }
-                
+
             }
         }
-
-        return authentication_result_site;
     }
 
     public String resetPassword(Usuario u) {
-        //TODO - verify that the user exists in the database
         final StringBuilder msg = new StringBuilder();
         String new_password = Password.generateSecurePassword(16);
         msg.append("<h2>Reseteo de password</h2>");
@@ -156,14 +185,13 @@ public class UsuarioBean implements Serializable {
                 .append(new_password)
                 .append("</h3>")
                 .append("<p>En cuanto acceda a su perfil, por motivos de seguridad resetee de nuevo su contraseña.</p><p style='font-size: 12px'>diariosur</p>");
-        
+
         setPassword(u, new_password);
         Sendmail.mailThread(u.getEmail(), "Reseteo de password", msg.toString());
-
         return "index?faces-redirect=true";
     }
 
-    private void setPassword(Usuario usuario, String password){
+    private void setPassword(Usuario usuario, String password) {
         //Generate a salt
         byte[] salt_bytes = Password.getNextSalt();
         //Convert salt to hexadecimal and set it for the corresponding user
@@ -173,40 +201,37 @@ public class UsuarioBean implements Serializable {
         //Convert hash to hexadecimal and set it for the corresponding user
         usuario.setPassword_hash(Password.bytesToHex(hash_bytes));
     }
-    public String validate() {
-        //System.out.println("validate - 1");
-        if(ctrl.getUsuario() == null){
-            //System.out.println("validate - 2");
-            //System.out.println(email2);
-            List<Usuario> u = business.getUserByEmail(email2);
-            //System.out.println(u.toString());
-            //System.out.println(u.size());
-            if(!u.isEmpty()){
-                //System.out.println("validate - 3");
-                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Correo enviado a:", email2);
 
-                RequestContext.getCurrentInstance().showMessageInDialog(message);
+    public String validate() {
+        if (ctrl.getUsuario() == null) {
+            List<Usuario> u = business.getUserByEmail(email2);
+            if (!u.isEmpty()) {
+                email2 = null;
                 return resetPassword(u.get(0));
+            } else {
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No tenemos ningún usuario con el correo " + email2);
+                RequestContext.getCurrentInstance().showMessageInDialog(message);
+                email2 = null;
+                return null;
             }
-            
         }
         return "index?faces-redirect=true";
     }
-    
-    public void modificar (){
+
+    public void modificar() {
         boolean modificado = false;
-        if(!emailLogueado.isEmpty() ){
+        if (!emailLogueado.isEmpty()) {
             List<Usuario> us = business.getUserByEmail(emailLogueado);
-            if(us.isEmpty()){
-            ctrl.getUsuario().setEmail(emailLogueado);
-            modificado = true;
+            if (us.isEmpty()) {
+                ctrl.getUsuario().setEmail(emailLogueado);
+                modificado = true;
             }
-        } 
-        if (emailNotifier!=ctrl.getUsuario().isEmail_notifier() ){
+        }
+        if (emailNotifier != ctrl.getUsuario().isEmail_notifier()) {
             ctrl.getUsuario().setEmail_notifier(emailNotifier);
             modificado = true;
         }
-        if(!contraseniaLogueado.isEmpty() && !contrasenia2Logueado.isEmpty() && contraseniaLogueado.equals(contrasenia2Logueado)){
+        if (!contraseniaLogueado.isEmpty() && !contrasenia2Logueado.isEmpty() && contraseniaLogueado.equals(contrasenia2Logueado)) {
             //Generate salt
             byte[] salt_bytes = Password.getNextSalt();
             //Convert password to char[]
@@ -217,9 +242,9 @@ public class UsuarioBean implements Serializable {
             ctrl.getUsuario().setSal(Password.bytesToHex(salt_bytes));
             modificado = true;
         }
-        if(modificado){
+        if (modificado) {
             business.updateUser(ctrl.getUsuario());
         }
-        
-    } 
+
+    }
 }

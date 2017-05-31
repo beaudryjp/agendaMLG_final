@@ -5,7 +5,10 @@
             <displayName>Deploy</displayName>
             <goals>
                 <goal>wildfly:deploy</goal>
+                <goal>-X</goal>
+                
                 
             </goals>
         </action>
+        
     </actions>

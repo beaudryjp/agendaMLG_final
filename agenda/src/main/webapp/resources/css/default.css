@@ -1,6 +1,8 @@
 @import url(font-awesome.min.css);
-@import url('https://fonts.googleapis.com/css?family=Kaushan+Script');
-@import url('https://fonts.googleapis.com/css?family=Raleway');
+@font-face {
+    font-family: 'Kaushan Script';
+    src:  url('../fonts/KaushanScript-Regular.ttf') format('truetype');
+}
 
 @media (min-width: 400px) {
     #footer-services-1, #footer-services-2, #header-option-icons {
@@ -222,18 +224,27 @@ ul.icons a:hover {
     margin-right: 7px;
 }
 
+a.linkBack{
+    color: #262525;
+    font-size: 16px;
+}
 
-.login a {
+a.linkBack:hover{
+    color: #504e4e;
+    text-decoration: none;
+}
+
+a.loginLink{
     color: #f1e9e9;
 }
 
-.login a:hover {
+a.loginLink:hover {
     color: #fff;
     text-decoration: none;
     border-bottom: 4px solid #ffde4f;
 }
 
-.login a.icon {
+a.loginLink.icon , a.linkBack{
     text-decoration: none;
     border: 0;
     padding-right: 20px;
@@ -268,7 +279,7 @@ h4.login-header4 {
     padding-top: 15px;
 }
 
-.login #login-goBack {
+.login #login-goBack, #loginLink {
     float: right;
     padding-bottom: 20px;
     font-size: 11px;
@@ -367,10 +378,6 @@ form .submitButtons{
     text-align: right;
 }
 
-#search-sidebar h3{
-    border-top:2px solid #FFCDCD;
-    font-family: 'Raleway', sans-serif;
-}
 
 
 .search-option{
@@ -400,34 +407,40 @@ form .submitButtons{
 }
 
 .search-title{
-    background-color: #262525;
+    background-color: #393947;
     padding: 10px;
     margin-bottom: -2px;
+    width: 100%;
+
 }
 
-#search_form_calendar{
-    padding: 10px;
-}
-
-#search_form_options table{
+#search_form_options table, #search_form_calendar table{
     width: 100%;
 }
 
-#search_form_options tr,#search_form_options td,
-#search_form_options.ui-panelgrid .ui-panelgrid-cell {
+#search_form_options tr,
+#search_form_options td,
+#search_form_options.ui-panelgrid .ui-panelgrid-cell,
+#search_form_calendar tr, 
+#search_form_calendar td,
+#search_form_calendar.ui-panelgrid .ui-panelgrid-cell{
     border: none;
 }
 
-#search_form_options input, #search_form_options select, #search_form_options button{
+#search_form_calendar input,
+#search_form_calendar button,
+#search_form_options input, 
+#search_form_options select, 
+#search_form_options button{
     font-size: 12px;
 }
 
-#search_form_options button{
+#search_form_options button, #search_form_calendar button{
     float: right;
     padding: 7px;
 }
 
-#search_form_options td{
+#search_form_options td, #search_form_calendar td{
     padding: 5px 3px 5px 3px;
 }
 
@@ -515,8 +528,10 @@ ul#headerTags{
     margin:0 auto;
     font-size: 13px;
     text-transform: lowercase;
-    background-color: #888;
+    background-color: #66667f;
     color: #ccc;
+    box-shadow: 0px 0px 20px #444455;
+    border-radius: 5px;
 }
 
 h5.h5bold{
@@ -549,7 +564,7 @@ ul.publico{
 .eventCreate.ui-panelgrid td, .ui-panelgrid tr{
     border-style: none !important;
     width: 100%;
-    padding: 10px;
+    padding: 15px;
 }
 
 .ui-panelgrid input, .ui-panelgrid input{
@@ -623,6 +638,12 @@ ul.comments li i{
 
 .floatRight{
     float: right;
+    text-align: center;
+    margin-left: 5px;
+}
+
+.flRight{
+    float: right;
 }
 
 p.showDate{
@@ -638,6 +659,10 @@ p.showDate{
     margin-right: 10px;
 }
 
+.cancelSumit{
+    font-size: 15px;
+}
+
 .addComment, .deleteEvent, .editEvent{
     font-size:15px;
 }
@@ -648,4 +673,59 @@ p.showDate{
 
 .deleteEvent, .editEvent{
     float:right;
+}
+
+.dateBold{
+    font-weight: bold;
+}
+
+.eventDesc{
+    text-align: justify;
+}
+
+.ui-panel#panel-noti {
+    background-color: #66667f;
+    box-shadow: 0px 0px 20px #444455;
+    color: white;
+    border-radius: 5px;
+}
+
+.icon {
+    margin-left: 5px !important;
+}
+
+.ui-selectonemenu-list, .ui-selectonemenu-panel{
+    max-height:50% !important;
+    overflow: scroll;
+}
+
+.ui-selectonemenu-items-wrapper{
+    height:100% !important;
+    overflow: scroll;
+}
+
+.ui-selectonemenu-label{
+    width:100% !important;
+}
+
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("data:image/png;base64,R0lGODlhDwAUAIABAAAAAP///yH5BAEAAAEALAAAAAAPABQAAAIXjI+py+0Po5wH2HsXzmw//lHiSJZmUAAAOw==") no-repeat 90% 50%;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
 }

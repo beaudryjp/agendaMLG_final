@@ -1,8 +1,11 @@
-
 package grupog.agendamlg.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,28 +15,30 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 
 /**
-* Notificacion.java
-*
-* Mar 31, 2017
-* @author Jean Paul Beaudry
-*/
+ * Notificacion.java
+ *
+ * Mar 31, 2017
+ *
+ * @author Jean Paul Beaudry
+ */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="getNotifications", query="SELECT n from Notificacion n WHERE usuario.id_usuario = :id_usuario")
+    @NamedQuery(name = "getNotifications", query = "SELECT no from Notificacion no WHERE no.usuario.id_usuario = :id_usuario")
 })
 public class Notificacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_notificacion;
+    @Column(nullable = false)
     private String mensaje;
+    @Column(nullable = false)
     private LocalDateTime fecha_hora;
-    @ManyToOne(optional=true)
+    @ManyToOne(optional = true)
     private Usuario usuario;
-    @ManyToOne(optional=true)
+    @ManyToOne(optional = true)
     private Evento evento;
-    
 
     public Usuario getUsuario() {
         return usuario;
@@ -50,6 +55,7 @@ public class Notificacion implements Serializable {
     public void setEvento(Evento evento) {
         this.evento = evento;
     }
+
     public String getMensaje() {
         return mensaje;
     }
@@ -57,7 +63,6 @@ public class Notificacion implements Serializable {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
 
     public Long getId_notificacion() {
         return id_notificacion;
@@ -71,6 +76,11 @@ public class Notificacion implements Serializable {
         return fecha_hora;
     }
 
+    public Date getFecha_hora_date() {
+        Instant instant = fecha_hora.atZone(ZoneId.systemDefault()).toInstant();
+        return Date.from(instant);
+    }
+    
     public void setFecha_hora(LocalDateTime fecha_hora) {
         this.fecha_hora = fecha_hora;
     }
@@ -97,8 +107,7 @@ public class Notificacion implements Serializable {
 
     @Override
     public String toString() {
-        return "Notificacion{" + "id_notificacion=" + id_notificacion + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", usuario=" + usuario + ", evento=" + evento + '}';
+        return "Notificacion{" + "id_notificacion=" + id_notificacion + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora +  '}';
     }
-
 
 }

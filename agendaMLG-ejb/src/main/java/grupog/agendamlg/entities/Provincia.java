@@ -4,7 +4,6 @@ package grupog.agendamlg.entities;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,17 +24,18 @@ import javax.persistence.UniqueConstraint;
 @Entity
 @Table( uniqueConstraints = @UniqueConstraint(columnNames = {"nombre"}))
 @NamedQueries({
-    @NamedQuery(name="getAllProvinces", query="SELECT p from Provincia p"),
+    @NamedQuery(name="getAllProvinces", query="SELECT p from Provincia p ORDER BY p.nombre ASC"),
+    @NamedQuery(name = "getProvinciaByName", query = "SELECT p from Provincia p where p.nombre = :nombre"),
 })
 public class Provincia implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_provincia;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
-    @OneToMany(cascade=CascadeType.ALL,mappedBy="provincia")
+    @OneToMany(orphanRemoval=true, mappedBy="provincia")
     private List<Localidad> localidades;
 
     public Long getId_provincia() {
@@ -64,9 +64,8 @@ public class Provincia implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.id_provincia);
-        hash = 71 * hash + Objects.hashCode(this.nombre);
+        int hash = 5;
+        hash = 31 * hash + Objects.hashCode(this.nombre);
         return hash;
     }
 
@@ -85,15 +84,12 @@ public class Provincia implements Serializable {
         if (!Objects.equals(this.nombre, other.nombre)) {
             return false;
         }
-        if (!Objects.equals(this.id_provincia, other.id_provincia)) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Provincia{" + "id_provincia=" + id_provincia + ", nombre=" + nombre + ", localidades=" + localidades + '}';
+        return "Provincia{" + "id_provincia=" + id_provincia + ", nombre=" + nombre +  '}';
     }
 
 }

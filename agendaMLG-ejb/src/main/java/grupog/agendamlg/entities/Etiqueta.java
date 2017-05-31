@@ -26,24 +26,19 @@ import javax.persistence.UniqueConstraint;
 @NamedQueries({
     @NamedQuery(name="getAllTags", query="SELECT t from Etiqueta t"),
     @NamedQuery(name="getTagById", query="SELECT t from Etiqueta t WHERE t.id_etiqueta = :etiqueta"),
+    @NamedQuery(name="getTagByName", query="SELECT t from Etiqueta t WHERE t.nombre = :nombre"),
+    @NamedQuery(name="getAllTagsByEventId", query="SELECT t from Etiqueta t inner join t.evento e WHERE e.id_evento = :evento"),
 })
 public class Etiqueta implements Serializable, Comparable<Etiqueta>  {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_etiqueta;
-    @Column(name="nombre", nullable=false)
+    @Column(nullable=false)
     private String nombre;
     @ManyToMany(mappedBy="etiqueta")
     private List<Evento> evento;
-
-    public Etiqueta(){
-    }
-    
-    public Etiqueta(String nombre){
-        this.nombre = nombre;
-    }
     
     public List<Evento> getEvento() {
         return evento;
@@ -100,7 +95,7 @@ public class Etiqueta implements Serializable, Comparable<Etiqueta>  {
 
     @Override
     public String toString() {
-        return "Etiqueta{" + "id_etiqueta=" + id_etiqueta + ", nombre=" + nombre + ", evento=" + evento + '}';
+        return "Etiqueta{" + "id_etiqueta=" + id_etiqueta + ", nombre=" + nombre + '}';
     }
 
     @Override

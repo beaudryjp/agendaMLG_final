@@ -3,6 +3,7 @@ package grupog.agendamlg.entities;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,9 +27,11 @@ public class Comentario implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id_comentario;
+    @Column(nullable = false)
     private String mensaje;
+    @Column(nullable = false)
     private LocalDateTime fecha_hora;
     @ManyToOne(optional = true)
     private Evento evento;
@@ -102,7 +105,7 @@ public class Comentario implements Serializable {
 
     @Override
     public String toString() {
-        return "Comentario{" + "id_comentario=" + id_comentario + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + ", evento=" + evento + ", usuario=" + usuario + '}';
+        return "Comentario{" + "id_comentario=" + id_comentario + ", mensaje=" + mensaje + ", fecha_hora=" + fecha_hora + '}';
     }
     
     

@@ -2,6 +2,8 @@ $(document).ready(function () {
     $(".searchBox").hide();
     $("#tab2-main").hide();
     $("#search_form_calendar").hide();
+    $("#followEvents").hide();
+    $("#likeEvents").hide();
     //$("#form_contactUs").validate();
 
     //Click event to scroll to top
@@ -29,22 +31,33 @@ $(document).ready(function () {
         $(this).hide("slow");
     });
     $("#tab2-header").click(function () {
-        $("#search_form_options").hide('slow');
-        $("#search_form_calendar").show('slow');
-        $("#tab1-main").hide('slow');
-        $("#tab2-main").show('slow');
+        $("#search_form_options").hide('fast');
+        $("#search_form_calendar").show('fast');
+        $("#tab1-main").hide('fast');
+        $("#tab2-main").show('fast');
     });
     $("#tab1-header").click(function () {
-        $("#tab2-main").hide('slow');
-        $("#search_form_options").show('slow');
-        $("#search_form_calendar").hide('slow');
-        $("#tab1-main").show('slow');
+        $("#tab2-main").hide('fast');
+        $("#search_form_options").show('fast');
+        $("#search_form_calendar").hide('fast');
+        $("#tab1-main").show('fast');
     });
-    $('.eventLists table').DataTable({
-        'sPaginationType': 'full_numbers',
-        'aLengthMenu': [[3, 6], [3, 6]],
-        'iDisplayLength': 3,
-        "bAutoWidth": true
 
+    $("#h2assist").click(function () {
+        $("#likeEvents").slideUp('fast');
+        $("#followEvents").slideUp('fast');
+        $("#assistEvents").slideDown('fast');
+    });
+
+    $("#h2like").click(function () {
+        $("#followEvents").slideUp('fast');
+        $("#assistEvents").slideUp('fast');
+        $("#likeEvents").slideDown('fast');
+    });
+
+    $("#h2follow").click(function () {
+        $("#likeEvents").slideUp('fast');
+        $("#assistEvents").slideUp('fast');
+        $("#followEvents").slideDown('fast');
     });
 });

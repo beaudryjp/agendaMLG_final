@@ -1,0 +1,16 @@
+SET FOREIGN_KEY_CHECKS=0;
+TRUNCATE TABLE agenda.Comentario;
+TRUNCATE TABLE agenda.Destinatario;
+TRUNCATE TABLE agenda.Etiqueta;
+TRUNCATE TABLE agenda.Evento;
+TRUNCATE TABLE agenda.Evento_Destinatario;
+TRUNCATE TABLE agenda.Evento_Etiqueta;
+TRUNCATE TABLE agenda.Localidad;
+TRUNCATE TABLE agenda.Notificacion;
+TRUNCATE TABLE agenda.Provincia;
+TRUNCATE TABLE agenda.Tarea;
+TRUNCATE TABLE agenda.Usuario;
+TRUNCATE TABLE agenda.Usuario_Tarea;
+TRUNCATE TABLE agenda.jn_asiste_id;
+TRUNCATE TABLE agenda.jn_megusta_id;
+TRUNCATE TABLE agenda.jn_sigue_id;

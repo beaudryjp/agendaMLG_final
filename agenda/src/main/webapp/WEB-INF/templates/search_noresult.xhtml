@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <ui:composition>
+        <p class="lead"></p>
+        <p:panelGrid style="border: none;">
+            <p:column style="padding: 20px; border: none">
+                <h3 class="search-title" style="padding: 10px">¡Lo sentimos! No hay ningún evento disponible con los parámetros específicados.</h3>
+                <div class="search-option srchEvents" style="padding: 10px">
+                    <p class="lead">
+                        <h4>Realice una nueva búsqueda usando el menú de la derecha o en el menú de la cabecera.</h4>
+                        <div id="login-goBack">
+                            <h:link value="Volver" outcome="index" class="loginBack icon fa-chevron-left fa-2x floatRight"/>
+                        </div>
+                    </p>
+                </div>
+            </p:column>
+        </p:panelGrid>
+    </ui:composition>
+</html>

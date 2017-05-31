@@ -15,7 +15,9 @@
                 </pretty:link>
             </h3>
             <div class="imageEventList">
-                <h:graphicImage name="#{evento.imagen_url}" width="200px" height="200px"/>
+                <p:graphicImage value="#{eventoBean.getImage()}" width="200px" height="200px">
+                    <f:param name="filename" value="#{evento.imagen_url}" />
+                </p:graphicImage>
             </div>
             <div>
                 <p class="eventListDesc"><h:outputText value="#{evento.descripcion.length() gt 200 ? evento.descripcion.substring(0,200).concat('...') : evento.descripcion}" /></p>

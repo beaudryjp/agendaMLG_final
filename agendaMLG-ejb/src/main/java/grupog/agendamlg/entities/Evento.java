@@ -4,14 +4,12 @@ import com.google.common.collect.ComparisonChain;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -29,101 +27,78 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name="getAllEvents", query="SELECT e from Evento e"),
-    @NamedQuery(name="getEventsById", query="SELECT e from Evento e WHERE e.id_evento = :evento"),
-    @NamedQuery(name="getEventsImportant", query="SELECT e from Evento e WHERE e.destacado = true"),
-    @NamedQuery(name="getEventsByDate", query="SELECT e from Evento e WHERE e.fecha_inicio = :fecha"),
-    //revisar que funcione
-    @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e, Etiqueta et, Destinatario d "
-            + "WHERE e.localidad.nombre = :localidad and "
-            + "e.localidad.provincia.nombre = :provincia and et.nombre = :etiqueta and d.descripcion = :destinatario"),
-    //Event by tag
-    //@NamedQuery(name="getEventsFromTag", query="SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :tag")
-})
-/*
+    @NamedQuery(name = "getAllEvents", query = "SELECT e from Evento e WHERE e.visible = true") ,
+    @NamedQuery(name = "getEventById", query = "SELECT e from Evento e WHERE e.id_evento = :evento") ,
+    @NamedQuery(name = "getEventsImportant", query = "SELECT e from Evento e WHERE e.destacado = true and e.visible = true") ,
+    @NamedQuery(name = "getEventsByDate", query = "SELECT e from Evento e WHERE e.fecha_inicio <= :fecha and e.fecha_fin >= :fecha2 and e.visible = true ORDER BY e.fecha_inicio ASC") ,
+    @NamedQuery(name = "getEventsNearestByDate", query = "select e from Evento e where e.visible = true order by ABS(TIMESTAMPDIFF(SECOND, current_date(), fecha_inicio))") ,
+    @NamedQuery(name="getEventsBySearch", query="SELECT e from Evento e inner join e.etiqueta et inner join e.destinatario d "
+            + "WHERE e.localidad.nombre = :localidad and et.nombre = :etiqueta and d.descripcion = :destinatario and e.visible = true"),
+    @NamedQuery(name = "getUserAssists", query = "select e from Evento e join fetch e.asiste a where a.id_usuario = :id") ,
+    @NamedQuery(name = "getUserLikes", query = "select e from Evento e join fetch e.megusta a where a.id_usuario = :id") ,
+    @NamedQuery(name = "getUserFollows", query = "select e from Evento e join fetch e.sigue a where a.id_usuario = :id") ,
+    @NamedQuery(name = "getEventsByTag", query = "SELECT e from Evento e INNER JOIN e.etiqueta et WHERE et.nombre = :nombre and e.visible = true") ,
+    @NamedQuery(name = "getEventsByAudience", query = "SELECT e from Evento e INNER JOIN e.destinatario de WHERE de.descripcion = :descripcion and e.visible = true") ,
+    @NamedQuery(name = "getUserEvents", query = "SELECT e from Evento e inner join e.propietario u WHERE u.id_usuario = :usuario"),})
 
-StringBuilder queryAsiste = new StringBuilder(); 
-        sb.append("SELECT * FROM jn_asiste_id WHERE id_usuario = ");
-        sb.append(usuario.id_usuario);
-        sb.append(" AND id_evento = ");
-        sb.append(evento.id_evento);
-
-StringBuilder queryGusta = new StringBuilder(); 
-        sb.append("SELECT * FROM jn_megusta_id WHERE id_usuario = ");
-        sb.append(usuario.id_usuario);
-        sb.append(" AND id_evento = ");
-        sb.append(evento.id_evento);
-
-StringBuilder querySigue = new StringBuilder(); 
-        sb.append("SELECT * FROM jn_sigue_id WHERE id_usuario = ");
-        sb.append(usuario.id_usuario);
-        sb.append(" AND id_evento = ");
-        sb.append(evento.id_evento);
-
-    Query query = em.createNativeQuery(queryString);
-    List<Hospital> result = query.getResultList();
-*/
 public class Evento implements Serializable, Comparable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_evento;
+    @Column(nullable = false)
     private String titulo;
-    @Column(name = "descripcion", nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String descripcion;
-    @Column(name = "fecha_inicio", nullable = false)
+    @Column(nullable = false)
     @Temporal(TemporalType.DATE)
     private Date fecha_inicio;
     @Temporal(TemporalType.DATE)
     private Date fecha_fin;
+    @Column(nullable = false)
     private String horario;
+    @Column(nullable = false)
     private String precio;
-    private double longitud;
-    private double latitud;
-    private boolean destacado;
+    @Column(nullable = false)
+    private Double longitud;
+    @Column(nullable = false)
+    private Double latitud;
+    @Column(nullable = false)
+    private Boolean destacado;
+    @Column(nullable = false)
     private String imagen_url;
+    @Column(nullable = false)
     private String imagen_titulo;
+    private Integer valoracion;
+    @Column(nullable = false)
+    private Boolean visible;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "jn_comentarios_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_comentario"))
+    @OneToMany(mappedBy = "evento")
     private List<Comentario> comentarios;
-//    @OneToMany(cascade = CascadeType.ALL)
-//    private List<Imagen> imagenes;
+
     @ManyToMany
-    @JoinTable(name = "jn_etiqueta_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_etiqueta"))
-    private List<Etiqueta> etiqueta;
-    @ManyToOne
-    private Localidad localidad;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "jn_notificaciones_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_notificacion"))
-    private List<Notificacion> notificaciones;
-    @ManyToMany(mappedBy = "megusta", cascade = CascadeType.ALL)
-    private List<Usuario> megusta;
-    @ManyToMany(mappedBy = "sigue", cascade = CascadeType.ALL)
-    private List<Usuario> sigue;
-    @ManyToMany(mappedBy = "asiste", cascade = CascadeType.ALL)
-    private List<Usuario> asiste;
-    @ManyToMany
-    @JoinTable(name = "jn_destinatario_id", joinColumns = @JoinColumn(name = "id_evento"), inverseJoinColumns = @JoinColumn(name = "id_destinatario"))
     private List<Destinatario> destinatario;
 
-//    @OneToMany
-    public Evento() {
-    }
+    @ManyToMany
+    private List<Etiqueta> etiqueta;
 
-    public Evento(String titulo, String descripcion, Date fecha_inicio, Date fecha_fin, String horario, String precio, double longitud, double latitud, boolean destacado, Localidad localidad) {
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.fecha_inicio = fecha_inicio;
-        this.fecha_fin = fecha_fin;
-        this.horario = horario;
-        this.precio = precio;
-        this.longitud = longitud;
-        this.latitud = latitud;
-        this.destacado = destacado;
-        this.localidad = localidad;
-    }
+    @ManyToOne
+    private Localidad localidad;
+
+    @OneToMany(mappedBy = "evento")
+    private List<Notificacion> notificaciones;
+
+    @ManyToMany(mappedBy = "megusta")
+    private List<Usuario> megusta;
+    @ManyToMany(mappedBy = "sigue")
+    private List<Usuario> sigue;
+    @ManyToMany(mappedBy = "asiste")
+    private List<Usuario> asiste;
+
+    @ManyToOne
+    @JoinColumn(name = "propietario", insertable = false, updatable = false)
+    private Usuario propietario;
 
     public String getImagen_url() {
         return imagen_url;
@@ -141,7 +116,6 @@ public class Evento implements Serializable, Comparable {
         this.imagen_titulo = imagen_titulo;
     }
 
-    
     public List<Destinatario> getDestinatario() {
         return destinatario;
     }
@@ -284,6 +258,35 @@ public class Evento implements Serializable, Comparable {
 
     public void setAsiste(List<Usuario> asiste) {
         this.asiste = asiste;
+    }
+
+    public Usuario getPropietario() {
+        return propietario;
+    }
+
+    public void setPropietario(Usuario propietario) {
+        this.propietario = propietario;
+    }
+
+    public Integer getValoracion() {
+        return valoracion;
+    }
+
+    public void setValoracion(Integer valoracion) {
+        this.valoracion = valoracion;
+    }
+
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+    
+    public String getDescripcionFormateado(){
+        this.descripcion = descripcion.replaceAll("(\r\n|\n)", "<br />");
+        return this.descripcion;
     }
 
     @Override

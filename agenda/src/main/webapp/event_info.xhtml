@@ -11,9 +11,13 @@
         <ui:define name="main-content">
             <f:metadata>
                 <f:viewAction action="#{ControlLog.checkEventParameter()}" />
-                <f:viewParam name="eventId" value="#{eventoBean.eventId}" />
                 <f:viewAction action="#{eventoBean.onload}" />
+                <f:viewAction action="#{ControlLog.checkVisibility()}" />
+
+                <f:viewParam name="eventId" value="#{eventoBean.eventId}" />
+
             </f:metadata>
+
             <h:form id="formLike">
                 <h:inputHidden id="hidden2" value="#{eventoBean.eventId}" />
                 <p:commandLink id="linkLike" actionListener="#{eventoBean.sendNotificationLike}" />
@@ -26,45 +30,52 @@
             <p:dataTable value="#{eventoBean.getEvento()}" var="evento" id="eventInfo">
 
                 <p:column>
-                    <div id="event-goBack">
-                        <h:link value="Volver" outcome="index" class="icon fa-chevron-left"/>
-                    </div>
-                    <div class="floatRight">
+                    <ui:insert name="go-back">
+                        <ui:include src = "/WEB-INF/templates/go_back.xhtml" />
+                    </ui:insert>
+                    <br/><br/>
+                    
+                    <div class="flRight">
+                        <c:if test="#{(ControlLog.eventVisible)}">
+                            <h5 class="icon">
+                                <i><h:outputText value="#{eventoBean.numLikes}"/></i><a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
+                            </h5>
+                            <h5 class="icon">
+                                <i><h:outputText value="#{eventoBean.numAssists}"/></i><a data-toggle="tooltip" title="Assist"  data-placement="left" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
+                            </h5>
+                            <h5 class="icon">
+                                <i><h:outputText value="#{eventoBean.numFollows}"/></i><a data-toggle="tooltip" title="Follow"  data-placement="left" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
+                            </h5>
+                        </c:if>
 
-                        <c:choose>
-                            <c:when test="#{!empty ControlLog.usuario}">
-                                <h5 class="icon">
-                                    <i><h:outputText value="#{eventoBean.numAssists}"/></i><a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
-                                </h5>
-                                <h5 class="icon">
-                                    <i><h:outputText value="#{eventoBean.numAssists}"/></i><a data-toggle="tooltip" title="Assist"  data-placement="left" onclick="invokeClickAssist()" class="icon fa-users fa-2x"/>
-                                </h5>
-                                <h5 class="icon">
-                                    <i><h:outputText value="#{eventoBean.numFollows}"/></i><a data-toggle="tooltip" title="Follow"  data-placement="left" onclick="invokeClickFollow()" class="icon fa-bell fa-2x" />
-                                </h5>
-                            </c:when>
-                        </c:choose>
                         <h5 class="icon">
                             <a class="icon fa fa-map fa-2x" onclick="PF('gmap').show();"  data-toggle="tooltip" title="Show map"  data-placement="left" />
                         </h5>
-                        <h5 class="icon">
-                            <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank" data-toggle="tooltip" title="Twitter"  data-placement="left" ></a>
-                        </h5>
-                        <h5 class="icon">
-                            <a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Google+"  data-placement="left" ></a>
-                        </h5>
-                        <h5 class="icon">
-                            <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
-                        </h5>
+
+                        <c:if test="#{(ControlLog.eventVisible || empty ControlLog.usuario)}">
+                            <h5 class="icon">
+                                <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank" data-toggle="tooltip" title="Twitter"  data-placement="left" ></a>
+                            </h5>
+                            <h5 class="icon">
+                                &nbsp;&nbsp;<a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Google+"  data-placement="left" ></a>
+                            </h5>
+                            <h5 class="icon">
+                                &nbsp;&nbsp;<a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
+                            </h5>
+                        </c:if>
                     </div>
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
+                    <p:rating value="#{evento.valoracion}" readonly="true" />
                     <div class="imageEvent">
-                        <h:graphicImage name="#{evento.imagen_url}" width="500" height="300"/>
+
+                        <p:graphicImage value="#{eventoBean.getImage()}" width="500px" height="300px">
+                            <f:param name="filename" value="#{evento.imagen_url}" />
+                        </p:graphicImage>
                     </div>
                     <div>
 
-                        <p class="eventDesc"><br/><h:outputText value="#{evento.descripcion}" /></p>
+                        <p class="eventDesc"><br/><h:outputText escape="false" value="#{evento.getDescripcionFormateado()}" /></p>
                         <p class="showDate"><i>
                                 Fecha
                                 <h:outputText value="#{evento.fecha_inicio}">
@@ -77,66 +88,104 @@
                         <hr/>
                         <p><h5 class="h5bold"><h:outputText value="#{evento.localidad.nombre}&nbsp;&nbsp;&nbsp;#{evento.horario}&nbsp;&nbsp;&nbsp;#{evento.precio} "  /></h5></p>
                         <hr/>
-                        <p>
-                            <ul class="publico">
-                                <ui:repeat value="#{evento.destinatario}" var="dest">
-                                    <li><h:outputText value="#{dest.descripcion}"/></li>
-                                </ui:repeat>
-                            </ul>
-                        </p>
-                        <hr/>
-                        <p>
-                            <h:form>
-                                <p:tagCloud model="#{eventoBean.getModel(evento.id_evento)}"></p:tagCloud>
-                            </h:form>
-                        </p>
+                        <c:if test="#{!empty eventoBean.eventDestinatarios}">
+                            <p>
+                                <ul class="publico">
+                                    <ui:repeat value="#{eventoBean.eventDestinatarios}" var="dest">
+                                        <li><h:outputText value="#{dest.descripcion}"/></li>
+                                    </ui:repeat>
+                                </ul>
+                            </p>
+
+                            <hr/>
+                        </c:if>
+                        <c:if test="#{!empty eventoBean.model}">
+                            <p>
+                                <h:form>
+                                    <p:tagCloud model="#{eventoBean.model}"></p:tagCloud>
+                                </h:form>
+                            </p>
+                        </c:if>
                     </div>
-                    <p:panel id="panel_comentarios">
+
+                    <c:if test="#{!empty eventoBean.eventComentarios}">
                         <div>
-                        <h5 class="h5bold">Comentarios</h5>
-                        <ul class="comments">
-                            <ui:repeat value="#{evento.comentarios}" var="comen">
-                                <li>
-                                    <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote>
-                                    <i>
-                                        <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> -
-                                        <h:outputText value="#{comen.getFecha_hora_formateado()}"/>
-                                    </i>
-                                </li>
-                            </ui:repeat>
-                        </ul>
-                    </div>
-                    </p:panel>
+                            <br/>
+                            <h5 class="h5bold">Comentarios</h5>
+                            <ul class="comments">
+                                <h:form>
+                                    <ui:repeat value="#{eventoBean.eventComentarios}" var="comen">
+                                        <li>
+                                            <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote>
+                                            <i>
+                                                <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> -
+                                                <h:outputText value="#{comen.getFecha_hora_formateado()}"/>&nbsp;&nbsp;
+                                                <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
+                                                    <h:commandLink action="#{eventoBean.deleteComment()}" styleClass="fa fa-trash" type="button">
+                                                        <f:attribute name="comment" value="#{comen.id_comentario}" />
+                                                    </h:commandLink>
+                                                </c:if>
+                                            </i>
+                                        </li>
+                                    </ui:repeat>
+                                </h:form>
+                            </ul>
+                        </div>
+                    </c:if>
+                    <br/>
                     <div>
                         <f:view contentType="text/html">
                             <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">
-                                <p:gmap id="gmap" center="#{evento.longitud}, #{evento.latitud}" zoom="15" type="HYBRID" styleClass="mapDialog" />
+                                <p:gmap id="gmap" center="#{evento.latitud}, #{evento.longitud}" zoom="15" type="HYBRID" styleClass="mapDialog" />
                             </p:dialog>
                         </f:view>
                     </div>
                     <h:form id="formComentario">
                         <p:dialog header="Añadir comentario" widgetVar="dlg_comen" minHeight="40">
-                            <p:inputText id="eventComentario" placeholder="Comentario"/>
-                            <p:commandButton value="Enviar" id="submitComen" actionListener="#{buttonView.buttonAction}"  ajax="true" update="panel_comentarios" icon="ui-icon-disk" />
+                            <p:inputText id="eventComentario" placeholder="Comentario" value="#{eventoBean.eventNewComment}"/>
+                            <p:commandButton value="Enviar" id="submitComen" action="#{eventoBean.createComment()}"  ajax="false" icon="ui-icon-disk" />
                         </p:dialog>
                     </h:form>
                     <h:form id="formDelete">
-                        <p:dialog header="Borrar evento" widgetVar="dlg_delete" minHeight="40">
-                            <h4><h:link outcome="index" value="Se ha borrado el evento" /></h4>
+                        <h:inputHidden id="hidden3" value="#{eventoBean.eventId}" />
+                        <p:confirmDialog global="true" widgetVar="dlg_delete" showEffect="fade" hideEffect="fade">
+                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:form>
+                    <h:form id="formChange" enctype="multipart/form-data">
 
+                        <p:dialog header="Cambiar imagen" widgetVar="dlg_change" minHeight="40">
+                            <p:fileUpload id="eventImage" fileLimit="1" oncomplete="PF('dlg_change').hide(); reloadEvent();"
+
+                                          mode="advanced" dragDropSupport="true" label="Seleccionar"
+                                          uploadLabel="Subir" cancelLabel="Borrar" update="@form" 
+                                          fileUploadListener="#{eventoBean.changeImage}"
+                                          allowTypes="/(\.|\/)(gif|jpe?g|png)$/" sizeLimit="1000000" />
                         </p:dialog>
                     </h:form>
-                    <c:if test="#{!empty ControlLog.usuario}">
+                    <c:if test="#{(ControlLog.eventVisible)}">
                         <p:commandLink id="addComment" styleClass="addComment btn btn-default btn-lg" onclick="PF('dlg_comen').show();" value="Añadir comentario"/>
                     </c:if>
-                    <c:if test="#{ControlLog.isUserValidated()}">
-                        <p:commandLink id="deleteEvent" onclick="PF('dlg_delete').show()" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg"/>
+                    <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
+                        <p:commandLink id="deleteEvent" onsuccess="PF('dlg_change').hide()" actionListener="#{eventoBean.deleteEvento()}" value="Eliminar" styleClass="deleteEvent btn btn-default btn-lg">
+                            <p:confirm header="Confirmación" message="¿Estás seguro?" icon="ui-icon-alert" />
+                        </p:commandLink>
                         <pretty:link mappingId="editEvent" id="editEvent" styleClass="editEvent btn btn-default btn-lg">
                             Editar
                             <f:param value="#{evento.id_evento}" />
                         </pretty:link>
-                    </c:if>
+                        <c:choose>
+                            <c:when test="#{ControlLog.eventHighlighted}">
+                                <p:commandLink id="ocultarEvento" action="#{eventoBean.destacarEvento()}" value="Quitar destacado" styleClass="editEvent btn btn-default btn-lg"/>
+                            </c:when>
+                            <c:otherwise>
+                                <p:commandLink id="destacarEvento" action="#{eventoBean.destacarEvento()}" value="Destacar evento" styleClass="editEvent btn btn-default btn-lg"/>
+                            </c:otherwise>
+                        </c:choose>
 
+                        <p:commandLink id="changeImage" onclick="PF('dlg_change').show()" value="Cambiar imagen" styleClass="editEvent btn btn-default btn-lg"/>
+                    </c:if>
                 </p:column>
             </p:dataTable>
             <script src="http://maps.google.com/maps/api/js?key=AIzaSyBgwx1lVQzR12Olyi9ISS1ZrDCgarlTYkg" type="text/javascript" ></script>
@@ -161,10 +210,12 @@
                             function invokeClickFollow() {
                                 document.getElementById('formLike:linkFollow').click();
                             }
+                            function reloadEvent() {
+                                window.location.reload();
+                            }
                             $(document).ready(function () {
                                 $('[data-toggle="tooltip"]').tooltip();
                             });
-
             </script>
         </ui:define>
     </ui:composition>
