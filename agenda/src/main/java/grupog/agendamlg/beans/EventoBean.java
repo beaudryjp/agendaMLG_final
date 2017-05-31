@@ -1,12 +1,12 @@
 package grupog.agendamlg.beans;
 
+import grupog.agendamlg.business.*;
 import grupog.agendamlg.entities.Comentario;
 import grupog.agendamlg.entities.Destinatario;
 import grupog.agendamlg.entities.Etiqueta;
 import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.entities.Notificacion;
-import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Tarea;
 import grupog.agendamlg.general.Redirect;
@@ -60,7 +60,11 @@ import org.primefaces.model.tagcloud.TagCloudModel;
 public class EventoBean implements Serializable {
 
     @EJB
-    private Business business;
+    private BusinessUser businessUser;
+    @EJB
+    private BusinessEvent businessEvent;
+    @EJB
+    private BusinessOther businessOther;
     @Inject
     private ControlLog current_user;
     @Inject
@@ -123,7 +127,7 @@ public class EventoBean implements Serializable {
     }
 
     public List<Evento> getEventosProximos() {
-        List<Evento> e = business.getEventsNearestByCurrentDate();
+        List<Evento> e = businessEvent.getEventsNearestByCurrentDate();
         if (!e.isEmpty()) {
             if (e.size() > 2) {
                 return e.subList(0, 2);
@@ -136,7 +140,7 @@ public class EventoBean implements Serializable {
     }
 
     public List<Evento> getEventos() {
-        eventos = business.getEvents();
+        eventos = businessEvent.getEvents();
         Collections.sort(eventos, new Comparator<Evento>() {
             @Override
             public int compare(Evento o1, Evento o2) {
@@ -147,29 +151,39 @@ public class EventoBean implements Serializable {
     }
 
     public List<Evento> getEventosDestacados() {
-        return business.getEventsImportant();
+        return businessEvent.getEventsImportant();
     }
 
     public void getEventosByFecha() {
         if (dateSelected != null) {
-            eventoSearch = business.getEventsByDate(dateSelected);
+            eventoSearch = businessEvent.getEventsByDate(dateSelected);
             Redirect.redirect2("events_search");
         }
     }
 
     public void searchEvents() {
-        eventoSearch = business.getEventsBySearch(searchText, prov.getLocalidad(), searchEtiqueta, searchDestinatario);
+        System.out.println("searchEvents()");
+        System.out.println("text: " + searchText);
+        System.out.println("localidad: " + prov.getLocalidad());
+        System.out.println("etiqueta: " + searchEtiqueta);
+        System.out.println("destinatario: " + searchDestinatario);
+        eventoSearch = businessEvent.getEventsBySearch(searchText, prov.getLocalidad(), searchEtiqueta, searchDestinatario);
+        if (eventoSearch != null) {
+            for (Evento x : eventoSearch) {
+                System.out.println(x.getTitulo());
+            }
+        }
         Redirect.redirect2("events_search");
     }
 
     public List<Evento> getSearchEventosEtiquetas() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        return business.getEventsByTag(business.getEtiquetaByName(hsr.getParameter("tag")).getId_etiqueta());
+        return businessEvent.getEventsByTag(businessOther.getEtiquetaByName(hsr.getParameter("tag")).getId_etiqueta());
     }
 
     public Evento getEvento() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        return business.getEventById(Long.parseLong(hsr.getParameter("id")));
+        return businessEvent.getEventById(Long.parseLong(hsr.getParameter("id")));
     }
 
     public String getSearchLocalidad() {
@@ -215,9 +229,9 @@ public class EventoBean implements Serializable {
     public TagCloudModel getModelTags() {
         TagCloudModel s = new DefaultTagCloudModel();
         Random r = new Random(0);
-        Evento x = business.getEventById(Long.parseLong(eventId));
+        Evento x = businessEvent.getEventById(Long.parseLong(eventId));
         if (x != null) {
-            for (Etiqueta et : business.getAllTagsByEvent(Long.parseLong(eventId))) {
+            for (Etiqueta et : businessEvent.getAllTagsByEvent(Long.parseLong(eventId))) {
                 s.addTag(new DefaultTagCloudItem(et.getNombre(), "/event/tag/" + et.getNombre(), r.nextInt(4) + 1));
             }
         }
@@ -229,37 +243,37 @@ public class EventoBean implements Serializable {
     }
 
     public void sendNotificationLike(ActionEvent e) {
-        Evento evento = business.getEventById(Long.parseLong(eventId));
-        if (!business.checkLike(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
+        Evento evento = businessEvent.getEventById(Long.parseLong(eventId));
+        if (!businessEvent.checkLike(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
             sendMailSocial("Has pinchado like en el evento");
-            business.like(evento.getId_evento(), current_user.getUsuario().getId_usuario());
+            businessEvent.like(evento.getId_evento(), current_user.getUsuario().getId_usuario());
         } else {
             Redirect.redirectToEventInfo(evento.getId_evento());
         }
     }
 
     public void sendNotificationAssist(ActionEvent e) {
-        Evento evento = business.getEventById(Long.parseLong(eventId));
-        if (!business.checkAssist(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
+        Evento evento = businessEvent.getEventById(Long.parseLong(eventId));
+        if (!businessEvent.checkAssist(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
             sendMailSocial("Has indicado que vas a asistir al evento");
-            business.assist(evento.getId_evento(), current_user.getUsuario().getId_usuario());
+            businessEvent.assist(evento.getId_evento(), current_user.getUsuario().getId_usuario());
         } else {
             Redirect.redirectToEventInfo(evento.getId_evento());
         }
     }
 
     public void sendNotificationFollow(ActionEvent e) {
-        Evento evento = business.getEventById(Long.parseLong(eventId));
-        if (!business.checkFollow(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
+        Evento evento = businessEvent.getEventById(Long.parseLong(eventId));
+        if (!businessEvent.checkFollow(evento.getId_evento(), current_user.getUsuario().getId_usuario())) {
             sendMailSocial("Has indicado que quieres seguir el evento");
-            business.follow(evento.getId_evento(), current_user.getUsuario().getId_usuario());
+            businessEvent.follow(evento.getId_evento(), current_user.getUsuario().getId_usuario());
         } else {
             Redirect.redirectToEventInfo(evento.getId_evento());
         }
     }
 
     private void sendMailSocial(String msg) {
-        Evento ev = business.getEventById(Long.parseLong(eventId));
+        Evento ev = businessEvent.getEventById(Long.parseLong(eventId));
         final Usuario u = current_user.getUsuario();
         final StringBuilder m = new StringBuilder();
         String full_url = "http://localhost:8080/agenda/event/show/" + this.eventId;
@@ -283,7 +297,7 @@ public class EventoBean implements Serializable {
         n.setUsuario(u);
         n.setMensaje(msg);
         n.setFecha_hora(LocalDateTime.now());
-        business.setNotifications(n);
+        businessUser.setNotifications(n);
         Redirect.redirectToEventInfo(ev.getId_evento());
     }
 
@@ -490,23 +504,23 @@ public class EventoBean implements Serializable {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
         model = getModelTags();
-        Evento e = business.getEventById(Long.parseLong(eventId));
-        eventDestinatarios = business.getAllAudiencesByEvent(Long.parseLong(eventId));
-        eventComentarios = business.getComments(e.getId_evento());
-        numAssists = business.numAssist(e.getId_evento());
-        numLikes = business.numLike(e.getId_evento());
-        numFollows = business.numFollow(e.getId_evento());
+        Evento e = businessEvent.getEventById(Long.parseLong(eventId));
+        eventDestinatarios = businessEvent.getAllAudiencesByEvent(Long.parseLong(eventId));
+        eventComentarios = businessEvent.getComments(e.getId_evento());
+        numAssists = businessEvent.numAssist(e.getId_evento());
+        numLikes = businessEvent.numLike(e.getId_evento());
+        numFollows = businessEvent.numFollow(e.getId_evento());
     }
 
     public void onload2() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
-        Evento e = business.getEventById(Long.parseLong(eventId));
+        Evento e = businessEvent.getEventById(Long.parseLong(eventId));
         updateTitulo = e.getTitulo();
         updatePrecio = e.getPrecio();
         updateDescripcion = e.getDescripcion();
 
-        lista_localidades = business.getTowns(e.getLocalidad().getProvincia().getNombre());
+        lista_localidades = businessOther.getTowns(e.getLocalidad().getProvincia().getNombre());
         prov.setLocalidades(lista_localidades);
         for (Localidad localidad : lista_localidades) {
             if (localidad.equals(e.getLocalidad())) {
@@ -545,17 +559,20 @@ public class EventoBean implements Serializable {
 
         List<Destinatario> s = new ArrayList<>();
         for (String str : destinatarios) {
-            s.add(business.getDestinatarioByDescripcion(str));
+            s.add(businessOther.getDestinatarioByDescripcion(str));
         }
 
         e.setDestinatario(s);
         List<Etiqueta> etq = new ArrayList<>();
         for (String etiqueta : etiquetas) {
-            etq.add(business.getEtiquetaByName(etiqueta));
+            etq.add(businessOther.getEtiquetaByName(etiqueta));
         }
 
         e.setEtiqueta(etq);
-        e.setLocalidad(business.getLocalidadByName(prov.getLoca().getNombre()));
+        System.out.println("createEvent() ProvinciaBean.localidad: " + prov.getLoca().getNombre());
+        Localidad l = businessOther.getLocalidadByName(prov.getLoca().getNombre());
+        System.out.println("createEvent() business localidad: " + l.getNombre());
+        e.setLocalidad(l);
 
         e.setImagen_url("default.png");
         e.setImagen_titulo(event_new_titulo.toLowerCase());
@@ -569,8 +586,8 @@ public class EventoBean implements Serializable {
             e.setDestacado(event_new_destacado);
         }
 
-        e.setPropietario(business.getUserByEmail(current_user.getUsuario().getEmail()).get(0));
-        business.createEvent(e);
+        e.setPropietario(businessUser.getUserByEmail(current_user.getUsuario().getEmail()).get(0));
+        businessEvent.createEvent(e);
         if (current_user.isUserRegistered()) {
             Tarea t = new Tarea();
             t.setCreador_peticion(current_user.getUsuario());
@@ -578,12 +595,12 @@ public class EventoBean implements Serializable {
             t.setId_evento(e.getId_evento());
             t.setMensaje(current_user.getUsuario().getPseudonimo() + " desea crear un evento");
             t.setNombre("Propuesta de evento");
-            business.createTask(t);
-            for (Usuario u : business.getRedactores()) {
-                List<Tarea> l = business.getTasks(u.getId_usuario());
-                l.add(t);
-                u.setTareas(l);
-                business.updateUser(u);
+            businessUser.createTask(t);
+            for (Usuario u : businessUser.getRedactores()) {
+                List<Tarea> li = businessUser.getTasks(u.getId_usuario());
+                li.add(t);
+                u.setTareas(li);
+                businessUser.updateUser(u);
             }
         }
         Redirect.redirectToEventInfo(e.getId_evento());
@@ -598,13 +615,13 @@ public class EventoBean implements Serializable {
 
                     try (InputStream input = event.getFile().getInputstream()) {
 
-                        Evento e = business.getEventById(Long.parseLong(hsr.getParameter("id")));
+                        Evento e = businessEvent.getEventById(Long.parseLong(hsr.getParameter("id")));
                         Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
                         String filename = FilenameUtils.getBaseName(event.getFile().getFileName()) + "." + FilenameUtils.getExtension(event.getFile().getFileName());
 
                         //update event
                         e.setImagen_url(filename);
-                        business.updateEvent(e);
+                        businessEvent.updateEvent(e);
 
                         //create file
                         File newFile = new File(path.toString() + "/" + filename);
@@ -623,20 +640,20 @@ public class EventoBean implements Serializable {
     public void createComment() {
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String id = hsr.getParameter("id");
-        Evento e = business.getEventById(Long.parseLong(id));
+        Evento e = businessEvent.getEventById(Long.parseLong(id));
         Comentario c = new Comentario();
         c.setEvento(e);
         c.setUsuario(current_user.getUsuario());
         c.setFecha_hora(LocalDateTime.now());
         c.setMensaje(eventNewComment);
-        business.createComment(c);
+        businessEvent.createComment(c);
         Redirect.redirectToEventInfo(e.getId_evento());
     }
 
     public void deleteComment(ActionEvent e) {
-        String comment = e.getComponent().getAttributes().get( "comment" ).toString();
+        String comment = e.getComponent().getAttributes().get("comment").toString();
         System.out.println(comment);
-        business.deleteComentario(Long.parseLong(comment));
+        businessEvent.deleteComentario(Long.parseLong(comment));
         //Redirect.redirectToEventInfo(c.getEvento().getId_evento());
     }
 
@@ -701,17 +718,17 @@ public class EventoBean implements Serializable {
     }
 
     public void setNumAssists(int numAssists) {
-        int n = business.getEventById(Long.parseLong(eventId)).getAsiste().size();
+        int n = businessEvent.getEventById(Long.parseLong(eventId)).getAsiste().size();
         this.numAssists = numAssists;
     }
 
     public void setNumLikes(int numLikes) {
-        int n = business.getEventById(Long.parseLong(eventId)).getMegusta().size();
+        int n = businessEvent.getEventById(Long.parseLong(eventId)).getMegusta().size();
         this.numLikes = n;
     }
 
     public void setNumFollows(int numFollows) {
-        int n = business.getEventById(Long.parseLong(eventId)).getSigue().size();
+        int n = businessEvent.getEventById(Long.parseLong(eventId)).getSigue().size();
         this.numFollows = n;
     }
 
@@ -792,9 +809,9 @@ public class EventoBean implements Serializable {
     }
 
     public void deleteEvento() {
-        final Evento e = business.getEventById(Long.parseLong(eventId));
-        final Evento system = business.getEventById(500);
-        final List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
+        final Evento e = businessEvent.getEventById(Long.parseLong(eventId));
+        final Evento system = businessEvent.getEventById(500);
+        final List<Usuario> u = businessUser.getUsuariosByEvento(e.getId_evento());
         final StringBuilder m = new StringBuilder();
         m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
                 .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
@@ -816,19 +833,19 @@ public class EventoBean implements Serializable {
                     notiplana.setFecha_hora(LocalDateTime.now());
                     notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido suspendido");
                     notiplana.setUsuario(usi);
-                    business.setNotifications(notiplana);
+                    businessUser.setNotifications(notiplana);
                 }
             }
         }).start();
 
-        business.deleteEvent(Long.parseLong(eventId));
+        businessEvent.deleteEvent(Long.parseLong(eventId));
 
         Redirect.redirectToIndex();
     }
 
     public String updateEvento() {
 
-        Evento e = business.getEventById(Long.parseLong(eventId));
+        Evento e = businessEvent.getEventById(Long.parseLong(eventId));
 
         e.setFecha_inicio(updateFechaInicio);
         e.setFecha_fin(updateFechaFin);
@@ -838,10 +855,10 @@ public class EventoBean implements Serializable {
 
         e.setHorario(updateHorario);
         e.setPrecio(updatePrecio);
-        e.setLocalidad(business.getLocalidadByName(updateLocalidad));
+        e.setLocalidad(businessOther.getLocalidadByName(updateLocalidad));
 
         List<Etiqueta> nuevasEtiquetas = new ArrayList<>();
-        for (Etiqueta eti : business.getTags()) {
+        for (Etiqueta eti : businessOther.getTags()) {
             if (updateEtiquetas.contains(eti.getNombre())) {
                 nuevasEtiquetas.add(eti);
             }
@@ -849,16 +866,16 @@ public class EventoBean implements Serializable {
         e.setEtiqueta(nuevasEtiquetas);
 
         List<Destinatario> nuevasDestinatario = new ArrayList<>();
-        for (Destinatario dest : business.getAudiences()) {
+        for (Destinatario dest : businessOther.getAudiences()) {
             if (updateDestinatario.contains(dest.getDescripcion())) {
                 nuevasDestinatario.add(dest);
             }
         }
         e.setDestinatario(nuevasDestinatario);
 
-        business.updateEvent2(e);
+        businessEvent.updateEvent2(e);
 
-        List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
+        List<Usuario> u = businessUser.getUsuariosByEvento(e.getId_evento());
         final StringBuilder m = new StringBuilder();
         m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
                 .append(ZonedDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
@@ -875,15 +892,15 @@ public class EventoBean implements Serializable {
             notiplana.setFecha_hora(LocalDateTime.now());
             notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido actualizado");
             notiplana.setUsuario(usi);
-            business.setNotifications(notiplana);
+            businessUser.setNotifications(notiplana);
         }
         return "event_info?id=" + e.getId_evento() + "?faces-redirect=true";
     }
 
     public void destacarEvento() {
-        Evento e = business.getEventById(Long.parseLong(eventId));
+        Evento e = businessEvent.getEventById(Long.parseLong(eventId));
         e.setDestacado(!e.isDestacado());
-        business.highlightEvent(e);
+        businessEvent.highlightEvent(e);
         Redirect.redirectToEventInfo(e.getId_evento());
     }
 

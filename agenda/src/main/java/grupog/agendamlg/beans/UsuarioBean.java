@@ -5,7 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.business.Business;
+import grupog.agendamlg.business.BusinessUser;
 import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
@@ -45,7 +45,7 @@ public class UsuarioBean implements Serializable {
     @Inject
     private ControlLog ctrl;
     @EJB
-    private Business business;
+    private BusinessUser business;
 
     @PostConstruct
     public void init() {

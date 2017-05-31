@@ -1,6 +1,7 @@
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.business.Business;
+import grupog.agendamlg.business.BusinessEvent;
+import grupog.agendamlg.business.BusinessUser;
 import grupog.agendamlg.entities.Evento;
 import grupog.agendamlg.entities.Notificacion;
 import grupog.agendamlg.entities.Tarea;
@@ -27,12 +28,14 @@ public class TareasBean implements Serializable {
 
     private List<Tarea> pendiente;
     @EJB
-    private Business business;
+    private BusinessUser businessUser;
+    @EJB
+    private BusinessEvent businessEvent;
     @Inject
     private ControlLog control;
 
     public List<Tarea> getPendiente() {
-        return business.getTasks(control.getUsuario().getId_usuario());
+        return businessUser.getTasks(control.getUsuario().getId_usuario());
     }
 
     public void setPendiente(List<Tarea> pendiente) {
@@ -45,12 +48,12 @@ public class TareasBean implements Serializable {
         newTask.setCreador_peticion(control.getUsuario());
         newTask.setNombre("Solicito validación");
         newTask.setMensaje(control.getUsuario().getPseudonimo() + " ha solicitado ser usuario validado");
-        business.createTask(newTask);
-        for (Usuario u : business.getRedactores()) {
-            List<Tarea> l = business.getTasks(u.getId_usuario());
+        businessUser.createTask(newTask);
+        for (Usuario u : businessUser.getRedactores()) {
+            List<Tarea> l = businessUser.getTasks(u.getId_usuario());
             l.add(newTask);
             u.setTareas(l);
-            business.updateUser(u);
+            businessUser.updateUser(u);
         }
         Redirect.redirectToProfile();
     }
@@ -61,11 +64,11 @@ public class TareasBean implements Serializable {
         {
             Usuario usi = t.getCreador_peticion();
             usi.setRol_usuario(Usuario.Tipo_Rol.VALIDADO);
-            business.updateUser(usi);
+            businessUser.updateUser(usi);
         } else {//Evento
-            Evento e = business.getEventById(t.getId_evento());
+            Evento e = businessEvent.getEventById(t.getId_evento());
             e.setVisible(true);
-            business.updateEvent(e);
+            businessEvent.updateEvent(e);
         }
 
         final StringBuilder m = new StringBuilder();
@@ -78,21 +81,21 @@ public class TareasBean implements Serializable {
             Sendmail.mailThread(t.getCreador_peticion().getEmail(), "Notificación agendaMLG - diariosur", m.toString());
         }
 
-        Evento eve = business.getEventById(500);
+        Evento eve = businessEvent.getEventById(500);
         Notificacion notiplana = new Notificacion();
         notiplana.setEvento(eve);
         notiplana.setFecha_hora(LocalDateTime.now());
         notiplana.setMensaje("Su solicitud ha sido aceptada");
         notiplana.setUsuario(t.getCreador_peticion());
-        business.setNotifications(notiplana);
-        business.deleteTask(t.getId_tarea());
+        businessUser.setNotifications(notiplana);
+        businessUser.deleteTask(t.getId_tarea());
     }
 
     public void reject(Tarea t) {
 
         if (t.getId_evento() != null) {
 
-            business.deleteEvent(t.getId_evento());
+            businessEvent.deleteEvent(t.getId_evento());
         }
         final StringBuilder m = new StringBuilder();
         m.append("<h2>Notificaci&oacute;n <span style='font-size: 13px'>(")
@@ -104,20 +107,20 @@ public class TareasBean implements Serializable {
             Sendmail.mailThread(t.getCreador_peticion().getEmail(), "Notificación agendaMLG - diariosur", m.toString());
         }
 
-        Evento e = business.getEventById(500);
+        Evento e = businessEvent.getEventById(500);
         Notificacion notiplana = new Notificacion();
         notiplana.setEvento(e);
         notiplana.setFecha_hora(LocalDateTime.now());
         notiplana.setMensaje("Su solicitud ha sido rechazada");
         notiplana.setUsuario(t.getCreador_peticion());
-        business.setNotifications(notiplana);
-        business.deleteTask(t.getId_tarea());
+        businessUser.setNotifications(notiplana);
+        businessUser.deleteTask(t.getId_tarea());
 
     }
 
     public boolean validado() {
         boolean b = false;
-        List<Tarea> peticiones = business.getPeticiones(control.getUsuario().getId_usuario());
+        List<Tarea> peticiones = businessUser.getPeticiones(control.getUsuario().getId_usuario());
         for (Tarea t : peticiones) {
             if (t.getId_evento() == null) {
                 b = true;
@@ -131,7 +134,7 @@ public class TareasBean implements Serializable {
         boolean result = false;
         Usuario u = control.getUsuario();
         if(u != null){
-            return !business.getTasks(u.getId_usuario()).isEmpty();
+            return !businessUser.getTasks(u.getId_usuario()).isEmpty();
         }
         return false;
     }

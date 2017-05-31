@@ -1,6 +1,6 @@
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.business.Business;
+import grupog.agendamlg.business.BusinessOther;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Provincia;
 import java.io.Serializable;
@@ -10,15 +10,15 @@ import java.util.Comparator;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author Jean Paul Beaudry
  */
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class ProvinciaBean implements Serializable {
 
     /**
@@ -30,16 +30,16 @@ public class ProvinciaBean implements Serializable {
     private String localidad;
     private Localidad loca;
     @EJB
-    private Business business;
+    private BusinessOther business;
 
     public ProvinciaBean() {
     }
 
     @PostConstruct
     public void init() {
-        List<Provincia> p = business.getProvinces();
-        if (!p.isEmpty()) {
-            provincia = p.get(6).getNombre();
+       provincias = business.getProvinces();
+        if (!provincias.isEmpty()) {
+            provincia = provincias.get(6).getNombre();
             localidad = "Málaga";
             localidades = provinciaGetLocalidades(provincia);
         }
@@ -47,11 +47,13 @@ public class ProvinciaBean implements Serializable {
     }
 
     public List<Provincia> getProvincias() {
-        provincias = business.getProvinces();
+        //provincias = business.getProvinces();
         return provincias;
     }
 
     public void onCambioProvincia() {
+        System.out.println("onCambioprovincia before localidad " + localidad);
+        System.out.println("onCambioprovincia before provincia " + provincia);
         localidad = provincia;
         if (provincia != null && !provincia.equals("")) {
            
@@ -77,7 +79,7 @@ public class ProvinciaBean implements Serializable {
     }
 
     public String getProvincia() {
-
+        /*
         provincias = business.getProvinces();
         Collections.sort(provincias, new Comparator<Provincia>() {
             @Override
@@ -85,6 +87,7 @@ public class ProvinciaBean implements Serializable {
                 return o1.getNombre().compareTo(o2.getNombre());
             }
         });
+        */
         return provincia;
     }
 
@@ -101,7 +104,7 @@ public class ProvinciaBean implements Serializable {
     }
 
     public List<Localidad> getLocalidades() {
-        return business.getTowns(provincia);
+        return localidades;
     }
 
     public void setLocalidades(List<Localidad> localidades) {

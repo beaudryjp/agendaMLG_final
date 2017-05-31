@@ -5,7 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.business.Business;
+import grupog.agendamlg.business.BusinessUser;
 import grupog.agendamlg.entities.*;
 import java.io.Serializable;
 import java.util.List;
@@ -25,7 +25,7 @@ public class NotificationBean implements Serializable {
 
     List<Notificacion> notificaciones;
     @EJB
-    private Business business;
+    private BusinessUser business;
     @Inject
     private ControlLog usuario;
 

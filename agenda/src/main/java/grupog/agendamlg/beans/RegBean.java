@@ -5,7 +5,7 @@
  */
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.business.Business;
+import grupog.agendamlg.business.BusinessUser;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
 import java.io.Serializable;
@@ -36,7 +36,7 @@ public class RegBean implements Serializable {
     private boolean email_notifier;
 
     @EJB
-    private Business business;
+    private BusinessUser business;
 
     public RegBean() {
 

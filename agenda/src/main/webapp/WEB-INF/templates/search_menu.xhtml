@@ -41,14 +41,12 @@
                                     <p:column>
                                         <h:selectOneMenu id="provincia" class="form-control"  value="#{provinciaBean.provincia}" >
                                             <p:ajax listener="#{provinciaBean.onCambioProvincia()}" update="localidad" />
-                                            <!--<f:selectItem itemLabel="Provincia" itemValue="" noSelectionOption="true" />-->
                                             <f:selectItems value="#{provinciaBean.provincias}" var="pro" itemLabel="#{pro.nombre}" itemValue="#{pro.nombre}" />
                                         </h:selectOneMenu>
                                     </p:column>
 
                                     <p:column>
                                         <h:selectOneMenu id="localidad"  class="form-control" value="#{provinciaBean.localidad}" >
-                                            <!--<f:selectItem itemLabel="Localidad" itemValue="" noSelectionOption="true" />-->
                                             <f:selectItems value="#{provinciaBean.localidades}" var="loc" itemLabel="#{loc.nombre}" itemValue="#{loc.nombre}" />
                                         </h:selectOneMenu>
                                     </p:column>
@@ -61,7 +59,6 @@
                                     </p:column>
                                     <p:column>
                                         <h:selectOneMenu id="search_tags" class="form-control" value="#{eventoBean.searchEtiqueta}">
-                                            <!--<f:selectItem itemLabel="Todos" itemValue="Todos"/>-->
                                             <f:selectItems value="#{etiquetaBean.etiquetas}" var="et" itemLabel="#{et.nombre}" itemValue="#{et.nombre}" />
                                         </h:selectOneMenu>
                                     </p:column>

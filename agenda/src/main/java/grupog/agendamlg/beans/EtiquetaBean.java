@@ -1,6 +1,6 @@
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.business.Business;
+import grupog.agendamlg.business.BusinessOther;
 import grupog.agendamlg.entities.Etiqueta;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -29,7 +29,7 @@ public class EtiquetaBean implements Serializable {
     private String etiquetaAnt;
     private List<String> etiquetaDelete;
     @EJB
-    private Business business;
+    private BusinessOther business;
 
     public EtiquetaBean() {
     }

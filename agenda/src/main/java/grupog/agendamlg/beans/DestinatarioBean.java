@@ -1,6 +1,6 @@
 package grupog.agendamlg.beans;
 
-import grupog.agendamlg.business.Business;
+import grupog.agendamlg.business.BusinessOther;
 import grupog.agendamlg.entities.Destinatario;
 import java.io.Serializable;
 import java.util.Collections;
@@ -23,6 +23,11 @@ public class DestinatarioBean implements Serializable {
     private String destinatario;
     private String destinatarionew;
     private List<String> destinatariodel;
+    
+    private String destinatarioup;
+    
+    @EJB
+    private BusinessOther business;
 
     public List<String> getDestinatariodel() {
         return destinatariodel;
@@ -32,11 +37,6 @@ public class DestinatarioBean implements Serializable {
         this.destinatariodel = destinatariodel;
     }
     
-    
-    private String destinatarioup;
-    
-    @EJB
-    private Business business;
 
     public DestinatarioBean() {
     }
