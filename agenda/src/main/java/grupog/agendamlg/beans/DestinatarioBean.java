@@ -9,8 +9,6 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -84,18 +82,7 @@ public class DestinatarioBean implements Serializable {
         this.destinatarioup = destinatarioup;
     }
     
-
-//    public Destinatario getSpecificDestinatario() {
-//        HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-//        try {
-//            return destinatarios.get(Integer.parseInt(hsr.getParameter("id")));
-//        } catch (NumberFormatException n) {
-//            return null;
-//        }
-//    }
-    
      public String createAudience(){
-        System.out.println("Estoy intentando crear una audiencia");
         Destinatario d = new Destinatario();
         d.setDescripcion(destinatarionew);
         business.createAudience(d);
@@ -103,20 +90,15 @@ public class DestinatarioBean implements Serializable {
     }
      
     public String updateAudience(){
-        System.out.println("Estoy intentando update Audience");
         Destinatario a = business.getDestinatarioByDescripcion(destinatario);
         a.setDescripcion(destinatarioup);
         business.updateAudience(a);
         return "index?faces-redirect=true";
     }
    
-    public String deleteAudience() {
-        System.out.println("Estoy intentando delete Audience");
- 
-        for(String str : destinatariodel)
-        {
+    public String deleteAudience() { 
+        for(String str : destinatariodel) {
             business.deleteAudience(business.getDestinatarioByDescripcion(str).getId_destinatario());
- 
         }
 
     

@@ -45,7 +45,6 @@ public class TareasBean implements Serializable {
         newTask.setCreador_peticion(control.getUsuario());
         newTask.setNombre("Solicito validación");
         newTask.setMensaje(control.getUsuario().getPseudonimo() + " ha solicitado ser usuario validado");
-        System.out.println("ajk");
         business.createTask(newTask);
         for (Usuario u : business.getRedactores()) {
             List<Tarea> l = business.getTasks(u.getId_usuario());
@@ -126,5 +125,14 @@ public class TareasBean implements Serializable {
             }
         }
         return b;
+    }
+    
+    public boolean hasTasks(){
+        boolean result = false;
+        Usuario u = control.getUsuario();
+        if(u != null){
+            return !business.getTasks(u.getId_usuario()).isEmpty();
+        }
+        return false;
     }
 }

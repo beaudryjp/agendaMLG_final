@@ -27,7 +27,6 @@
                     <ui:include src = "/WEB-INF/templates/loader_dialog.xhtml" />
                 </p:blockUI>
             </h:form>
-
             <p:dataTable value="#{eventoBean.getEvento()}" var="evento" id="eventInfo">
 
                 <p:column>
@@ -35,11 +34,8 @@
                         <ui:include src = "/WEB-INF/templates/go_back.xhtml" />
                     </ui:insert>
                     <br/><br/>
-                    <div class="floatRight">
-                        <div class="rating">
-                            <p:rating value="#{evento.valoracion}" readonly="true" />
-                        </div>
-
+                    
+                    <div class="flRight">
                         <c:if test="#{(ControlLog.eventVisible)}">
                             <h5 class="icon">
                                 <i><h:outputText value="#{eventoBean.numLikes}"/></i><a data-toggle="tooltip" title="Like"  data-placement="left" onclick="invokeClickLike()" class="icon fa-thumbs-up fa-2x" />
@@ -61,15 +57,16 @@
                                 <a href="https://twitter.com/share" class="icon fa fa-twitter fa-2x" target="_blank" data-toggle="tooltip" title="Twitter"  data-placement="left" ></a>
                             </h5>
                             <h5 class="icon">
-                                <a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Google+"  data-placement="left" ></a>
+                                &nbsp;&nbsp;<a class="fa fa-google-plus fa-2x" target="_blank" href="https://plus.google.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Google+"  data-placement="left" ></a>
                             </h5>
                             <h5 class="icon">
-                                <a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
+                                &nbsp;&nbsp;<a class="fa fa-facebook fa-2x" target="_blank" href="https://facebook.com/share?url=event_info.xhtml?event=#{evento.id_evento}" data-toggle="tooltip" title="Facebook"  data-placement="left" ></a>
                             </h5>
                         </c:if>
                     </div>
 
                     <h2 class="eventTitle">#{evento.titulo}</h2>
+                    <p:rating value="#{evento.valoracion}" readonly="true" />
                     <div class="imageEvent">
 
                         <p:graphicImage value="#{eventoBean.getImage()}" width="500px" height="300px">
@@ -111,30 +108,31 @@
                         </c:if>
                     </div>
 
-                    <c:choose>
-                        <c:when test="#{!empty eventoBean.eventComentarios}">
-                            <div>
-                                <h5 class="h5bold">Comentarios</h5>
-                                <ul class="comments">
+                    <c:if test="#{!empty eventoBean.eventComentarios}">
+                        <div>
+                            <br/>
+                            <h5 class="h5bold">Comentarios</h5>
+                            <ul class="comments">
+                                <h:form>
                                     <ui:repeat value="#{eventoBean.eventComentarios}" var="comen">
                                         <li>
                                             <blockquote><h:outputText value="#{comen.mensaje}"/></blockquote>
                                             <i>
                                                 <b><h:outputText value="#{comen.usuario.pseudonimo}"/></b> -
-                                                <h:outputText value="#{comen.getFecha_hora_formateado()}"/>
+                                                <h:outputText value="#{comen.getFecha_hora_formateado()}"/>&nbsp;&nbsp;
+                                                <c:if test="#{ControlLog.isUserOwnerOfEvent()}">
+                                                    <h:commandLink action="#{eventoBean.deleteComment()}" styleClass="fa fa-trash" type="button">
+                                                        <f:attribute name="comment" value="#{comen.id_comentario}" />
+                                                    </h:commandLink>
+                                                </c:if>
                                             </i>
                                         </li>
                                     </ui:repeat>
-                                </ul>
-                            </div>
-                        </c:when>
-                        <c:otherwise>
-
-                        </c:otherwise>
-                    </c:choose>
-
+                                </h:form>
+                            </ul>
+                        </div>
+                    </c:if>
                     <br/>
-
                     <div>
                         <f:view contentType="text/html">
                             <p:dialog id="gmapDialog" widgetVar="gmap" width="625" height="400" modal="true">

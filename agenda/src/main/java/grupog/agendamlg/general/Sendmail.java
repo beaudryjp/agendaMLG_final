@@ -77,8 +77,6 @@ public class Sendmail {
 
             Transport.send(message);
 
-            //System.out.println("Done");
-
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
@@ -93,7 +91,6 @@ public class Sendmail {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                System.out.println(m);
                 try {
                     Sendmail.mail(reciever, subject, message);
                 } catch (AddressException ex) {

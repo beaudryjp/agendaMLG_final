@@ -561,11 +561,6 @@ ul.publico{
     padding: 20px;
 }
 
-.ui-panelgrid.ui-widget td {
-    color: white;
-}
-
-
 .eventCreate.ui-panelgrid td, .ui-panelgrid tr{
     border-style: none !important;
     width: 100%;
@@ -645,6 +640,10 @@ ul.comments li i{
     float: right;
     text-align: center;
     margin-left: 5px;
+}
+
+.flRight{
+    float: right;
 }
 
 p.showDate{

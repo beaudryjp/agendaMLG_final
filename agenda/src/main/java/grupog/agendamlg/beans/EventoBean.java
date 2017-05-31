@@ -35,7 +35,6 @@ import java.util.Random;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -125,9 +124,6 @@ public class EventoBean implements Serializable {
 
     public List<Evento> getEventosProximos() {
         List<Evento> e = business.getEventsNearestByCurrentDate();
-        for (Evento x : e) {
-            System.out.println(x.getTitulo());
-        }
         if (!e.isEmpty()) {
             if (e.size() > 2) {
                 return e.subList(0, 2);
@@ -500,16 +496,9 @@ public class EventoBean implements Serializable {
         numAssists = business.numAssist(e.getId_evento());
         numLikes = business.numLike(e.getId_evento());
         numFollows = business.numFollow(e.getId_evento());
-        /*
-        numAssists = business.getEventById(eventId).getAsiste().size();
-        System.out.println("numAssists: " + numAssists);
-         */
     }
 
     public void onload2() {
-
-        System.out.println("Estoy en onload2");
-
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         this.setEventId(hsr.getParameter("id"));
         Evento e = business.getEventById(Long.parseLong(eventId));
@@ -524,17 +513,9 @@ public class EventoBean implements Serializable {
                 updateLocalidad = localidad.getNombre();
             }
         }
-        System.out.println("onload2() fecha inicio " + e.getFecha_inicio());
-        System.out.println("onload2() fecha fin" + e.getFecha_fin());
         updateFechaInicio = e.getFecha_inicio();
         updateFechaFin = e.getFecha_fin();
-        System.out.println("onload2() new fecha inicio " + updateFechaInicio);
-        System.out.println("onload2() new fecha fin" + updateFechaFin);
-
         updateHorario = e.getHorario();
-
-        System.out.println("Imprimo " + eventId + " " + hsr.getParameter("id"));
-
     }
 
     public void tag_onLoad() {
@@ -557,15 +538,8 @@ public class EventoBean implements Serializable {
 
         e.setHorario(event_new_horario);
         e.setPrecio(event_new_precio);
-        System.out.println("createEvent() " + event_new_latitud);
-        System.out.println("createEvent() " + event_new_longitud);
         e.setLatitud(Double.parseDouble(event_new_latitud));
         e.setLongitud(Double.parseDouble(event_new_longitud));
-
-        System.out.println(event_new_latitud);
-        System.out.println(event_new_longitud);
-        System.out.println(e.getLatitud());
-        System.out.println(e.getLongitud());
 
         e.setDestacado(event_new_destacado);
 
@@ -581,8 +555,6 @@ public class EventoBean implements Serializable {
         }
 
         e.setEtiqueta(etq);
-        System.out.println("createEvent() provincia: " + prov.getProvincia());
-        System.out.println("createEvent() localidad: " + prov.getLoca().getNombre());
         e.setLocalidad(business.getLocalidadByName(prov.getLoca().getNombre()));
 
         e.setImagen_url("default.png");
@@ -620,7 +592,6 @@ public class EventoBean implements Serializable {
 
     public void changeImage(FileUploadEvent event) {
         HttpServletRequest hsr = Redirect.getRequest();
-        System.out.println("changeImage(): newEventImage: " + event.getFile().getFileName());
         if (event.getFile() != null) {
             if (hsr.getParameterMap().containsKey("id")) {
                 if (!hsr.getParameter("id").isEmpty()) {
@@ -628,10 +599,8 @@ public class EventoBean implements Serializable {
                     try (InputStream input = event.getFile().getInputstream()) {
 
                         Evento e = business.getEventById(Long.parseLong(hsr.getParameter("id")));
-                        //System.out.println("changeImage(): eventid: " + e.getId_evento());
                         Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
                         String filename = FilenameUtils.getBaseName(event.getFile().getFileName()) + "." + FilenameUtils.getExtension(event.getFile().getFileName());
-                        //System.out.println(path.toString() + " " + filename);
 
                         //update event
                         e.setImagen_url(filename);
@@ -662,6 +631,13 @@ public class EventoBean implements Serializable {
         c.setMensaje(eventNewComment);
         business.createComment(c);
         Redirect.redirectToEventInfo(e.getId_evento());
+    }
+
+    public void deleteComment(ActionEvent e) {
+        String comment = e.getComponent().getAttributes().get( "comment" ).toString();
+        System.out.println(comment);
+        business.deleteComentario(Long.parseLong(comment));
+        //Redirect.redirectToEventInfo(c.getEvento().getId_evento());
     }
 
     public List<String> getDestinatarios() {
@@ -797,38 +773,25 @@ public class EventoBean implements Serializable {
 
     public void onPointSelect(PointSelectEvent event) {
         LatLng latlng = event.getLatLng();
-        System.out.println("onclick lati " + event_new_latitud);
-        System.out.println("onclick longi " + event_new_longitud);
         event_new_latitud = String.valueOf(latlng.getLat());
         event_new_longitud = String.valueOf(latlng.getLng());
-        /*
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Coordinates", "Las coordendadas son: " + event_new_latitud + ", " + event_new_longitud);
-        RequestContext.getCurrentInstance().showMessageInDialog(message);
-         */
-        System.out.println("onclick lati 2 " + event_new_latitud);
-        System.out.println("onclick longi 2 " + event_new_longitud);
     }
 
     public StreamedContent getImage() throws IOException {
         FacesContext context = FacesContext.getCurrentInstance();
         if (context.getCurrentPhaseId() == PhaseId.RENDER_RESPONSE) {
-            // So, we're rendering the view. Return a stub StreamedContent so that it will generate right URL.
             return new DefaultStreamedContent();
         } else {
-            // So, browser is requesting the image. Return a real StreamedContent with the image bytes.
             String filename = context.getExternalContext().getRequestParameterMap().get("filename");
             Path path = Paths.get(System.getProperty("user.home"), "webapp", "img", "eventos");
             if (filename.isEmpty()) {
                 filename = "default.png";
             }
-//            System.out.println(filename);
-//            System.out.println(path.toString());
             return new DefaultStreamedContent(new FileInputStream(new File(path.toString(), filename)));
         }
     }
 
     public void deleteEvento() {
-        System.out.println("deleteEvento(): entered");
         final Evento e = business.getEventById(Long.parseLong(eventId));
         final Evento system = business.getEventById(500);
         final List<Usuario> u = business.getUsuariosByEvento(e.getId_evento());
@@ -839,22 +802,6 @@ public class EventoBean implements Serializable {
                 .append("Ha sido suspendido el evento <b>\"")
                 .append(changeHtmlChars(e.getTitulo()))
                 .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
-        /*
-        for (Usuario usi : u) {
-            if (usi.isEmail_notifier()) {
-                System.out.println("funcionadelete?");
-                Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
-            }
-            Notificacion notiplana = new Notificacion();
-            notiplana.setEvento(system);
-            notiplana.setFecha_hora(LocalDateTime.now());
-            notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido suspendido");
-            notiplana.setUsuario(usi);
-            business.setNotifications(notiplana);
-            System.out.println("funcionadelete , si");
-
-        }
-         */
         e.setVisible(false);
         new Thread(new Runnable() {
             @Override
@@ -862,7 +809,6 @@ public class EventoBean implements Serializable {
 
                 for (Usuario usi : u) {
                     if (usi.isEmail_notifier()) {
-                        System.out.println("funcionadelete?");
                         Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
                     }
                     Notificacion notiplana = new Notificacion();
@@ -871,8 +817,6 @@ public class EventoBean implements Serializable {
                     notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido suspendido");
                     notiplana.setUsuario(usi);
                     business.setNotifications(notiplana);
-                    System.out.println("funcionadelete , si");
-
                 }
             }
         }).start();
@@ -923,9 +867,7 @@ public class EventoBean implements Serializable {
                 .append(changeHtmlChars(e.getTitulo()))
                 .append("\"</b></p><p style='font-size: 12px'>diariosur</p>");
         for (Usuario usi : u) {
-
             if (usi.isEmail_notifier()) {
-                System.out.println("funciona?");
                 Sendmail.mailThread(usi.getEmail(), "diariosur - Mensaje de actualización de evento", m.toString());
             }
             Notificacion notiplana = new Notificacion();
@@ -934,11 +876,8 @@ public class EventoBean implements Serializable {
             notiplana.setMensaje("El evento " + e.getTitulo() + " ha sido actualizado");
             notiplana.setUsuario(usi);
             business.setNotifications(notiplana);
-            System.out.println("esto funciona");
         }
         return "event_info?id=" + e.getId_evento() + "?faces-redirect=true";
-        //Redirect.redirectTo("/event/show/"+e.getId_evento());
-        //Redirect.redirectToEventInfo(e.getId_evento());
     }
 
     public void destacarEvento() {

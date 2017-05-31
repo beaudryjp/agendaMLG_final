@@ -174,7 +174,6 @@ public class UsuarioBean implements Serializable {
     }
 
     public String resetPassword(Usuario u) {
-        System.out.println("resetPassword() entered");
         final StringBuilder msg = new StringBuilder();
         String new_password = Password.generateSecurePassword(16);
         msg.append("<h2>Reseteo de password</h2>");
@@ -189,7 +188,6 @@ public class UsuarioBean implements Serializable {
 
         setPassword(u, new_password);
         Sendmail.mailThread(u.getEmail(), "Reseteo de password", msg.toString());
-        System.out.println("resetPassword() sent mail");
         return "index?faces-redirect=true";
     }
 
@@ -205,13 +203,9 @@ public class UsuarioBean implements Serializable {
     }
 
     public String validate() {
-        System.out.println("validate() entered");
         if (ctrl.getUsuario() == null) {
-            System.out.println("validate() no user logged in");
-            System.out.println("validate() email " + email2);
             List<Usuario> u = business.getUserByEmail(email2);
             if (!u.isEmpty()) {
-                System.out.println("validate() user exists");
                 email2 = null;
                 return resetPassword(u.get(0));
             } else {

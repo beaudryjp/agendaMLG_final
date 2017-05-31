@@ -116,7 +116,6 @@ public class RegBean implements Serializable {
 
             return "registration?faces-redirect=true";
         }
-        System.out.println("Llego aqui");
         if (business.validateRegister(pseudonimo, email)) {
             //Generate salt
             byte[] salt_bytes = Password.getNextSalt();

@@ -73,8 +73,6 @@ public class EtiquetaBean implements Serializable {
     }
 
     public String createTag() {
-        System.out.println("Estoy intentando crear Tags");
-        System.out.println("etiqueta " + etiquetaCreate);
         Etiqueta e = new Etiqueta();
         e.setNombre(etiquetaCreate);
         business.createTag(e);
@@ -89,8 +87,6 @@ public class EtiquetaBean implements Serializable {
     }
 
     public String deleteTag() {
-        System.out.println("Estoy intentando delete Tags");
-
         for (String str : etiquetaDelete) {
             business.deleteTag(business.getEtiquetaByName(str).getId_etiqueta());
 

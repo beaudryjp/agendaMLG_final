@@ -53,7 +53,6 @@ public class ControlLog implements Serializable {
 
     public void checkUserPrivileges() {
         HttpServletRequest hsr = Redirect.getRequest();
-        //System.out.println(hsr.getRequestURI());
         if (usuario == null) { //User not loggedin
             Redirect.redirectToIndex();
         } else if (hsr.getParameterMap().containsKey("id") && usuario == null) { //User not loggedin and url has event ta

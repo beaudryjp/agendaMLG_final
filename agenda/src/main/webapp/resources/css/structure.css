@@ -248,7 +248,7 @@ header>.login-headerLogo {
     width: 100%;
     padding: 40px;
     margin: 0 auto;
-    margin-top: 30px;
+    margin-top: 10px;
 
 }
 
@@ -474,6 +474,9 @@ header>.login-headerLogo {
     background-color: #5b5b71;
 }
 
+.ui-tabs-nav{
+    margin-top: 10px;
+}
 
 .ui-tabs.ui-tabs-right > .ui-tabs-nav {
     background: transparent !important;
@@ -604,29 +607,30 @@ h2.profileEvent{
     width: auto;
 }
 
-.ui-widget-content {
+form[name="profile"] .ui-widget-content {
     background: #5b5b71;
     border: none;
 }
 
-.ui-panel-content.ui-widget-content {
+form[name="profile"] .ui-panel-content.ui-widget-content {
     background: #66667f !important;
-    color: white;
-
 }
 
-.ui-panel-content.ui-widget-content .ui-datatable.ui-widget {
+form[name="profile"].ui-panel-content.ui-widget-content .ui-datatable.ui-widget {
     color: #5b5b71;
 }
 
-.ui-panel-content.ui-widget-content h2 {
+
+form[name="profile"] .ui-panel-content.ui-widget-content > h2 {
     color: white; 
 }
 
-.form-group.form-group-sm .ui-panelgrid.ui-widget td {
-    background: white;
+form[name="profile"] .ui-panelgrid.ui-widget td {
+    
 }
 
 .ui-tagcloud.ui-widget.ui-widget-content.ui-corner-all a {
-    color: white;
+    background: white !important;
+    color: #413d3d;
+    margin: 5px;
 }

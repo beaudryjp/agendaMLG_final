@@ -10,7 +10,6 @@ import grupog.agendamlg.entities.Provincia;
 import grupog.agendamlg.entities.Tarea;
 import grupog.agendamlg.entities.Usuario;
 import grupog.agendamlg.general.Password;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -95,12 +94,9 @@ public class Business implements BusinessLocal {
 
     @Override
     public List<Tarea> getTasks(long usuario) {
-        
-        System.out.println(usuario);
         Usuario u = em.find(Usuario.class, usuario);
         List<Tarea> l = u.getTareas();
         boolean b = l.isEmpty();
-        System.out.println(b);
         return l;
     }
 
@@ -141,25 +137,15 @@ public class Business implements BusinessLocal {
                 .setParameter("localidad", loca)
                 .setParameter("etiqueta", etiq)
                 .setParameter("destinatario", dest);
-//        System.out.println("localidad: " + loca);
-//        System.out.println("etiqueta: " + etiq);
-//        System.out.println("destinatario: " + dest);
-//        for (Evento x : query.getResultList()) {
-//            System.out.println(x.getTitulo());
-//        }
         List<Evento> ev = new ArrayList<>();
         if (!text.isEmpty() && !text.equals("")) {
-
-            //System.out.println("getEventsBySearch(): if text not empty");
             for (Evento e : query.getResultList()) {
                 if (e.getTitulo().toUpperCase().contains(text.toUpperCase())) {
-                    //System.out.println("getEventsBySearch(): event exists with that text");
                     ev.add(e);
                 }
             }
             return ev;
         } else {
-            //System.out.println("getEventsBySearch(): text is empty");
             if (query.getResultList().isEmpty()) {
                 return new ArrayList<>();
             } else {
@@ -277,7 +263,6 @@ public class Business implements BusinessLocal {
     @Override
     public void createAudience(Destinatario e
     ) {
-        System.out.println(e.getDescripcion());
         em.persist(e);
 
     }
@@ -476,9 +461,6 @@ public class Business implements BusinessLocal {
     public void deleteEvent(long e
     ) {
         Evento e1 = em.find(Evento.class, e);
-        System.out.println("deleteEvent(): entered");
-        System.out.println("deleteEvent(): event " + e1.getTitulo());
-
         List<Etiqueta> eti = e1.getEtiqueta();
         for (Etiqueta et : eti) {
             et.getEvento().remove(e1);
@@ -579,15 +561,15 @@ public class Business implements BusinessLocal {
     }
 
     @Override
-    public void createTask(Tarea t ) {
+    public void createTask(Tarea t) {
         em.persist(t);
     }
 
     @Override
-    public void deleteTask(long t ) {
+    public void deleteTask(long t) {
         Tarea tari = em.find(Tarea.class, t);
         List<Usuario> users = tari.getRedactores();
-        for(Usuario x : users){
+        for (Usuario x : users) {
             x.getTareas().remove(tari);
         }
         em.remove(em.merge(tari));
@@ -603,6 +585,7 @@ public class Business implements BusinessLocal {
     @Override
     public void deleteComentario(long c) {
         Comentario co = em.find(Comentario.class, c);
+        System.out.println(co.getMensaje());
         em.remove(em.merge(co));
     }
 

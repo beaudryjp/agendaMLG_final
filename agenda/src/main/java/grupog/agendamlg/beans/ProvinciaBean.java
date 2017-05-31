@@ -3,7 +3,6 @@ package grupog.agendamlg.beans;
 import grupog.agendamlg.business.Business;
 import grupog.agendamlg.entities.Localidad;
 import grupog.agendamlg.entities.Provincia;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,13 +11,14 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 /**
  *
  * @author Jean Paul Beaudry
  */
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class ProvinciaBean implements Serializable {
 
     /**
